@@ -1,0 +1,39 @@
+% TODO This should be a class deriving from llncs instead of a package.
+
+\ProvidesPackage{llncsstandalone}
+
+\RequirePackage{xpatch}
+
+% The llncs class is designed for conference proceedings, where each ToC
+% entry and PDF bookmark is an entire paper, and page numbering is
+% global. If we want to use it for a standalone paper, we'll need some
+% tweaks:
+
+\newcommand{\llncsstandalone@error}{\PackageError{llncsstandalone}{patching failed}{}}
+
+% Remove title and authors from ToC (https://tex.stackexchange.com/a/350689).
+% This also takes care of PDF bookmarks (https://tex.stackexchange.com/a/47410).
+\xpatchcmd{\maketitle}{%
+  \addtocontents{toc}{\noexpand\protect\noexpand\authcount{\the\c@auco}}%
+  \addcontentsline{toc}{author}{\toc@uthor}%
+}{}{}{\llncsstandalone@error}
+\xpatchcmd{\maketitle}{%
+  \if!\the\toctitle!\addcontentsline{toc}{title}{\@title}\else
+    \addcontentsline{toc}{title}{\the\toctitle}\fi
+}{}{}{\llncsstandalone@error}
+
+% Make ToC a section* instead of a chapter*
+\xpatchcmd{\tableofcontents}{\chapter*}{\section*}{}{\llncsstandalone@error}
+\AtBeginDocument{\renewcommand\contentsname{Contents}}
+
+% Change depth settings:
+% Include sections and subsections in ToC
+\setcounter{tocdepth}{2}
+% ... and in PDF bookmarks
+\AtBeginDocument{
+  \IfPackageLoadedTF{hyperref}{
+    \hypersetup{bookmarksdepth=2}}{}
+}
+
+% Enable page numbers
+\pagestyle{plain}

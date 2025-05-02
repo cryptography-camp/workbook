@@ -1,0 +1,155 @@
+\setcounter{section}{-1}
+\section{Template Usage Notes}
+This is a brief overview.
+See the respective package documentation for more details. (Hint: Try \texttt{texdoc -l <pkg>} if you use TeXLive or check out \url{https://texdoc.org/}.)
+The source code of this file (\texttt{template-readme.tex}) may be instructive, too.
+
+
+\subsection{Compilation}
+It's recommended to use \texttt{latexmk}.
+A configuration file is included, so simply running \texttt{latexmk} is enough.
+Use \texttt{latexmk -C} to clean auxiliary files, which are all stored in the \texttt{latex.out} directory.
+
+
+\subsection{Toggles}
+A few toggles are provided at the top of \texttt{main.tex}:
+\begin{quote}
+  \begin{description}
+    \item [\texttt{\textbackslash{}fulltrue}:]
+          Full version of the paper. (Authors can also use \verb|\iffull| where appropriate.)
+    \item [\texttt{\textbackslash{}notestrue}:]
+          Enable notes and todos
+    \item [\texttt{\textbackslash{}labelstrue}:]
+          Print labels
+    \item [\texttt{\textbackslash{}anonymoustrue}:]
+          Hide authors
+    \item [\texttt{\textbackslash{}spacetrue}:]
+          Enable hacks to save space
+    \item [\texttt{\textbackslash{}camerareadytrue}:]
+          Disable some tweaks that the publisher may not like
+    \item [\texttt{\textbackslash{}bibtextrue}:]
+          Use legacy BibTeX instead of Biber (see \cref{sec:biber}).
+  \end{description}
+\end{quote}
+
+
+\subsection{Theorem-live Environments}
+The \texttt{llncs} class defines the environments
+\texttt{corollary}, \texttt{definition}, \texttt{lemma}, \texttt{proposition}, and \texttt{theorem},
+as well as \texttt{proof} and \texttt{claim} with a different formatting.
+This template adds \texttt{assumption}.
+
+\begin{theorem}[My Theorem]\label{thm:my-thm}
+  \begin{equation}\label{eq:my-thm}
+    C = g^mh^r.
+  \end{equation}
+  \begin{equation}\label{eq:my-thm2}
+    \Pr[\bad] \le \negl.
+  \end{equation}
+\end{theorem}
+\begin{proof}[Proof (handwavy)]
+  Believe, me, this \cref{eq:my-thm}, it's true.
+  But here's an equation to demonstrate that \verb|\qedhere| works:
+  \[ c = m+rx . \qedhere \]
+\end{proof}
+
+\begin{lemma}\label{thm:a-lemma}
+  $10\,\btcsym$ is a lot of money.
+\end{lemma}
+\begin{proof}
+  Follows from the theorem.
+\end{proof}
+
+\begin{assumption}[VERY-HARD-PROB]\label{ass:very-hard}
+  It's hard, you know?
+\end{assumption}
+
+\begin{remark}\label{rem:add-env}
+  There are additional environments
+  \texttt{case}, \texttt{conjecture}, \texttt{example}, \texttt{exercise}, \texttt{note}, \texttt{problem}, \texttt{property}, \texttt{question}, \texttt{remark}, and \texttt{solution}.
+  These have a different formatting (like this \lcnamecref{rem:add-env}).
+\end{remark}
+
+
+\subsection{Citations and Bibliography (\texttt{biblatex})}
+\texttt{crypto.bib} is included. Use \verb|./update_cryptobib.sh| to update it.
+
+You can use \verb|\textcite| to typeset author names automatically, \eg, \textcite{CCS:BelNev06,EPRINT:NicRufSeu20}.
+
+It's a good idea to define the \texttt{shorthand} field in the bib file for BIPs, RFCs and similar documents, \eg, \verb|shorthand = {BIP340}|. By the way, have you heard about xonly keys~\cite{add:bip-schnorr}?
+
+\paragraph{Biber vs. BibTeX}\label{sec:biber}
+This template defaults to BibLaTeX's modern Biber backend, which can handle UTF-8 and which will enable all BibLaTeX features.
+But since Biber tends to be slow and will need over a minute to parse the huge \texttt{crypto.bib},\footnote{See \url{https://github.com/plk/biber/issues/371} for background.}
+the \verb|./update_cryptobib.sh| script will automatically convert \texttt{crypto.bib} to BibLaTeX's experimental XML format,
+which biber can process much faster (just a few seconds).
+A disadvantage is that caveat the conversion process takes a while, and that modifying \texttt{crypto.bib} has no effect (but since this file is from upstream, this is a bad practice anyway.)
+
+If you want to disable Biber and use the good old BibTeX, set the \verb|\bibtextrue| toggle.
+
+
+\subsection{References (\texttt{cleveref})}
+\begin{enumerate}
+  \item\label{item:one}
+        Use \verb|\cref{label,maybe-another-label}| to insert a reference, \eg, \cref{sec:intro,thm:my-thm,ass:very-hard}.
+        The prefix, \eg, ``Theorem'' or ``Appendix'' will be added automatically.
+  \item
+        References to equations, list items, and line numbers (\cref{line:false,item:one,eq:my-thm}) are not capitalized.
+        Use \verb|\Cref| to force uppercase, \eg, at the beginning of a sentence.
+        Then you get:
+        \Cref{line:false,item:one}. But: \Cref{item:one}. And: \Cref{eq:my-thm,eq:my-thm2,item:one}.
+\end{enumerate}
+
+
+\subsection{Notes and Todos (\texttt{todonotes})}
+Set \verb|\notestrue| to display them.
+\newuser{readme}{Template:}{orange!20}
+\readmenote{
+  You can define a user with \texttt{\textbackslash{}newuser}, \eg,  \texttt{\textbackslash{}newuser\textbraceleft{}s\textbraceright{}\textbraceleft{}Satoshi\textbraceright{}\textbraceleft{}orange\textbraceright{}}, see the source code.
+  This will create the user-specific command \texttt{\textbackslash{}snote} for inserting notes.
+
+  A note can span multiple paragraphs.
+}
+
+
+\subsection{Macros, \eg, $\btcsym$, $\algo{Sign}$, $\pk$, $\defeq$, and $\xmark$ Are Mostly Robust and Can Thus be Used in Movable Arguments like Section Headings}
+If not, try to put a \verb|\protect| in front of them when using them.
+
+
+\subsection{Pseudocode (\texttt{cryptocode})}
+See the source code.
+\begin{figure}[tbhp]
+  \begin{center}
+    % If you omit the width, then it will be 100%.
+    % Try to specify boxsep=1mm or smaller if space is tight
+    \begin{tcolorbox}[width=10cm]
+      \begin{pchstack}[center]
+        \begin{pcvstack}
+          \procedure[linenumbering]{$\algo{Alg}(\secpar)$}{%
+            y \gets \ZZ_p \\
+            \pcreturn \pcfalse \label{line:false}
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{$\game{\Game~\algo{Coll}}{\algo{H}}$}{%
+            \mathellipsis
+          }
+        \end{pcvstack}
+        \pchspace[1em]
+        \begin{pcvstack}
+          \procedure{$\algo{Foo}(\secpar)$}{%
+            x \gets 5\\
+            \gamechange{\pcassert \pcfalse}
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{$\oracle{Bar}(\sk, \pk)$}{%
+            \pcbox{x \sample \ZZ_p \pcsc \pcreturn \sk + x} \\
+            y \sample \ZZ_p
+          }
+        \end{pcvstack}
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{My great scheme\label{fig:scheme}}  % \label goes inside \caption
+\end{figure}
+
+\clearpage
