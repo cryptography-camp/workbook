@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 # bib: The path to original BibTeX file (may not contain "<", ">", and "&").
