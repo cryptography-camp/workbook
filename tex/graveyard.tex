@@ -1,0 +1,105 @@
+\begin{lemma}
+  \label{lem:preimage-size}
+  Let $\lambda$ be a natural number, $\mathcal{S}, \mathcal{T}$ be nonempty sets where $|\mathcal{S}| \ge 2^\lambda |\mathcal{T}|$, and $f: \mathcal{S} \rightarrow \mathcal{T}$ be a function.
+  Let $f^{-1}(y) \defeq \{x \in \mathcal{S} : f(x) = y\}$ be the set of preimages of $y$ under $f$.
+
+  The probability that for a uniformly random element $x$ of $\mathcal{S}$ it holds that $|f^{-1}(y)| \ge 2$ is greater than $1- \frac{1}{2^\lambda}$.
+\end{lemma}
+\begin{proof}
+  Let $\mathcal{U} \defeq \{ x \in \mathcal{S} : |f^{-1}(f(x))| = 1\}$.
+  Since $|\mathcal{T}| < |\mathcal{S}|$, there are at most $|\mathcal{T}| - 1$ elements $x$ in $\mathcal{S}$ such that $|f^{-1}(f(x))| = 1$.
+  Therefore $|\mathcal{U}| \le |\mathcal{T}| - 1$.
+
+  Hence, the probability that a uniformly random element $x$ of $\mathcal{S}$ is in subset $\mathcal{U}$ is
+  \begin{align*}
+    \pr{x \in \mathcal{U}} &= \frac{|\mathcal{U}|}{|\mathcal{S}|} \\
+    &\le \frac{|\mathcal{T}| - 1}{|\mathcal{S}|}\\
+    &< \frac{|\mathcal{T}|}{|\mathcal{S}|}\\
+    &< \frac{|\mathcal{S}|/2^\lambda}{|\mathcal{S}|}\\
+    &< \frac{1}{2^\lambda}
+  \end{align*}
+  and $\pr{x \notin \mathcal{U}} > 1- \frac{1}{2^\lambda}$.
+\end{proof}
+
+
+
+  which is the case if $y$ only has one preimage or (if $y$ has more than one preimage but) we picked the same one at random.
+  % \begin{align*}
+  %   \pr{\text{$y$ has one preimage} \vee \text{$y$ has more than one preimage and $x = x'$}} &<=
+  %   2^{-\lambda} + \frac{1}{2}
+  % \end{align*}
+  % well this is not negligible...
+  % 1. does this even make sense? we're ignoring the probability that $y$ has more than one preimage
+  % 2. do we need to rewrite the lemma to let the function be negligible? We could try to argue that with overwhelming probability, we pick a $x$ that has at least 2^lambda many preimages...
+
+  % Old stuff:
+  % Given that, the probability that we did pick the wrong one is less than $\frac{1}{2}$.
+
+
+  % $\bdv$ aborts at line~\cref{line:break-hash-preimage-bdv-assert} if $x = x'$,
+  % $\bdv$ aborts at line~\cref{line:break-hash-preimage-bdv-assert} if $x = x'$,
+  % which is the case if $y$ has more than one preimage or if $y$ has more than one preimage but we picked the same one at random.
+  % which corresponds to the event that
+  % \[
+  % \text{$y$ one preimage} \vee \text{$y$ has more than one preimage and $x = x'$}
+  % \]
+
+  % \begin{align*}
+  %   \pr{\text{$y$ has more than one preimage} \vee \text{$y$ has more than one preimage and $x = x'$}} &<= \pr{\text{$y$ has more than one preimage}} + \pr{\text{$y$ has more than one preimage and $x = x'$}}\\
+  %   &= \pr{\text{$y$ has more than one preimage}} + \pr{\text{$y$ has more than one preimage} \wedge x \neq x'}\\
+  % \end{align*}
+  % The probability of the second case is less than $\frac{1}{2}$.
+  % By lemma \cref{lem:preimage-size} the probability that $y$ has only one preimage is at most $\frac{1}{2}$.
+  % Hence the probability that $\bdv$ aborts at line 
+
+  % $\bdv$ does not abort at line~\cref{line:break-hash-preimage-bdv-assert} if $y$ has more than one preimage and has more than one preimage but we picked a different one at random.
+  % The probability that it has more than one preimage is at least $1 - \frac{1}{2^\lambda}$.
+  % Given that, the probability that we did not pick the wrong one is more than $\frac{1}{2}$.
+  % (we want this probability to be upper bounded by a negligible function)
+
+  % which corresponds to the event that
+  % \[
+  % \text{$y$ one preimage} \vee \text{$y$ has more than one preimage and $x = x'$}
+  % \]
+
+  % Have two coins, one normal one biased. What is the probability that the two coins are not the same?
+  % P(c1 != c2) = p(c1 = H) * p(c2 = T) + p(c1 = T) * p(c2 = H)
+  % P(c1 != c2) = 1/2 * p + 1/2 * q = 1/2 * (p + q) = 1/2
+\end{proof}
+ 
+% TODO: mention that reduction needs to be p.p.t.
+
+% Counterexample: Define $G: \{0,1\}^* \rightarrow \{0,1\}^\lambda$ to be any collision\-resistant hash.
+% Define $H(x) \defeq G(x) \parallel x$.
+% $H$ is injective, hence trivially collision\-resistant.
+% However given an output $y = (y_1, y_2)$ a preimage is recovered by outputting $x = y_2$ in time $O(1)$, so $H$ is not preimage\-resistant.
+% Therefore collision\-resistance does not imply preimage\-resistance in general.
+
+% Note that in our model all hash functions map arbitrary length inputs to \emph{fixed} $\lambda$\-bit outputs. 
+% The toy construction above violates this restriction because the output includes the entire input and is therefore longer than $\lambda$ bits. 
+% Hence it serves only as intuition for why an additional compression assumption is required if the codomain size were not fixed.
+
+\begin{proof}[Alternative variant without fixing $y$]
+We can bound the abort probability directly, without introducing an additional event.  Recall that the reduction aborts \\emph{exactly} when the adversary outputs the same input, i.e.
+\[
+  B \;:=\; \{x' = x\}.
+\]
+To compute $\Pr[B]$ we apply the elementary \\emph{law of total probability}.  \\
+The outcomes of the random variable $H(x)$ form a set of disjoint events $\{H(x)=y\}_{y\in\mathcal T}$ whose probabilities add up to~1.  \\
+Therefore any event—here $B$—can be written as the union of the disjoint intersections $B \wedge \{H(x)=y\}$.  Summing those probabilities is valid because the intersections are mutually exclusive.  In formulae
+\[
+  \Pr[B] = \sum_{y\in\mathcal T} \Pr\bigl[ B \wedge (H(x)=y) \bigr].
+\]
+For each fixed $y$ let $S_y := H^{-1}(y)$ be the set of inputs that hash to $y$.
+
+•  The probability that the randomly chosen $x$ lands in $S_y$ is $|S_y|/|\mathcal S|$.  \\
+•  Conditioned on that event, $x$ is uniform in $S_y$ \\emph{and} the adversary's answer $x'$ is chosen independently, uniformly at random from the \\emph{same} set $S_y$.  Two independent uniform draws from a set of size $|S_y|$ coincide with probability $1/|S_y|$, so
+\[
+  \Pr[x'=x\mid H(x)=y] = \frac{1}{|S_y|}.
+\]
+Because the two ingredients are independent, the probability of their conjunction factors as the product of the two probabilities:
+\[
+  \Pr[B \wedge (H(x)=y)] = \Pr[H(x)=y] \cdot \Pr[x'=x \mid H(x)=y] = \frac{|S_y|}{|\mathcal S|}\,\cdot\,\frac{1}{|S_y|}=\frac{1}{|\mathcal S|}.
+\]
+This key cancellation holds for \emph{every} $y$. \\
+\end{proof}

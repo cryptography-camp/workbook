@@ -14,7 +14,7 @@
 %% Print labels in the margins
 % \labelstrue
 %% Hide authors
-% \anonymoustrue
+\anonymoustrue
 %% Enable hacks to save space
 % \spacetrue
 %% Disable some tweaks that the publisher may not like
@@ -254,7 +254,7 @@
 \renewcommand{\paragraph}[1]{\llncsparagraph{#1.}}
 
 
-\input{macros.tex}
+\input{tex/macros.tex}
 
 
 %%% Title
@@ -267,9 +267,9 @@
 %
 % Hint: https://titlecaseconverter.com/
 \title{\texorpdfstring{%
-    My Title with Manual Line Breaks\\ and Some Special Chars like $\Lambda$%
+    Intro to Cryptography for Bitcoiners%
   }{% Title for PDF metadata and bookmarks:
-    My Title with Manual Line Breaks and Some Special Chars like Λ%
+    Intro to Cryptography for Bitcoiners%
   }
 }
 
@@ -315,7 +315,7 @@
 
 %%% Abstract
 \begin{abstract}
-  \input{abstract.tex}
+  \input{tex/abstract.tex}
 \end{abstract}
 
 %%% Keywords
@@ -330,10 +330,11 @@
 \fi
 
 %%% Uncomment this for usage notes on this LaTeX template
-\input{README-TEMPLATE.tex}
+% \input{README-TEMPLATE.tex}
 
-\input{intro.tex}
-\input{prelim.tex}
+\input{tex/intro.tex}
+\input{tex/commitments.tex}
+
 
 %%% Appendix
 \appendix
@@ -356,7 +357,7 @@ The idea is that the references will be easy to find: They're always at the end.
   \begin{description}
     \item[2022-03-30]\
           \begin{itemize}
-            \item First public draft.
+            \item First draft.
           \end{itemize}
   \end{description}
   % TODO Why is spacing wrong without this?

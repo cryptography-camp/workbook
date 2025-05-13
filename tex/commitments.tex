@@ -1,0 +1,72 @@
+\section{Commitments}\label{sec:commitments}
+
+
+A commitment scheme consists of algorithm $\mathsf{Com}_\mathsf{Commit}$:
+\begin{itemize}
+    \item $\mathsf{Com}_\mathsf{Commit}(m;r)\rightarrow C$ outputs a commitment $C$ to message $m$ with randomness $r$.
+\end{itemize}
+
+\subsection{Syntax}
+A commitment scheme $\mathsf{Com}$ is a tuple of algorithms:
+
+\begin{itemize}
+  \item $\mathsf{Com}_\mathsf{Setup}(1^\lambda) \rightarrow \mathsf{pp}$
+        On input the security parameter $\lambda$ (in unary) output public
+        parameters~$\mathsf{pp}$.
+
+  \item $\mathsf{Com}_\mathsf{Commit}(\mathsf{pp},m;r)\rightarrow C$
+        On message $m$ and randomness $r$ output a commitment $C$ to $m$.
+\end{itemize}
+
+% Why does this need a setup algorithm
+% What are the sets, the types?
+
+\paragraph{Example} An example is the $\mathsf{Trivial}$ commitment scheme:
+\begin{itemize}
+  \item $\mathsf{Trivial}.\mathsf{Com}_\mathsf{Setup}(1^\lambda) = ()$
+  \item $\mathsf{Trivial}.\mathsf{Com}_\mathsf{Commit}(\mathsf{pp},m;r) = m$
+\end{itemize}
+
+\subsection{Security}
+We define binding security through a game between a challenger and an adversary.
+A commitment scheme is binding if no p.p.t adversary can win the following game with non-negligible probability:
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=8cm]
+      \begin{pchstack}[center]
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComBind}}{\algo{Com}}$}{%
+            \params \sample \mathsf{Com}_\mathsf{Setup}(1^\lambda) \\
+            (m_0, m_1, r_0, r_1) \gets \adv(\params) \\
+            C_0 \gets \mathsf{Com}_\mathsf{Commit}(\params, m_0; r_0) \\
+            C_1 \gets \mathsf{Com}_\mathsf{Commit}(\params, m_1; r_1) \\
+            \pcreturn (C_0 = C_1) \wedge (m_0 \neq m_1)
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{Game for finding a binding attack on a commitment scheme \label{fig:break-com-bind}}
+\end{figure}
+
+% Why does the adversary get \params? Let say we have a Pedersen commitment scheme and the group is hardcoded in the commitment scheme.
+% Then there exists an adversary that just has the collision hardcoded.
+
+% TODO begin definition
+More formally, a commitment scheme $\mathsf{Com}$ is binding if for all p.p.t. adversaries $\adv$, there exists a negligible function $\negl$ such that:
+\[ \pr{\game{\algo{ComBind}}{\algo{Com}} = \pctrue} \leq \negl(\lambda) \]
+
+% collision resistant hash function makes for a binding commitment
+
+% What does this mean? We can make the probability as close to 0 as we want by increasing the security parameter.
+% Note that we choose the pp and therefore the group in an pedersen commitment randomly.
+% Hence the adversery can't just hardcode the collision. But how many groups are there of a certain order? Or do we mean with n-bit group that the prime has at least n bits, but we can also select a choice of larger groups?
+
+
+
+%Informal
+%\paragraph{Security} A commitment scheme is \emph{binding} if no PPT adversary produces two distinct messages $m_0, m_1$ and randomness $r_0, r_1$ such that $\com(m_0;r_0) = \com(m_1;r_1)$  (except with probability negligible in $\secpar$).
+%A commitment scheme is \emph{hiding} if no PPT adversary obtains any information about the message from the commitment.
+
+% define hiding
+% show that hash function is not hiding in the standard model and motivate the ROM in that way??
+
