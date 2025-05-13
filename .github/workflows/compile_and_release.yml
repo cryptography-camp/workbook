@@ -1,0 +1,29 @@
+name: Build and release LaTeX document
+on: [push]
+permissions:
+  contents: write
+
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex
+      - name: Upload PDF file
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDF
+          path: main.pdf
+      - name: Generate release tag
+        id: tag
+        run: |
+            echo "::set-output name=release_tag::notebook.pdf_$(date +"%Y.%m.%d_%H-%M")"
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+            files: main.pdf
+            tag_name: ${{ steps.tag.outputs.release_tag }}
