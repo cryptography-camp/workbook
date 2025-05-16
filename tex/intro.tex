@@ -1,90 +1,92 @@
 \section{Introduction}\label{sec:intro}
 
-% Provable cryptography (see n years of provable security)
-% This first chapter is abstract, but it's important to put cryptography on a solid mathematical footing.
-% What we're doing is similar to applied physics
-% What we're really doing is studying algorithms, a set of instructions that can be executed by a machine. We write algorithms and we characterize algorithms. We also make statements over all algorithms.
-% Sometimes we will need to study algorithms in certain models of reality.
-% We also make assumptions on the "hardness" of certain problems.
+The concepts introduced in this section may at first seem abstract, but this level of abstraction is important: it provides the rigorous mathematical framework on which modern provable cryptography is built.
+Throughout this workbook we will study algorithms, analyse their running time and success probability, both for explicit algorithms and for hypothetical adversarial algorithms.
+In later sections we will sometimes study these algorithms within idealised computational models.
 
-% We also make assumptions on the "hardness" of certain problems.
-% Why we need a security parameter (how we explain this will depend on the security definitions
-% Why 1^lambda as input (we care about algorithms that run polynomial time in the input, ergo the security parameter)
-% You will get more familiar with this as we get along
+% NOTE: What we're doing is similar to applied physics
 
-% The runtime of an algorithm may be dependent on the input (p.p.t.) [need to introduce this properly]
-% You may overread this when looking at actual papers, but it's useful to have seen this.
-% There exists an algorithm such that outputs x, y such that SHA256(x) = SHA256(y) that runs in constant time. Hence, in cryptographic groups.
-% Algorithms take arguments, similar to function calls in programming languages.
-% We will say that there exists no algorithm that wins a game with a certain probability.
-
-% Maybe start with the sets we're considering...
-% One way we charazterize algorithms is by the probability that they win a game.
-% TODO: define neglible
-% We also look at the running time of an algorithm depending on the input length.
-% That's why we don't do fixed things: Things are abstract, we don't use SHA256 or secp256k1, well of course it's better to abstract away from that.
-
-% TODO describe game, explain sample, gets, :=, returns true or false
-% notation: {0,1}* (appendix)
-% TODO: we only query bitstrings
+% REQUIREMENTS:
 % proof by contraposition
 % union bound
+% what is big-O notation, set builder notation
+% good to have seen before:
 % negligible functions
-% p.p.t.
-% TODO: what is big-O notation, set builder notation
-
+% p.p.t. algorithms
 
 TODO: dummy cite something to make biber happy \textcite{EPRINT:NicRufSeu20}.
 
-\subsection{Sets}
+\subsection{Algorithms}
 
-% TODO: aren't we talking about integer functions, no, real or complex valued anyway?
-We denote the set of \emph{polynomially-bounded} functions in the security parameter $\secpar$ by $\poly = \{ f : \exists a \in \NN,\ f(\secpar) \in O(\lambda^a) \}$,
-the set of \emph{negligible} functions in the security parameter $\secpar$ by $\negl = \{ f : f(\secpar)^{-1} \not\in \poly \}$
-or equivalently for all $a \in \NN$, there exists $N \in \NN$ such that for all $\secpar \ge N$, $f(\secpar) \le \frac{1}{\lambda^a}$.
+\say{In mathematics, \emph{algorithm} is commonly understood to be an exact prescription, defining a computational process, leading from various initial data to the desired result.} (A. Markov, 1954)
 
-% TODO: give examples (2^-n, 2^{-sqrt(n)} negligible, 1/n not negligible)
-\begin{proposition}
-  Let $f$ be negligible functions and $c > 0$ be a constant. Then $g(\secpar) = f(\secpar) + c$ is not negligible.
-\end{proposition}
-\begin{proof}
-  We have that $\frac{1}{g(\secpar)} = \frac{1}{f(\secpar) + c} \le \frac{1}{c}$
-  and $\frac{1}{c} = O(\lambda^0)$. Therefore $g(\secpar)^{-1} \in \poly$ and $g$ is not negligible.
-\end{proof}
+\begin{definition}
+An algorithm $\adv$ is
+\begin{itemize}
+\item \emph{polynomial-time} if there exists a polynomial $p$ such that for every $x \in \{0,1\}^\lambda$, $\adv(x)$ terminates in time $p(\lambda)$.
+\item \emph{probabilistic} if it has access to a source of randomness.
+\item \emph{probabilistic polynomial-time (PPT)} if it is probabilistic and polynomial-time.
+\end{itemize}
+\end{definition}
 
-\begin{proposition}
-  \label{lem:negl-sum}
-  Let $f_1, f_2$ be negligible functions. Then $f_1 + f_2$ is negligible.
-\end{proposition}
-\begin{proof}
-  Let $a \in \NN$ be arbitrary.
-  There exists $N_1, N_2 \in \NN$ such that
-  \[
-  \forall \secpar \ge N_1, f_1(\secpar) \le \frac{1}{\lambda^{a+1}} \quad \text{and} \quad \forall \secpar \ge N_2, f_2(\secpar) \le \frac{1}{\lambda^{a+1}}
-  \].
-  Let $N = \max(N_1, N_2, 2)$. Then for all $\secpar \ge N$
-  \[
-    f_1(\secpar) + f_2(\secpar) \le \frac{1}{\lambda^{a+1}} + \frac{1}{\lambda^{a+1}} = \frac{2}{\lambda^{a+1}} \le \frac{1}{\lambda^{a}}.
-  \]
-  Therefore, $f_1 + f_2$ is negligible.
-\end{proof}
+Note that the runtime of an algorithm is characterized by the size of the input.
+Unless stated otherwise, an adversary is a synonym for algorithm.
+
+\subsection{Negligible Functions}
+
+
+
+\begin{definition}
+A function $f$ is \emph{negligible} if for every polynomial $p$ there exists $N \in \NN$ such that for all integers $\secpar > N$, $f(\secpar) \le \frac{1}{p(\secpar)}$.
+% Or equivalently.
+% - We denote the set of \emph{polynomially-bounded} functions in the security parameter $\secpar$ by $\poly = \{ f : \exists a \in \NN,\ f(\secpar) \in O(\lambda^a) \}$,. functions in the security parameter $\secpar$ by $\negl = \{ f : f(\secpar)^{-1} \not\in \poly \}$
+% - for all $a \in \NN$, there exists $N \in \NN$ such that for all $\secpar \ge N$, $f(\secpar) \le \frac{1}{\lambda^a}$.
+\end{definition}
+
+\begin{example}
+  $2^{-\secpar}$ and $2^{-\sqrt{\secpar}}$ are negligible. $1/\secpar$ is not negligible.
+\end{example}
 
 \begin{proposition}
-  \label{lem:non-negl-diff}
-  Let $f$ be a non-negligible and $g$ be a negligible function.
-  Then $f - g$ is non-negligible.
+  \label{lem:negl}
+  \hfill
+  \begin{enumerate}
+  \item Let $f$ be a negligible function and $p$ be a polynomial. Then $f(\secpar) \cdot p(\secpar)$ is negligible.
+  \item Let $f_1, f_2$ be negligible functions. Then $f_1 + f_2$ is negligible.
+  \item Let $f$ be a negligible function $f(\secpar) \ge 0$ and $c > 0$ be a constant. Then $f + c$ is not negligible.
+  \item Let $f$ be a non-negligible function and $g$ be a negligible function. Then $f - g$ is not negligible.
+  \end{enumerate}
 \end{proposition}
 \begin{proof}
-  Assume for contradiction that $f - g$ is negligible.
-  Then by \cref{lem:negl-sum}, $f = (f - g) + g$ is negligible, a contradiction.
+  \hfill
+  \begin{enumerate}
+  \item Let $a'$ be an integer such that $p(\lambda) < \lambda^{a'}$ and let $a$ be an arbitrary integer.
+    There exists $N \in \NN$ such that for all $\secpar \ge N$, $f(\secpar) \le \frac{1}{\lambda^{a' + a}}$.
+    Therefore, $f(\secpar) \cdot p(\secpar) \le \frac{p(\secpar)}{\lambda^{a' + a}} \le \frac{1}{\lambda^{a}}$ for all $\secpar \ge N$.
+  \item Let $a \in \NN$ be arbitrary.
+    There exists $N_1, N_2 \in \NN$ such that
+    \[
+    \forall \secpar \ge N_1, f_1(\secpar) \le \frac{1}{\lambda^{a+1}} \quad \text{and} \quad \forall \secpar \ge N_2, f_2(\secpar) \le \frac{1}{\lambda^{a+1}}
+    \].
+    Let $N = \max(N_1, N_2, 2)$. Then for all $\secpar \ge N$
+    \[
+      f_1(\secpar) + f_2(\secpar) \le \frac{1}{\lambda^{a+1}} + \frac{1}{\lambda^{a+1}} = \frac{2}{\lambda^{a+1}} \le \frac{1}{\lambda^{a}}.
+    \]
+  \item Let $c'$ be a constant $c' > \frac{1}{c}$.
+    Then $c > c'^{-1}$ and $f(\secpar) + c > c'^{-1}$ for all $\secpar$.
+  \item Assume for contradiction that $f - g$ is negligible.
+    Then by the above, $f = (f - g) + g$ is negligible, a contradiction.
+  \end{enumerate}
 \end{proof}
 
-A probabilistic interactive Turing machine is \emph{probabilistic polynomial-time (PPT)} if its runtime is in $\poly$.
-% enhance with definition of katz,lindell?
-% explain that randomness is omitted usually
+\subsection{Games \& Asymptotic Security}
 
+In this section we will introduce the concept of security games (also called "experiments") and asymptotic security through a series of toy examples.
+% THere are other frameworks such as "concrete" security and UC
 
-\subsection{Games}
+The $\game{\Game~\algo{Guess}}{}$ defined in \autoref{fig:guessing-game} takes an algorithm $\adv$ and the security parameter $\secpar$ as input and outputs $\pctrue$ or $\pcfalse$.
+The game first sets $n = 2^\lambda$ and samples $x$ uniformly at random from $\ZZ_n$.
+Then it runs algorithm $\adv$, sets the output to $x'$ and returns $x = x'$.
 
 \begin{figure}[tbhp]
   \begin{center}
@@ -115,11 +117,11 @@ A probabilistic interactive Turing machine is \emph{probabilistic polynomial-tim
 
 \begin{proof}
 Let $x'$ be the value returned by $\adv$.
-The probability that $x$ sampled uniformly at random from $[1, 2^\lambda]$ is equal to $x'$ is $\frac{1}{2^\lambda} = \negl$.
+The probability that $x$ sampled uniformly at random from $[1, 2^\lambda]$ is equal to $x'$ is $2^-\lambda = \negl$.
 \end{proof}
 
-% TODO: explain game, define SHA256
-% $H: \{0, 1\}^* \rightarrow \{0, 1\}^256$
+The $\game{\Game~\algo{SHAPreimgZ}}{}$ defined in \autoref{fig:sha-preimg-0} outputs $\pctrue$ if the algorithm $\adv$ outputs a preimage of 0 under the hash function $\algo{SHA256}: \{0, 1\}^* \rightarrow \{0, 1\}^{256}$.
+Note that $\adv$ gets $1^{\secpar}$ (a string of 1s of length $\secpar$) as input in order to characterise the running time of $\adv$ as a function of the security parameter $\secpar$.
 
 \begin{figure}[tbhp]
   \begin{center}
@@ -139,11 +141,11 @@ The probability that $x$ sampled uniformly at random from $[1, 2^\lambda]$ is eq
 \begin{proposition}
  For $\game{\Game~\algo{SHAPreimgZ}}{}$ as defined in \autoref{fig:sha-preimg-0}, let the advantage of $\adv$ be defined as
  \[
-  \advantage{SHAPreimgZ}{\adv} \defeq \pr{\game{\algo{SHAPreimgZ}}{} = \pctrue}.
+  \advantage{SHAPreIZ}{\adv} \defeq \pr{\game{\algo{SHAPreimgZ}}{} = \pctrue}.
  \]
- Then, there exists a p.p.t algorithm $\adv$ such that
+ Assuming there exists $x$ such that $\algo{SHA256}(x) = 0$, there exists a p.p.t algorithm $\adv$ such that
   \[
-  \advantage{SHAPreimgZ}{\adv} = 1.
+  \advantage{SHAPreIZ}{\adv} = 1.
   \]
 \end{proposition}
 
@@ -155,7 +157,7 @@ The probability that $x$ sampled uniformly at random from $[1, 2^\lambda]$ is eq
   where $SHA256(x) = y$.
 \end{proof}
 
-% What if we sample y at random from instead of 0?
+In $\game{\Game~\algo{SHAPreimg}}{}$ defined in \autoref{fig:sha-preimg} the value $x$ is a uniformly random bitstring of length $256$.
 
 \begin{figure}[tbhp]
   \begin{center}
@@ -173,20 +175,19 @@ The probability that $x$ sampled uniformly at random from $[1, 2^\lambda]$ is eq
   \caption{Game for finding the SHA256 preimage of a random value \label{fig:sha-preimg}}
 \end{figure}
 
-
 \begin{proposition}
  For $\game{\Game~\algo{SHAPreimg}}{}$ as defined in \autoref{fig:sha-preimg}, let the advantage of $\adv$ be defined as
  \[
-  \advantage{SHAPreimg}{\adv} \defeq \pr{\game{\algo{SHAPreimg}}{} = \pctrue}.
+  \advantage{SHAPreI}{\adv} \defeq \pr{\game{\algo{SHAPreimg}}{} = \pctrue}.
  \]
  There exists a p.p.t algorithm $\adv$ such that
  \[
- \advantage{SHAPreimg}{\adv} = 1.
+ \advantage{SHAPreI}{\adv} = 1.
  \]
 \end{proposition}
 
 \begin{proof}
-  Let $\adv$ be an algorithm that queries SHA256 until it finds a solution as shown in \autoref{fig:sha-preimg-adv}.
+  Let $\adv$ be an algorithm that queries $\algo{SHA256}$ until it finds a solution as shown in \autoref{fig:sha-preimg-adv}.
   \begin{figure}[tbhp]
   \begin{center}
     \begin{tcolorbox}[width=5cm]
@@ -204,26 +205,37 @@ The probability that $x$ sampled uniformly at random from $[1, 2^\lambda]$ is eq
   \caption{Algorithm for finding the SHA256 preimage of a given value \label{fig:sha-preimg-adv}}
   \end{figure}
   $\adv$ will return the correct solution with probability $1$.
-  The time that $\adv$ takes is a constant independent of the security parameter $\secpar$ and, therefore, $\adv$ is p.p.t.
+  The running time of $\adv$ is a constant independent of the security parameter $\secpar$ and, therefore, $\adv$ is p.p.t.
 \end{proof}
 
-% This is strange but it captures the idea that anything can be broken if you have enough time.
+% NOTE: This is strange but it captures the idea that anything can be broken if you have enough time.
+% There is also an algorithm which just has all preimages of SHA256 hardcoded and stored in order. Then use binary search.
 
-% There is an algorithm which just has all preimages of SHA256 hardcoded and stored in order. Then use binary search.
+We observe that if the output space of the hash function is independent of the security parameter, then the hash function is not preimage-resistant.
 
-Need to change the size of the hash function.
-We now talk about an abstract hash function (not a concrete one like SHA256) $H: \{0, 1\}^* \rightarrow \{0, 1\}^\lambda$, as follows:
-% How does H know lambda? It just gets 1^\lambda as input.
+\subsection{Hash Functions}
+
+\begin{definition}[Hash function]
+  A \emph{hash function} $\algo{H}$ is a pair of p.p.t. algorithms $(\algo{Gen}, \algo{Eval})$ where
+  \begin{itemize}
+  \item $\algo{Gen}(\secparam) \rightarrow \kappa$ is a probabilistic algorithm that takes the security parameter $\secparam$ and returns a hashing key $\kappa$ \footnote{We assume $\kappa$ includes $\secparam$ so that $\algo{Eval}$ can run in time polynomial in $\secpar$}.
+  \item $\algo{Eval}(\kappa, x) \rightarrow y$ takes the hashing key $\kappa$ and $x\in \{0,1\}^*$ as input outputs a hash $y\in \{0,1\}^{c\lambda}$ for some integer $c > 0$.
+  \end{itemize}
+\end{definition}
+
+Note that the hashing key $\kappa$ is not secret.
+It effectively allows the $\algo{Gen}$ algorithm to select an $\algo{Eval}$ function.
 
 \begin{figure}[tbhp]
   \begin{center}
     \begin{tcolorbox}[width=5cm]
       \begin{pchstack}[center]
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{Preimage}}{\algo{H}}$}{%
+          \kappa \gets \algo{H.Gen}(\secpar) \\
           x \sample \{0, 1\}^\lambda\\
-          y \gets \algo{H}(x) \\
-          x' \gets \adv(y) \\
-          \pcreturn \algo{H}(x') = y
+          y \gets \algo{H.Eval}(\kappa, x) \\
+          x' \gets \adv(\kappa, y) \\
+          \pcreturn \algo{H.Eval}(\kappa, x') = y
         }
       \end{pchstack}
     \end{tcolorbox}
@@ -231,38 +243,39 @@ We now talk about an abstract hash function (not a concrete one like SHA256) $H:
   \caption{Game for finding the preimage of a given value under the hash function \label{fig:break-hash}}
 \end{figure}
 
-Clearly the computing adversary from above doesn't exist anymore.
-But similar to above, there exists an algorithm succeeding with probability 1 that just evaluates H on fresh inputs until $H(x) = y$.
-% well only prob 1 if every y _has_ a preimage
-This algorithm runs in time about $2^\lambda$ which is exponential in the security parameter, not p.p.t.
-% Depending on the hash function, it might _not_ run in time 2^lambda
+Similar to the algorithm in \autoref{fig:sha-preimg-adv}, there exists an algorithm that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability 1 by just evaluates $\algo{H.Eval}$ on fresh inputs until $H\algo{H.Eval}(x) = y$.
+However, for adequate hash functions this algorithm runs in time exponential in the security parameter.
+Hence, the definition of preimage-resistance only considers p.p.t. adversaries.
 
 \begin{definition}[Preimage-resistance]
-  H is preimage-resistant if for any p.p.t. algorithm $\adv$,
+  A hash function $\algo{H}$ is \emph{preimage-resistant} if for any p.p.t. algorithm $\adv$,
  \[
-  \advantage{Preimage}{\adv, H} \defeq \pr{\game{\algo{Preimage}}{\algo{H}} = \pctrue} = \negl.
+  \advantage{PreI}{\adv, \algo{H}} \defeq \pr{\game{\algo{Preimage}}{\algo{H}} = \pctrue} = \negl.
  \]
 \end{definition}
 
 % why we cannot hardcode all solutions:
-It could have all possible keys hardcoded in a sorted list and then search through them in $O(log lambda)$ time.
-No that's because of uniformity. we need to show advantage for a specific machine and then vary the lambda.
+% It could have all possible keys hardcoded in a sorted list and then search through them in $O(log lambda)$ time.
+% No that's because of uniformity. we need to show advantage for a specific machine and then vary the lambda.
+% well we solved this problem through the correct definition of hash functions.
 
-% Exercise: write an algorithm that to show that you understand the pseudocode
-% Exercise: define collision resistance
+% TODO: some exercises here?
 
 \section{Reductions}
-We often need to relate the hardness of various games.
-This formalism allows us to relate the hardness of various games.
+We use reductions to relate the hardness of various games.
+If we can reduce a game $X$ to a game $Y$, then the game $Y$ is at least as hard as $X$.
+A reduction is a p.p.t algorithm that wins game $X$ using an algorithm that wins game $Y$.
+We illustrate the concept of reductions through a series of examples.
 
 \begin{figure}[tbhp]
   \begin{center}
-    \begin{tcolorbox}[width=5cm]
+    \begin{tcolorbox}[width=7cm]
       \begin{pchstack}[center]
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{PreimageEither}}{\algo{H}}$}{%
+          \kappa \gets \algo{H.Gen}(\secpar) \\
           y_1, y_2 \sample \{0, 1\}^\lambda\\
-          x \gets \adv(y_1, y_2) \\
-          \pcreturn H(x) = y_1 \vee H(x) = y_2
+          x \gets \adv(\kappa, y_1, y_2) \\
+          \pcreturn \algo{H.Eval}(\kappa, x) = y_1 \vee \algo{H.Eval}(\kappa, x) = y_2
         }
       \end{pchstack}
     \end{tcolorbox}
@@ -272,30 +285,30 @@ This formalism allows us to relate the hardness of various games.
 
 
 \begin{definition}
-  For $\game{\Game~\algo{PreimageEither}}{H}$ as defined in \autoref{fig:break-hash-either} we define the advantage of $\adv$ as
+  For $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ as defined in \autoref{fig:break-hash-either} we define the advantage of $\adv$ as
  \[
-  \advantage{PreimageEither}{\adv, H} \defeq \pr{\game{\algo{PreimageEither}}{\algo{H}} = \pctrue}.
+  \advantage{PreIE}{\adv, \algo{H}} \defeq \pr{\game{\algo{PreimageEither}}{\algo{H}} = \pctrue}.
  \]
 \end{definition}
 
 \begin{proposition}
-  Let $H$ be a hash function. If for all p.p.t. adversaries $\adv$, it holds that
+  Let $\algo{H}$ be a hash function. If for all p.p.t. adversaries $\adv$, it holds that
   \[
-  \advantage{PreimageEither}{\adv, H} = \negl
+  \advantage{PreIE}{\adv, \algo{H}} = \negl
   \]
-  then $H$ is preimage-resistant.
+  then $\algo{H}$ is preimage-resistant.
 \end{proposition}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
-  If $H$ is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins game $\pcgame{PreimageEither}{H}$ with non-negligible probability.
-  Since $H$ is not preimage-resistant, there exists a p.p.t. algorithm $\adv$ that wins game $\pcgame{Preimage}{H}$ with non-negligible probability.
+  If $\algo{H}$ is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins game $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability.
+  Assume $\algo{H}$ is a hash function $\{0,1\}^* \rightarrow \{0,1\}^{c\lambda}$ for some constant $c$ and is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
   Let $\bdv^\adv_\algo{H}$ be an algorithm that runs $\adv$ and returns its output (see \autoref{fig:break-hash-either-bdv}).
   \begin{figure}[tbhp]
   \begin{center}
     \begin{tcolorbox}[width=5cm]
       \begin{pchstack}[center]
-          \procedure[headlinesep=1pt]{$\bdv^\adv_\algo{H}(y_1, y_2)$}{%
-            x \gets \adv(y_1) \\
+          \procedure[headlinesep=1pt]{$\bdv^\adv_\algo{H}(\kappa, y_1, y_2)$}{%
+            x \gets \adv(\kappa, y_1) \\
             \pcreturn (x, 0)
           }
       \end{pchstack}
@@ -304,29 +317,29 @@ This formalism allows us to relate the hardness of various games.
   \caption{Algorithm for finding the preimage of either of two given values under the hash function \label{fig:break-hash-either-bdv}}
   \end{figure}
 
-  Then $\advantage{PreimageEither}{\bdv_\adv, H} = \advantage{Preimage}{\adv, H}$ and non-negligible and $\bdv_\adv$ is p.p.t.
+  Then $\advantage{PreIE}{\bdv^\adv_\algo{H}, \algo{H}} = \advantage{PreI}{\adv, \algo{H}}$ and non-negligible and $\bdv^\adv_\algo{H}$ is p.p.t.
 \end{proof}
 
 % Exercise: proof the converse
 
 \begin{proposition}
-  Let $H$ be a hash function. If $H$ is preimage-resistant, then for all p.p.t. adversaries $\adv$, it holds that
+  Let $\algo{H}$ be a hash function. If $\algo{H}$ is preimage-resistant, then for all p.p.t. adversaries $\adv$, it holds that
   \[
-  \advantage{PreimageEither}{\adv, H} = \negl.
+  \advantage{PreIE}{\adv, \algo{H}} = \negl.
   \]
 \end{proposition}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
-  If there exists a p.p.t. algorithm $\adv$ that wins game $\pcgame{BreakHashEither}{H}$ with non-negligible probability, then $H$ is not preimage-resistant.
-  Let $\bdv^\adv_\algo{H}(y)$ be an algorithm that runs $\adv$ and returns its output.
+  If there exists a p.p.t. algorithm $\adv$ that wins game $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability, then $\algo{H}$ is not preimage-resistant.
+  Let $\bdv^\adv_\algo{H}$ be an algorithm as defined in \autoref{fig:break-preimage-bdv} that runs $\adv$ and returns its output.
 \end{proof}
 \begin{figure}[tbhp]
   \begin{center}
     \begin{tcolorbox}[width=5cm]
       \begin{pchstack}[center]
-          \procedure[headlinesep=1pt]{$\bdv^\adv_\algo{H}(y)$}{%
-            (x_1, x_2) \gets \adv(y) \\
-            \pcif H(x_1) = y \pcthen \\
+          \procedure[headlinesep=1pt]{$\bdv^\adv_\algo{H}(\kappa, y)$}{%
+            (x_1, x_2) \gets \adv(\kappa, y) \\
+            \pcif \algo{H.Eval}(\kappa, x_1) = y \pcthen \\
               \t\pcreturn x_1 \\
             \pcelse \\
               \t\pcreturn x_2
@@ -334,27 +347,26 @@ This formalism allows us to relate the hardness of various games.
       \end{pchstack}
     \end{tcolorbox}
   \end{center}
-  \caption{Algorithm for finding the preimage of either of two given values under the hash function \label{fig:break-hash-either-bdv}}
+  \caption{Algorithm for finding the preimage of either of two given values under the hash function \label{fig:break-preimage-bdv}}
   \end{figure}
 
 
+\subsection{Collision Resistance}
 
 % Define collision, but need to account again for the fact that we don't want to a trivial algorithm that just outputs a collision.
 % To do that, we define hashing as follows:
 % (in paper: Let $\algo{H} = (\algo{HGen}, \algo{HEval})$ where $\algo{HGen}$ is an algorithm taking the security parameter $\secpar$ and returning the hashing key $\kappa$ and $\algo{HEval}$ is an algorithm taking a hashing key $\kappa$ and an input $x \in \{0, 1\}^*$ and returning a hash defined by the hashing key.)
 
 % TODO: well this is very nonstandard
-Let $\algo{Hgen}$ be an algorithm taking the security parameter $\secpar$ and returning a hash function $\algo{H}: \{0, 1\}^* \rightarrow \{0, 1\}^\lambda$.
-
 
 \begin{figure}[tbhp]
   \begin{center}
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}[center]
-        \procedure[headlinesep=1pt]{$\game{\Game~\algo{Collision}}{\algo{HGen}}$}{%
-          H \gets \algo{HGen}(\secpar) \\
-          (x,x') \gets \adv(H) \\
-          \pcreturn (x \neq x' \wedge \algo{H}(x) = \algo{H}(x'))
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{Collision}}{\algo{H}}$}{%
+          \kappa \gets \algo{H.Gen}(\secpar) \\
+          (x,x') \gets \adv(\kappa) \\
+          \pcreturn (x \neq x' \wedge \algo{H.Eval}(\kappa, x) = \algo{H.Eval}(\kappa, x'))
         }
       \end{pchstack}
     \end{tcolorbox}
@@ -363,28 +375,27 @@ Let $\algo{Hgen}$ be an algorithm taking the security parameter $\secpar$ and re
 \end{figure}
 
 \begin{definition}[Collision-resistance]
-  $\algo{HGen}$ is collision-resistant if for any p.p.t. algorithm $\adv$,
+  Hash function $\algo{H}$ is collision-resistant if for any p.p.t. algorithm $\adv$,
  \[
-  \advantage{Collision}{\adv, \algo{HGen}} \defeq \pr{\game{\algo{Collision}}{\algo{HGen}} = \pctrue} = \negl.
+  \advantage{Coll}{\adv, \algo{H}} \defeq \pr{\game{\algo{Collision}}{\algo{H}} = \pctrue} = \negl.
  \]
 \end{definition}
 
-% TODO: HGen cannot be preimage-resistant
 \begin{proposition}
-  Let $\algo{HGen}$ be a collision-resistant hash function generator. Then $\algo{HGen}$ is preimage-resistant.
+  Let $\algo{H}$ be a collision-resistant hash function. Then $\algo{H}$ is preimage-resistant.
 \end{proposition}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
-  If $\algo{HGen}$ is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins game $\pcgame{Preimage}{H}$ with non-negligible probability.
-  Let $\bdv^\adv$ be an algorithm that runs $\adv$ and returns its output.
+  If $\algo{H}$ is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
+  Let $\bdv^\adv_\algo{H}$ be an algorithm as defined in \autoref{fig:break-hash-preimage-bdv} that runs $\adv$ and returns its output.
   \begin{figure}[tbhp]
   \begin{center}
     \begin{tcolorbox}[width=4cm]
       \begin{pchstack}[center]
-        \procedure[linenumbering, headlinesep=1pt]{$\bdv^\adv(\algo{H})$}{%
-          x \sample \{0, 1\}^{2\lambda} \\
-          y \defeq \algo{H}(x) \\
-          x' \gets \adv(y) \\
+        \procedure[linenumbering, headlinesep=1pt]{$\bdv^\adv_\algo{H}(\kappa)$}{%
+          x \sample \{0, 1\}^{(c+1)\lambda} \\
+          y \defeq \algo{H.Eval}(\kappa, x) \\
+          x' \gets \adv(\kappa, y) \\
           \pcassert x \neq x' \label{line:break-hash-preimage-bdv-assert} \\
           \pcreturn (x, x')
         }
@@ -393,47 +404,44 @@ Let $\algo{Hgen}$ be an algorithm taking the security parameter $\secpar$ and re
   \end{center}
   \caption{Algorithm for finding the preimage of a given value under the hash function \label{fig:break-hash-preimage-bdv}}
   \end{figure}
-  If $\adv$ succeed and $\bdv$ does not abort in \cref{line:break-hash-preimage-bdv-assert}, then $\bdv$ wins game $\game{Collision}{\algo{HGen}}$ with non-negligible probability, or conversely:
+  If $\adv$ succeeds and $\bdv$ does not abort in \cref{line:break-hash-preimage-bdv-assert}, then $\bdv$ wins game $\game{Collision}{\algo{H}}$, or conversely:
 
   \begin{align*}
-  \pr{\game{Collision}{\algo{HGen}} = \pcfalse} &= \pr{\game{Preimage}{\algo{HGen}} = \pcfalse \vee \bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} } \\
-  &\le \pr{\game{Preimage}{\algo{HGen}} = \pcfalse} + \pr{\bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} } \\
+  \pr{\game{Collision}{\algo{H}} = \pcfalse} &= \pr{\game{Preimage}{\algo{H}} = \pcfalse \vee \bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} } \\
+  &\le \pr{\game{Preimage}{\algo{H}} = \pcfalse} + \pr{\bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} } \\
   \end{align*}
   using union bound.
-  Then
+  Then, by the definition of $\advantage{Coll}{\bdv, \algo{H}}$ and $\advantage{PreI}{\adv, \algo{H}}$ we have
   \begin{align*}
-    1 - \advantage{Collision}{\bdv, \algo{HGen}} &\le 1 - \advantage{Preimage}{\adv, \algo{H}} + \pr{\bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} }\\
+    1 - \advantage{Coll}{\bdv, \algo{H}} &\le 1 - \advantage{PreI}{\adv, \algo{H}} + \pr{\bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} }\\
   \end{align*}
   and
   \begin{align*}
-    \advantage{Collision}{\bdv, \algo{HGen}} &\ge \advantage{Preimage}{\adv, \algo{H}} - \pr{\bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} }\\
+    \advantage{Coll}{\bdv, \algo{H}} &\ge \advantage{PreI}{\adv, \algo{H}} - \pr{\bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} }.\\
   \end{align*}
   Assume for now that $\pr{\bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} } = \negl$ which we will show later.
-  Then, since $\advantage{Preimage}{\adv, \algo{H}}$ is not negligible and \cref{lem:non-negl-diff} applies,
-  $\advantage{Collision}{\bdv, \algo{HGen}}$ is not negligible.
-  Since $\bdv$ is p.p.t., $\algo{HGen}$ is not collision-resistant.
+  Then, since $\advantage{PreI}{\adv, \algo{H}}$ is not negligible and \cref{lem:negl} applies,
+  $\advantage{Coll}{\bdv, \algo{H}}$ is not negligible.
+  Since $\bdv$ is p.p.t., $\algo{H}$ is not collision-resistant.
   This proves the contrapositive statement.
 
   We now show that $\pr{\bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} } = \negl$.
   Let us denote this event by by $A$.
-  Let $B_y$ denote the event that $H(x) = y$ and $\Ima H$ be the image of $H$, i.e., the set of all output values $H$ produces.
+  Let $B_y$ denote the event that $\algo{H.Eval}(\kappa, x) = y$ and $\Ima \algo{H.Eval}(\kappa, \cdot)$ be the image of $\algo{H.Eval}$ for a fixed $\kappa$, i.e., the set of all output values $\algo{H.Eval}(\kappa, \cdot)$ produces.
   Then, by the law of total probability and the chain rule we have
   \begin{align*}
-    \pr{A} &= \sum_{y \in \Ima \algo{H}} \pr{A \wedge B_y} \\
-           &= \sum_{y \in \Ima \algo{H}} \pr{B_y} \pr{A \mid B_y}
+    \pr{A} &= \sum_{y \in \Ima \algo{H.Eval}(\kappa, \cdot)} \pr{A \wedge B_y} \\
+           &= \sum_{y \in \Ima \algo{H.Eval}(\kappa, \cdot)} \pr{B_y} \pr{A \mid B_y}
   \end{align*}
-  Let $H^{-1}(y) = \{x \in \{0, 1\}^{2\lambda} : H(x) = y\}$, i.e., the preimage of $y$.
-  Since $x$ is chosen from a set of size $2^{2\lambda}$, we have that $\pr{B_y} = \frac{|\algo{H}^{-1}(y)|} {2^{2\lambda}}$.
-  Also, since $x$ is chosen independent of the adversary's answer $x'$ we have that $\pr{A \mid B_y} = \frac{1}{|\algo{H}^{-1}(y)|}$.
+  Let $H^{-1}(y) = \{x \in \{0, 1\}^{(c+1)\lambda} : H(x) = y\}$, i.e., the preimage of $y$.
+  Since $x$ is uniformly random from a set of size $2^{(c+1)\lambda}$, the probability $\pr{B_y}$ that $\algo{H.Eval}(\kappa, x) = y$ is $\frac{|\algo{H}^{-1}(y)|} {2^{(c+1)\lambda}}$.
+  Also, the probability $\pr{A \mid B_y}$ that the sampled value $x$ matches the adversaries answer $x'$ given that $\algo{H.Eval}(\kappa, x) = y$ is $\frac{1}{|\algo{H}^{-1}(y)|}$.
   Therefore, we have
   \begin{align*}
-    \pr{A} &= \sum_{y \in \Ima \algo{H}} \frac{|\algo{H}^{-1}(y)|} {2^{2\lambda}} \frac{1}{|\algo{H}^{-1}(y)|}  \\
-           &= \sum_{y \in \Ima \algo{H}} \frac{1} {2^{2\lambda}} \\
-           &= \frac{|\Ima \algo{H}|} {2^{2\lambda}} \\
+    \pr{A} &= \sum_{y \in \Ima \algo{H.Eval}(\kappa, \cdot)} \frac{|\algo{H}^{-1}(y)|} {2^{(c+1)\lambda}} \frac{1}{|\algo{H}^{-1}(y)|}  \\
+           &= \sum_{y \in \Ima \algo{H.Eval}(\kappa, \cdot)} \frac{1} {2^{(c+1)\lambda}} \\
+           &= \frac{|\Ima \algo{H.Eval}(\kappa, \cdot)|} {2^{(c+1)\lambda}} \\
            &\le 2^{-\lambda} \\
   \end{align*}
   which is negligible.
 \end{proof}
-
-
-

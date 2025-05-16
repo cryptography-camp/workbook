@@ -54,6 +54,7 @@ A commitment scheme is binding if no p.p.t adversary can win the following game 
 % TODO begin definition
 More formally, a commitment scheme $\mathsf{Com}$ is binding if for all p.p.t. adversaries $\adv$, there exists a negligible function $\negl$ such that:
 \[ \pr{\game{\algo{ComBind}}{\algo{Com}} = \pctrue} \leq \negl(\lambda) \]
+If the advantage is 0, then the commitment scheme is perfectly binding.
 
 % collision resistant hash function makes for a binding commitment
 
@@ -69,4 +70,27 @@ More formally, a commitment scheme $\mathsf{Com}$ is binding if for all p.p.t. a
 
 % define hiding
 % show that hash function is not hiding in the standard model and motivate the ROM in that way??
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=8cm]
+      \begin{pchstack}[center]
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHid}}{\algo{Com}, b}$}{%
+            \params \sample \mathsf{Com}_\mathsf{Setup}(1^\lambda) \\
+            (m_0, m_1) \gets \adv(\params) \\
+            r \sample \params.\mathcal{R} \\
+            b \sample \{0, 1\} \\
+            C \gets \mathsf{Com}_\mathsf{Commit}(\params, m_b; r) \\
+            b' \gets \adv(\params, C) \\
+            \pcreturn (b = b')
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{Game for finding a hiding attack on a commitment scheme \label{fig:break-com-hid}}
+\end{figure}
+
+A commitment scheme $\mathsf{Com}$ is hiding if for all p.p.t. adversaries $\adv$, there exists a negligible function $\negl$ such that:
+\[ \left| \pr{\game{\algo{ComHid}}{\algo{Com}, b} = \pctrue} - \frac{1}{2} \right| \leq \negl(\lambda) \]
+If the advantage is 0, then the commitment scheme is perfectly hiding.
 
