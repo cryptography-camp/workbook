@@ -53,7 +53,7 @@ A commitment scheme is binding if no p.p.t adversary can win the following game 
 
 % TODO begin definition
 More formally, a commitment scheme $\mathsf{Com}$ is binding if for all p.p.t. adversaries $\adv$, there exists a negligible function $\negl$ such that:
-\[ \pr{\game{\algo{ComBind}}{\algo{Com}} = \pctrue} \leq \negl(\lambda) \]
+\[ \pr{\game{\algo{ComBind}}{\algo{Com}} = \pctrue} \leq \negl \]
 If the advantage is 0, then the commitment scheme is perfectly binding.
 
 % collision resistant hash function makes for a binding commitment
@@ -91,6 +91,6 @@ If the advantage is 0, then the commitment scheme is perfectly binding.
 \end{figure}
 
 A commitment scheme $\mathsf{Com}$ is hiding if for all p.p.t. adversaries $\adv$, there exists a negligible function $\negl$ such that:
-\[ \left| \pr{\game{\algo{ComHid}}{\algo{Com}, b} = \pctrue} - \frac{1}{2} \right| \leq \negl(\lambda) \]
+\[ \left| \pr{\game{\algo{ComHid}}{\algo{Com}, b} = \pctrue} - \frac{1}{2} \right| \leq \negl \]
 If the advantage is 0, then the commitment scheme is perfectly hiding.
 
