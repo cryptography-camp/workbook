@@ -28,6 +28,7 @@ latexmk             # Compile the document
        - Exercises:
          - hash based commitments are binding
          - also hiding under preimage resistance (can this be proven)?
+         - define strong binding, commitment commits not only to message but also to randomness, why is that important for taproot (only for inner key)
     4. (Optional: Accumulators)
        - define syntax, completeness and security (binding and hiding)
        - Exercieses:
