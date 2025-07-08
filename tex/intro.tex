@@ -7,6 +7,7 @@ In later sections we will sometimes study these algorithms within idealised comp
 % NOTE: What we're doing is similar to applied physics
 
 % REQUIREMENTS:
+% basic sets
 % proof by contraposition
 % union bound
 % what is big-O notation, set builder notation
@@ -37,7 +38,7 @@ Unless stated otherwise, an adversary is a synonym for algorithm.
 
 
 \begin{definition}
-A function $f$ is \emph{negligible} if for every polynomial $p$ there exists $N \in \NN$ such that for all integers $\secpar > N$, $f(\secpar) \le \frac{1}{p(\secpar)}$.
+A function $f: \ZZ \rightarrow \real$ is \emph{negligible} if for every polynomial $p$ there exists $N \in \NN$ such that for all integers $\secpar > N$, $f(\secpar) \le \frac{1}{p(\secpar)}$.
 % Or equivalently.
 % - We denote the set of \emph{polynomially-bounded} functions in the security parameter $\secpar$ by $\poly = \{ f : \exists a \in \NN,\ f(\secpar) \in O(\lambda^a) \}$,. functions in the security parameter $\secpar$ by $\negl = \{ f : f(\secpar)^{-1} \not\in \poly \}$
 % - for all $a \in \NN$, there exists $N \in \NN$ such that for all $\secpar \ge N$, $f(\secpar) \le \frac{1}{\lambda^a}$.
@@ -46,6 +47,9 @@ A function $f$ is \emph{negligible} if for every polynomial $p$ there exists $N 
 \begin{example}
   $2^{-\secpar}$ and $2^{-\sqrt{\secpar}}$ are negligible. $1/\secpar$ is not negligible.
 \end{example}
+
+If a function $f$ is negligible, we write $f(\secpar) = \negl(\secpar)$.
+
 
 \begin{proposition}
   \label{lem:negl}
@@ -122,6 +126,8 @@ The probability that $x$ sampled uniformly at random from $[1, 2^\lambda]$ is eq
 
 The $\game{\Game~\algo{SHAPreimgZ}}{}$ defined in \autoref{fig:sha-preimg-0} outputs $\pctrue$ if the algorithm $\adv$ outputs a preimage of 0 under the hash function $\algo{SHA256}: \{0, 1\}^* \rightarrow \{0, 1\}^{256}$.
 Note that $\adv$ gets $1^{\secpar}$ (a string of 1s of length $\secpar$) as input in order to characterise the running time of $\adv$ as a function of the security parameter $\secpar$.
+
+% What does this mean? We can make the probability as close to 0 as we want by increasing the security parameter.
 
 \begin{figure}[tbhp]
   \begin{center}
@@ -352,12 +358,6 @@ We illustrate the concept of reductions through a series of examples.
 
 
 \subsection{Collision Resistance}
-
-% Define collision, but need to account again for the fact that we don't want to a trivial algorithm that just outputs a collision.
-% To do that, we define hashing as follows:
-% (in paper: Let $\algo{H} = (\algo{HGen}, \algo{HEval})$ where $\algo{HGen}$ is an algorithm taking the security parameter $\secpar$ and returning the hashing key $\kappa$ and $\algo{HEval}$ is an algorithm taking a hashing key $\kappa$ and an input $x \in \{0, 1\}^*$ and returning a hash defined by the hashing key.)
-
-% TODO: well this is very nonstandard
 
 \begin{figure}[tbhp]
   \begin{center}

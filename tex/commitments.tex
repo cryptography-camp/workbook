@@ -1,95 +1,94 @@
 \section{Commitments}\label{sec:commitments}
 
-
-A commitment scheme consists of algorithm $\mathsf{Com}_\mathsf{Commit}$:
-\begin{itemize}
-    \item $\mathsf{Com}_\mathsf{Commit}(m;r)\rightarrow C$ outputs a commitment $C$ to message $m$ with randomness $r$.
-\end{itemize}
-
 \subsection{Syntax}
-A commitment scheme $\mathsf{Com}$ is a tuple of algorithms:
+\begin{definition}[Commitment Scheme]
+  A \emph{commitment scheme} $\algo{Com}$is a pair of p.p.t algorithms $(\algo{Setup}, \algo{Commit})$ where
+  \begin{itemize}
+    \item $\algo{Setup}(1^\lambda) \rightarrow \params$ is a probabilistic algorithm that takes the security parameter $\lambda$ and returns public parameters $\params$, which include the message space $\mathcal{M}$ and the randomness space $\mathcal{R}$.
+    \item $\algo{Commit}(\params, m; r) \rightarrow C$ is a deterministic algorithm that takes the public parameters $\params$, a message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$ and returns a commitment $C$.
+  \end{itemize}
+\end{definition}
 
-\begin{itemize}
-  \item $\mathsf{Com}_\mathsf{Setup}(1^\lambda) \rightarrow \mathsf{pp}$
-        On input the security parameter $\lambda$ (in unary) output public
-        parameters~$\mathsf{pp}$.
-
-  \item $\mathsf{Com}_\mathsf{Commit}(\mathsf{pp},m;r)\rightarrow C$
-        On message $m$ and randomness $r$ output a commitment $C$ to $m$.
-\end{itemize}
-
-% Why does this need a setup algorithm
-% What are the sets, the types?
-
-\paragraph{Example} An example is the $\mathsf{Trivial}$ commitment scheme:
-\begin{itemize}
-  \item $\mathsf{Trivial}.\mathsf{Com}_\mathsf{Setup}(1^\lambda) = ()$
-  \item $\mathsf{Trivial}.\mathsf{Com}_\mathsf{Commit}(\mathsf{pp},m;r) = m$
-\end{itemize}
+\begin{example}
+  An example is the trivial commitment scheme\label{sec:trivial-com}:
+  \begin{itemize}
+    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{\})$
+    \item $\algo{Commit}(\params,m;r) \defeq m$
+  \end{itemize}
+\end{example}
 
 \subsection{Security}
-We define binding security through a game between a challenger and an adversary.
-A commitment scheme is binding if no p.p.t adversary can win the following game with non-negligible probability:
 
 \begin{figure}[tbhp]
   \begin{center}
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}[center]
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComBind}}{\algo{Com}}$}{%
-            \params \sample \mathsf{Com}_\mathsf{Setup}(1^\lambda) \\
+            \params \sample \algo{Com}.\algo{Setup}(1^\lambda) \\
             (m_0, m_1, r_0, r_1) \gets \adv(\params) \\
-            C_0 \gets \mathsf{Com}_\mathsf{Commit}(\params, m_0; r_0) \\
-            C_1 \gets \mathsf{Com}_\mathsf{Commit}(\params, m_1; r_1) \\
+            C_0 \gets \algo{Com}.\algo{Commit}(\params, m_0; r_0) \\
+            C_1 \gets \algo{Com}.\algo{Commit}(\params, m_1; r_1) \\
             \pcreturn (C_0 = C_1) \wedge (m_0 \neq m_1)
         }
       \end{pchstack}
     \end{tcolorbox}
   \end{center}
-  \caption{Game for finding a binding attack on a commitment scheme \label{fig:break-com-bind}}
+  \caption{Binding game \label{fig:break-com-bind}}
 \end{figure}
 
-% Why does the adversary get \params? Let say we have a Pedersen commitment scheme and the group is hardcoded in the commitment scheme.
-% Then there exists an adversary that just has the collision hardcoded.
+\begin{definition}[Binding]
+  A commitment scheme $\algo{Com}$ is binding if for any p.p.t. algorithm $\adv$,
+ \[
+  \advantage{Bind}{\adv, \algo{Com}} \defeq \pr{\game{\algo{ComBind}}{\algo{Com}} = \pctrue} = \negl.
+ \]
+ If $\advantage{Bind}{\adv, \algo{Com}} = 0$, then the commitment scheme is said to be \emph{perfectly binding}.
+\end{definition}
 
-% TODO begin definition
-More formally, a commitment scheme $\mathsf{Com}$ is binding if for all p.p.t. adversaries $\adv$, there exists a negligible function $\negl$ such that:
-\[ \pr{\game{\algo{ComBind}}{\algo{Com}} = \pctrue} \leq \negl \]
-If the advantage is 0, then the commitment scheme is perfectly binding.
-
-% collision resistant hash function makes for a binding commitment
-
-% What does this mean? We can make the probability as close to 0 as we want by increasing the security parameter.
-% Note that we choose the pp and therefore the group in an pedersen commitment randomly.
-% Hence the adversery can't just hardcode the collision. But how many groups are there of a certain order? Or do we mean with n-bit group that the prime has at least n bits, but we can also select a choice of larger groups?
-
-
-
-%Informal
-%\paragraph{Security} A commitment scheme is \emph{binding} if no PPT adversary produces two distinct messages $m_0, m_1$ and randomness $r_0, r_1$ such that $\com(m_0;r_0) = \com(m_1;r_1)$  (except with probability negligible in $\secpar$).
-%A commitment scheme is \emph{hiding} if no PPT adversary obtains any information about the message from the commitment.
-
-% define hiding
-% show that hash function is not hiding in the standard model and motivate the ROM in that way??
 
 \begin{figure}[tbhp]
   \begin{center}
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}[center]
-        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHid}}{\algo{Com}, b}$}{%
-            \params \sample \mathsf{Com}_\mathsf{Setup}(1^\lambda) \\
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHid}}{\algo{Com}}$}{%
+            \params \sample \algo{Com}.\algo{Setup}(1^\lambda) \\
             (m_0, m_1) \gets \adv(\params) \\
             r \sample \params.\mathcal{R} \\
             b \sample \{0, 1\} \\
-            C \gets \mathsf{Com}_\mathsf{Commit}(\params, m_b; r) \\
+            C \gets \algo{Com}.\algo{Commit}(\params, m_b; r) \\
             b' \gets \adv(\params, C) \\
             \pcreturn (b = b')
         }
       \end{pchstack}
     \end{tcolorbox}
   \end{center}
-  \caption{Game for finding a hiding attack on a commitment scheme \label{fig:break-com-hid}}
+  \caption{Hiding game \label{fig:break-com-hid}}
 \end{figure}
 
-A commitment scheme $\mathsf{Com}$ is hiding if for all p.p.t. adversaries $\adv$, there exists a negligible function $\negl$ such that:
-\[ \left| \pr{\game{\algo{ComHid}}{\algo{Com}, b} = \pctrue} - \frac{1}{2} \right| \leq \negl \]
-If the advantage is 0, then the commitment scheme is perfectly hiding.
+\begin{definition}[Hiding]
+  A commitment scheme $\algo{Com}$ is hiding if for any p.p.t. algorithm $\adv$,
+ \[
+  \advantage{Hid}{\adv, \algo{Com}} \defeq |\pr{\game{\algo{ComHid}}{\algo{Com}} = \pctrue} - \frac{1}{2}| = \negl.
+ \]
+ If $\advantage{Bind}{\adv, \algo{Com}} = 0$, then the commitment scheme is said to be \emph{perfectly binding}.
+\end{definition}
+
+\subsection{Exercises}
+\begin{itemize}
+  \item Is the trivial commitment scheme in \cref{sec:trivial-com} binding?.
+  \item Informally, a commitment scheme is \emph{strong binding} if commitment cannot be opened to randomness $r$ and $r'$ such that $r \neq r'$. 
+        Define $\game{\algo{ComStrongBind}}{\algo{Com}}$ by changing the definition of $\game{\algo{ComBind}}{\algo{Com}}$.
+  \item Can you imagine situations where strong binding is useful? (Think Taproot randomness is a group element and assume OP\_INTERNALKEY (we haven't introduced taproot at all yet, so this is confusing))
+  \item Come up with a hash commitment scheme that is strongly binding (or just binding if you didn't manage the previous session). Argue for your solution. Write down the theorem.
+  \item Is the trivial commitment scheme in \cref{sec:trivial-com} hiding?
+        Prove it.
+        (Hint: if it is not hiding, give an adversary that wins the $\game{\algo{ComHid}}{\algo{Com}}$ with non-negligible probability.)
+        % TODO: message/randomness space
+  \item Let $\algo{H}$ be a collision-resistant hash function and let $\algo{HashCom'}$ be a commitment scheme where
+    \begin{itemize}
+      \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}, \mathcal{R} \defeq \{\}, \kappa \gets \algo{H.Gen}(1^\lambda))$.
+      \item $\algo{Commit}(\params,m;r) \defeq  \algo{H.Eval}(\kappa, m)$.
+    \end{itemize}
+    Argue that it is binding and write down the security theorem.
+    Prove that it's not hiding.
+  \item Argue why a collision resistant hash function cannot be enough for hiding (even when the randomness is included in the hash).
+\end{itemize}
