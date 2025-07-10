@@ -1,0 +1,114 @@
+\section{Accumulators}\label{sec:accumulators}
+
+\subsection{Syntax}
+
+An accumulator is a compact representation of a set of elements and allows certain operations on the set.
+
+\begin{definition}[Accumulator]
+An accumulator that supports insertions of elements and membership proofs is also called an \emph{additive positive accumulator}~\cite{RSA:BalCanYak20}.
+It is a tuple of p.p.t algorithms $(\algo{Gen}, \algo{Init}, \algo{Value}, \algo{Insert}, \algo{ProveMembership}, \algo{VerifyMembership})$, where
+
+% TODO: mention something about the set of elements
+
+\begin{itemize}
+    \item $\algo{Gen}(1^\secpar)\rightarrow \params$ is a p.p.t algorithm that generates the public parameters $\params$ for the accumulator.
+    \item $\algo{Init}(\params)\rightarrow \state$ is a deterministic algorithm that outputs the initial state $\state$ of the accumulator.
+    \item $\algo{Value}(\params, \state)\rightarrow v$ outputs the accumulator value $v$ given the accumulator state $\state$.
+    \item $\algo{Insert}(\params, \state, x) \rightarrow \state'$ outputs a new state $\state'$ after inserting the element $x \in \mathcal{X}_\mathsf{Acc}$ into the accumulator with state $\state$.
+    \item $\algo{ProveMembership}(\params, \state, x) \rightarrow \pi$ outputs a proof $\pi$ that attests to the membership of $x$ in the accumulator with state $\state$.
+    \item $\algo{VerifyMembership}(\params, v, x, \pi) \rightarrow b$ outputs $b = 1$ if the proof $\pi$ proves that $x \in \mathcal{X}_\mathsf{Acc}$ is a member of the set represented by accumulator value $v$. Otherwise, it outputs $b = 0$.
+\end{itemize}
+\end{definition}
+
+Typically, an accumulator involves two parties: the manager, who uses $\algo{Init}$, $\algo{Value}$, $\algo{Insert}$, $\algo{ProveMembership}$ and the verifier, who uses $\algo{VerifyMembership}$.
+
+\begin{example}
+  An example is the trivial accumulator\label{sec:trivial-com}, where the accumulator value is just the accumulator state and therefore of size linear in the size of the set. In contrast, the accumulator value is usually a constant size value:
+  \begin{itemize}
+    \item $\algo{Gen}(1^\secpar)\rightarrow \bot$.
+    \item $\algo{Init}(\params)\rightarrow ()$
+    \item $\algo{Value}(\params, \state)\rightarrow \state$
+    \item $\algo{Insert}(\params, \state, x) \rightarrow \state \| x$
+    \item $\algo{ProveMembership}(\params, \state, x) \rightarrow \bot$
+    \item $\algo{VerifyMembership}(\params, v, x, \pi) \rightarrow b$ outputs $b = 1$ if $v$ contains $x$. Otherwise, it outputs $b = 0$.
+  \end{itemize}
+\end{example}
+
+\paragraph{Correctness}
+
+\begin{definition}[Correctness]
+An additive positive accumulator is considered \emph{correct} for a domain $\mathcal{X}_\mathsf{Acc}$ if, for any element $x$ that was inserted into the accumulator, the membership proof $\pi$ generated honestly for $x$ is successfully verified.
+More formally, for all security parameters $\secpar$, all public parameters $\params \gets \algo{Gen}(1^\secpar)$, all values $x \in \mathcal{X}_\mathsf{Acc}$, all positive integers $t$ polynomial in $\secpar$, all integers $t_x \in [1, t]$, all tuples $\vec{y} \in \mathcal{X}_\mathsf{Acc}^{t- 1}$, the following holds:
+
+\[
+    \Pr\left[
+    \begin{array}{l}
+        \state_0 \gets \algo{Init}(\params); \\
+        \state_i \gets \algo{Insert}(\params, \state_{i - 1}, y_i) \text{ for } i \in [1, t_x - 1]; \\
+        \state_{t_x} \gets \algo{Insert}(\params, \state_{i - 1}, x); \\
+        \state_i \gets \algo{Insert}(\params, \state_{i - 1}, y_{i - 1}) \text{ for } i \in [t_x + 1, t]; \\
+        \pi \gets \algo{ProveMembership}(\params, \state_t, x); \\
+        v \defeq \algo{Value}(\params, \state_t); \\
+        \algo{VerifyMembership}(\params, v, x, \pi) = 1
+    \end{array}
+    \right] = 1 - \negl.
+\]
+\end{definition}
+
+\paragraph{Security}
+
+In game \autoref{fig:break-acc-coll}, the adversary $\adv$ is given access to \emph{oracles}, which he can call, but not look inside.
+In other words, the adversary can insert elements into the accumulator and obtain membership proofs, but does not have access to the state directly.
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=13cm]
+      \begin{pcvstack}[center]
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{AccColl}}{\algo{Acc}}$}{%
+            \params \sample \algo{Acc}.\algo{Gen}(1^\secpar) \\
+            \mathcal{Q} \gets \emptyset \\
+            \state \gets \algo{Acc.Init}(\params) \\
+            v \gets \algo{Acc.Value}(\params, \state) \\
+            (x^*, \pi^*) \gets \adv^{\algo{Insert}, \algo{ProveMembership}}(\params, v) \\
+            \pcreturn x^* \notin \mathcal{Q} \wedge \algo{Acc.VerifyMembership}(\params, \state, x^*, \pi^*) = 1
+        }
+        \pcvspace
+        \begin{pchstack}[center]
+        \procedure[headlinesep=1pt]{Oracle $\pcoracle{Insert}(x)$}{%
+            \mathcal{Q} \gets \mathcal{Q} \cup \{x\} \\
+            \state \gets \algo{Acc.Insert}(\params, \state, x) \\
+            \pcreturn \algo{Acc.Value}(\params, \state)
+        }
+        \pchspace
+        \procedure[headlinesep=1pt]{Oracle $\pcoracle{ProveMembership}(x)$}{%
+            \pcif x \in \mathcal{Q} \pcthen\\
+                \t \pcreturn \algo{Acc.ProveMembership}(\params, \state, x) \\
+            \pcelse \\
+                \t \pcreturn \bot
+        }
+        \end{pchstack}
+      \end{pcvstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{Collision game \label{fig:break-acc-coll}}
+\end{figure}
+
+\begin{definition}[Collision-Freeness]
+    An additive positive accumulator is \emph{collision-free} for a given domain $\mathcal{X}_\mathsf{Acc}$ if it is hard to fabricate a membership proof for a value that is not in the set.
+    More formally, an accumulator $\algo{Acc}$ is collision-free if for any p.p.t algorithm $\adv$
+    \[
+      \advantage{Collision}{\adv, \algo{Acc}} \defeq \pr{\game{\algo{AccColl}}{\algo{Acc}} = \pctrue} = \negl.
+    \]
+\end{definition}
+
+\subsection{Exercises}
+\begin{enumerate}
+    \item Informally state the correctness definition in your own words and argue whether the trivial example is correct.
+    \item Informally state the security definition in your own words and argue whether the trivial example is collision-free.
+    \item Using a collision-resistant hash function, give an example of an accumulator with a constant size accumulator value and argue that it's correct and collision-free.
+    \item Optional: Using a collision-resistant hash function, give an example of an accumulator with a constant size accumulator value and logarithmic membership proofs and argue that it's correct and collision-free.
+    \item Define syntax, correctness and collision-freeness of an additive universal accumulator, i.e., an additive positive accumulator that supports non-membership proofs.
+    \item Optional: Using a collision-resistant hash function, give an example of an additive universal accumulator with a constant size accumulator value and logarithmic membership proofs and argue that it's correct and collision-free.
+\end{enumerate}
+
+

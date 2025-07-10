@@ -24,10 +24,10 @@
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}[center]
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComBind}}{\algo{Com}}$}{%
-            \params \sample \algo{Com}.\algo{Setup}(1^\lambda) \\
+            \params \sample \algo{Com.Setup}(1^\lambda) \\
             (m_0, m_1, r_0, r_1) \gets \adv(\params) \\
-            C_0 \gets \algo{Com}.\algo{Commit}(\params, m_0; r_0) \\
-            C_1 \gets \algo{Com}.\algo{Commit}(\params, m_1; r_1) \\
+            C_0 \gets \algo{Com.Commit}(\params, m_0; r_0) \\
+            C_1 \gets \algo{Com.Commit}(\params, m_1; r_1) \\
             \pcreturn (C_0 = C_1) \wedge (m_0 \neq m_1)
         }
       \end{pchstack}
@@ -44,6 +44,7 @@
  If $\advantage{Bind}{\adv, \algo{Com}} = 0$, then the commitment scheme is said to be \emph{perfectly binding}.
 \end{definition}
 
+Note that in $\game{\algo{ComBind}}{\algo{Com}}$ the adversary $\adv$ is run twice with different arguments, first to output two messages and then to output a bit.
 
 \begin{figure}[tbhp]
   \begin{center}
@@ -82,7 +83,6 @@
   \item Is the trivial commitment scheme in \cref{sec:trivial-com} hiding?
         Prove it.
         (Hint: if it is not hiding, give an adversary that wins the $\game{\algo{ComHid}}{\algo{Com}}$ with non-negligible probability.)
-        % TODO: message/randomness space
   \item Let $\algo{H}$ be a collision-resistant hash function and let $\algo{HashCom'}$ be a commitment scheme where
     \begin{itemize}
       \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}, \mathcal{R} \defeq \{\}, \kappa \gets \algo{H.Gen}(1^\lambda))$.
