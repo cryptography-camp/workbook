@@ -5,13 +5,14 @@ Throughout this workbook we will study algorithms, analyse their running time an
 In later sections we will sometimes study these algorithms within idealised computational models.
 
 This workbook primarily contains definitions, propositions, and lemmas, with limited intuitive explanations.
-The goal is to build intuition through the exercises, which provide hands-on experience with the theoretical concepts.
+The goal is to build intuition step-by-step through the exercises, which provide hands-on experience with the theoretical concepts.
 
 Note that there is rarely a single standard definition for a concept in cryptography.
 Sometimes we encounter equivalent definitions in the literature, while other times we find definitions that differ in subtle but important ways.
 This is why contemporary papers in cryptography include a preliminaries section that rigorously defines the concepts they use.
 
-% NOTE: What we're doing is similar to applied physics
+% NOTE: What we're doing is similar to applied physics. I would like to promise that we're just doing algorithms. who has had a course in theoretical computer science or algorithms?
+% what we're not going to do
 
 % REQUIREMENTS:
 % basic sets
@@ -388,9 +389,9 @@ We illustrate the concept of reductions through a series of examples.
  \]
 \end{definition}
 
-\begin{proposition}
+\begin{lemma}
   Let $\algo{H}$ be a collision-resistant hash function. Then $\algo{H}$ is preimage-resistant.
-\end{proposition}
+\end{lemma}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
   If $\algo{H}$ is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.

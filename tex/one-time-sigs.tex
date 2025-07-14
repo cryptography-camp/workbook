@@ -1,0 +1,250 @@
+\section{One-Time Signatures}\label{sec:one-time-sigs}
+
+\subsection{Syntax}
+
+\begin{definition}[One-Time Signature]
+    A one-time signature scheme $\algo{OTS}$ is a tuple of p.p.t algorithms $(\algo{Gen}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with message space $\mathcal{M}$, where
+    \begin{itemize}
+        \item $\algo{Gen}(1^\secpar)\rightarrow \params$ is a p.p.t algorithm that generates the public parameters $\params$ for the one-time signature scheme.
+        \item $\algo{KeyGen}(\params)\rightarrow (\sk, \pk)$ is a p.p.t algorithm that generates the key pair $(\sk, \pk)$ of the one-time signature scheme.
+        \item $\algo{Sign}(\params, \sk, m) \rightarrow \sigma$ is a p.p.t algorithm that outputs a signature $\sigma$ for the message $m$ under the one-time signature scheme with secret key $\sk$.
+        \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow b$ is a p.p.t algorithm that outputs $b = 1$ if the signature $\sigma$ is valid for the message $m$ under the one-time signature scheme with public key $\pk$. Otherwise, it outputs $b = 0$.
+    \end{itemize}
+\end{definition}
+
+
+\subsection{Correctness}
+
+\subsection{Security}
+
+\begin{definition}[EUF-CMA Security]\label{def:euf-cma-ot}
+    A one-time signature scheme $\algo{OTS}$ is \emph{EUF-CMA secure} (Existential Unforgeability under Chosen Message Attack) if for all p.p.t. adversaries $\adv$, it holds that
+    \[
+    \advantage{EUF-CMA}{\adv, \algo{OTS}} \defeq \pr{\game{\Game~\algo{EUF-CMA}}{\algo{OTS}} = 1} = \negl.
+    \]
+\end{definition}
+
+\begin{figure}[tbh]
+ \begin{tcolorbox}%[left=0mm,right=0mm]
+  \begin{pchstack}[center]
+   \procedure{Game $\game{\Game~\algo{EUF-CMA}}{\algo{OTS}}$}{%
+     \params \gets \algo{Gen}(1^\secpar) \\
+     (\sk,\pk) \gets \algo{KeyGen}(\params) \\
+     \mathcal{Q} \defeq \emptyset\\
+     (m^*, \sigma) \gets \adv^{\pcoracle{Sign}}(\params, \pk) \\
+     \pcreturn m^* \notin \mathcal{Q} \wedge \algo{Verify}(\params, \pk, m^*, \sigma) = 1
+   }
+   \pchspace
+   \procedure{Oracle $\pcoracle{Sign}(m)$}{%
+     \pcassert \mathcal{Q} = \emptyset \\
+     \mathcal{Q} \defeq \{m\} \\
+     \pcreturn \algo{Sign}(\params, \sk, m)
+   }
+  \end{pchstack}
+ \end{tcolorbox}
+ \caption{The EUF-CMA security game for a one-time signature scheme.}
+ \label{fig:euf-cma-ots}
+\end{figure}
+
+\begin{figure}[t!]
+ \begin{tcolorbox}
+  \begin{pchstack}[center]
+  \begin{pcvstack}
+    \procedure{$\algo{Gen}(1^\secpar)$}{%
+      \params \defeq \algo{H.Gen}(\secparam) \\
+      \pcreturn \params
+    }
+    \pcvspace
+    \procedure{$\algo{KeyGen}(\params)$}{%
+      x_{i, j} \sample \{0, 1\}^\secpar \text{ for } i \in [1, k], j \in \{0, 1\} \\
+      \sk \defeq (x_{1, 0}, x_{1, 1}, \dots, x_{k, 0}, x_{k, 1}) \\
+      \pk \defeq (\algo{H.Eval}(x_{1, 0}), \algo{H.Eval}(x_{1, 1}), \dots, \\
+      \t \t \algo{H.Eval}(x_{k, 0}), \algo{H.Eval}(x_{k, 1})) \\
+      \pcreturn (\sk, \pk)
+    }
+  \end{pcvstack}
+  \pchspace
+  \pchspace
+  \begin{pcvstack}
+    \procedure{$\algo{Sign}(\params, \sk, m)$}{%
+        \pccomment{$\algo{Sign}$ must be called at most once per $\sk$.}\\
+        (m_1, \ldots, m_k) \defeq m \\
+        (\sk_{1, 0}, \sk_{1, 1}), \ldots, (\sk_{k, 0}, \sk_{k, 1}) \defeq \sk \\
+        \sigma \defeq (\sk_{1, m_1}, \ldots, \sk_{k, m_k}) \\
+        \pcreturn \sigma
+    }
+    \pcvspace
+    \procedure{$\algo{Verify}(\params, \pk, m, \sigma)$}{%
+      (m_1, \ldots, m_k) \defeq m \\
+      (\pk_{1, 0}, \pk_{1, 1}), \ldots, (\pk_{k, 0}, \pk_{k, 1}) \defeq \pk \\
+      \pcreturn \bigwedge_{i=1}^k \algo{H.Eval}(\sigma_i) = \pk_{i, m_i}
+    }
+  \end{pcvstack}
+  \end{pchstack}
+ \end{tcolorbox}
+ \caption{The one-time Lamport signature scheme $\algo{LS}[\algo{H, k}]$.}
+ \label{fig:ots-lamport}
+\end{figure}
+
+
+\begin{example}[Lamport signatures]
+    The Lamport one-time signature scheme $\algo{LS}[\algo{H, k}]$ is defined in \autoref{fig:ots-lamport}.
+    It is parameterized by a hash function $\algo{H}$ and an integer $k$ that determines the message space $\mathcal{M} = \{0, 1\}^k$.
+\end{example}
+
+\begin{theorem}[Lamport signatures are EUF-CMA secure]\label{thm:ots-lamport-euf-cma}
+    Let $\algo{H}$ be a preimage-resistant hash function.
+    Then the Lamport one-time signature scheme $\algo{LS}[\algo{H, k}]$ is EUF-CMA secure.
+    More precisely, for any p.p.t. adversary $\adv$ against the EUF-CMA security of $\algo{LS}[\algo{H, k}]$,
+    there exists a p.p.t. adversary $\adv'$ against the preimage resistance of $\algo{H}$ such that
+    \[
+    \advantage{EUF-CMA}{\adv, \algo{LS}[\algo{H, k}]} \leq 2k\advantage{Preimage}{\adv', \algo{H}}.
+    \]
+\end{theorem}
+
+\begin{figure}[tbh]
+ \begin{tcolorbox}%[left=0mm,right=0mm]
+  \begin{pchstack}[center]
+  \begin{pcvstack}
+   \procedure{Game $\game{\Game~\algo{EUF-CMA}}{\algo{LS}[\algo{H, k}]}$}{%
+     \params \gets \algo{Gen}(1^\secpar) \\
+     (\sk,\pk) \gets \algo{KeyGen}(\params) \\
+     \mathcal{Q} \defeq \emptyset\\
+     (m^*, \sigma) \gets \adv^{\pcoracle{Sign}}(\params, \pk) \\
+     \pcreturn m^* \notin \mathcal{Q} \wedge \\
+      \t \algo{Verify}(\params, \pk, m^*, \sigma) = 1
+   }
+   \pcvspace
+   \procedure{Oracle $\pcoracle{Sign}(m)$}{%
+     \pcassert \mathcal{Q} = \emptyset \\
+     \mathcal{Q} \defeq \{m\} \\
+     \pcreturn \algo{Sign}(\params, \sk, m)
+   }
+  \end{pcvstack}
+  \pchspace
+   \begin{pcvstack}
+    \procedure{Game $\game{\Game~\algo{G_1}}{}$}{%
+      \params \gets \algo{Gen}(1^\secpar) \\
+      (\sk,\pk) \gets \algo{KeyGen}(\params) \\
+      \gamechange{$i \sample [1, k] \pcsc j \sample \{0, 1\}$} \\
+      \mathcal{Q} \defeq \emptyset\\
+      (m^*, \sigma) \gets \adv^{\pcoracle{Sign}}(\params, \pk) \\
+      \pcif \mathcal{Q} = \emptyset \pcthen \\
+      \t m \sample \{0, 1\}^k \\
+      \t \pcoracle{Sign}(m) \\
+      \pcreturn m^* \notin \mathcal{Q} \wedge \\
+      \t \algo{Verify}(\params, \pk, m^*, \sigma) = 1
+    }
+    \pcvspace
+    \procedure{Oracle $\pcoracle{Sign}(m)$}{%
+      \pcassert \mathcal{Q} = \emptyset \\
+      \gamechange{$\pcassert m_i \neq j$} \\
+      \mathcal{Q} \defeq \{m\} \\
+      \pcreturn \algo{Sign}(\params, \sk, m)
+    }
+   \end{pcvstack}
+  \pchspace
+   \begin{pcvstack}
+    \procedure{Game $\game{\Game~\algo{G_2}}{\algo{OTS}}$}{%
+      \params \gets \algo{Gen}(1^\secpar) \\
+      (\sk,\pk) \gets \algo{KeyGen}(\params) \\
+      i \sample [1, k]  \\
+      j \sample [0, 1]  \\
+      \mathcal{Q} \defeq \emptyset\\
+      (m^*, \sigma) \gets \adv^{\pcoracle{Sign}}(\params, \pk) \\
+      \pcif \mathcal{Q} = \emptyset \pcthen \\
+      \t m \sample \{0, 1\}^k \\
+      \t \pcoracle{Sign}(m) \\
+      \gamechange{$\pcassert m^*_i = j$} \\
+      \pcreturn m^* \notin \mathcal{Q} \wedge \\
+      \t \algo{Verify}(\params, \pk, m^*, \sigma) = 1
+    }
+    \pcvspace
+    \procedure{Oracle $\pcoracle{Sign}(m)$}{%
+      \pcassert \mathcal{Q} = \emptyset \\
+      \pcassert m_i \neq j \\
+      \mathcal{Q} \defeq \{m\} \\
+      \pcreturn \algo{Sign}(\params, \sk, m)
+    }
+   \end{pcvstack}
+  \end{pchstack}
+ \end{tcolorbox}
+ \caption{Sequence of games for the proof that Lamport signatures are EUF-CMA secure. Differences are \gamechange{highlighted}.}
+ \label{fig:euf-cma-ots-lamport}
+\end{figure}
+
+
+\begin{proof}
+    \autoref{fig:euf-cma-ots-lamport} shows a sequence of games for the proof that Lamport signatures are EUF-CMA secure.
+    The first game is identical to the $\Game~\algo{EUF-CMA}$ game.
+    Each subsequent game introduces a small change compared to the previous game.
+    Then we can construct an algorithm that runs a $\Game~\algo{EUF-CMA}$ adversary $\adv$ internally and wins the hash preimage game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with the same probability as $\adv$ winning the last game $\Game~\algo{G_2}$.
+    The rest of the proof is left as an exercise.
+\end{proof}
+
+\subsection{Exercises}
+\begin{enumerate}
+    \item What is "existential unforgeability" in "EUF-CMA" (\autoref{def:euf-cma-ot}) and what is "chosen message attack"?
+    \item To see why the security definition for signatures includes a signing oracle, consider game $\game{\Game~\algo{G}}{\algo{OTS}}$ which is the same as $\game{\Game~\algo{EUF-CMA}}{\algo{OTS}}$ except that the adversary $\adv$ is not given access to the signing oracle.
+          Give an example for a one time signature scheme that is correct and $\pr{\game{\Game~\algo{G}}{\algo{OTS}} = 1} = negl$ for all p.p.t. adversaries $\adv$ but is not EUF-CMA secure.
+    \item Is $(x_{1,0}, x_{2,0}, x_{3,1})$ a valid signature for the message $m = \{0, 0, 1\}$ under the Lamport signature scheme $\algo{LS}[\algo{H, 3}]$?
+    \item Is the Lamport signature scheme $\algo{LS}[\algo{H, k}]$ correct?
+    \item Prove theorem \autoref{thm:ots-lamport-euf-cma}:
+        \begin{enumerate}
+            \item Express $\pr{\game{\Game~\algo{G_1}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1}$.
+            \item Express $\pr{\game{\Game~\algo{G_2}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{G_1}}{} = 1}$.
+            \item Give an algorithm $\algo{E}^\adv$ that wins the preimage game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability $\pr{\game{\Game~\algo{G_2}}{} = 1}$.
+            \item Put it all together to prove \autoref{thm:ots-lamport-euf-cma}.
+        \end{enumerate}
+    \item Let $\Game~\algo{G'}$ be the same as $\Game~\algo{EUF-CMA}$ except that the signing oracle can be called twice. Where does your proof break?
+    \item Optional: Why are Lamport signatures considered post-quantum?
+\end{enumerate}
+
+\subsection{Solutions}
+\begin{enumerate}
+    \item \textbf{Existential unforgeability:} The adversary wins if it can forge a signature for \emph{any} message of its choice.
+          \textbf{Chosen message attack:} The adversary has access to a signing oracle and can obtain a signature for a message of its choice before attempting the forgery.
+    \item Consider the following scheme:
+          \begin{itemize}
+              \item $\algo{KeyGen}(\params) = (\sk = x, \pk = \algo{H.Eval}(x))$ where $x \sample \{0,1\}^\secpar$.
+              \item $\algo{Sign}(\params, \sk, m) = \sk$ (simply outputs the secret key).
+              \item $\algo{Verify}(\params, \pk, m, \sigma) = 1$ if and only if $\algo{H.Eval}(\sigma) = \pk$.
+          \end{itemize}
+          This scheme is correct and would be secure in game $\Game~\algo{G}$ (without signing oracle) since the adversary cannot forge without knowing $\sk$, which requires solving the preimage problem.
+          However, this scheme is obviously insecure in practice: anyone who sees one signature learns the secret key and can forge signatures for any message!
+          The $\Game~\algo{EUF-CMA}$ game with signing oracle correctly captures this insecurity.
+    \item We have
+    \begin{align*}
+        \pr{\game{\Game~\algo{G_1}}{} = 1} &= \pr{\game{(\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}}) = 1) \wedge (m_i \neq j)} \\
+        &= \pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1 | m_i \neq j} \pr{m_i \neq j} \\
+        &= \frac{1}{2}\pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1} \\
+    \end{align*}
+    In game $\game{\Game~\algo{G_2}}{} = 1$ only when $m^* \neq m$ and $m^*_i = j$.
+    Therefore,
+    \begin{align*}
+        \pr{\game{\Game~\algo{G_2}}{} = 1} &= \pr{\game{\Game~\algo{G_1}}{} = 1 \wedge m^*_i = j} \\
+        &= \pr{m^*_i = j | \game{\Game~\algo{G_1}}{} = 1} \pr{\game{\Game~\algo{G_1}}{} = 1} \\
+        &\geq \frac{1}{k}\pr{\game{\Game~\algo{G_1}}{} = 1} \\
+    \end{align*}
+    The last inequality holds because when $\Game~\algo{G_1}$ succeeds, we have $m \neq m^*$ (at least one position differs), $m_i \neq j$, and $i$ is uniformly random. The probability that position $i$ is one where $m$ and $m^*$ differ is at least $1/k$. When they differ at position $i$ and $m_i \neq j$, then $m^*_i = j$ (since the message space is binary).
+    $\Game~\algo{E}$ is the same as $\Game~\algo{G_2}$ except that
+    \begin{itemize}
+        \item it gets a preimage challenge $y$ from a challenger and
+        \item replaces $\pk_{i, j}$ with $y$
+        \item it returns $\sigma_i$.
+    \end{itemize}
+    Since $m_i \neq j$, the inputs to the adversary (including the signing oracle call) has the same distribution as in $\Game~\algo{G_2}$.
+    Moreover, if $\game{\Game~\algo{G_2}}{}$ returns 1, then $\algo{H.Eval}(\sigma_i) = \pk_{i, j}$
+    Therefore,
+    \[
+    \advantage{Preimage}{\algo{E}^\adv, \algo{H}} = \pr{\game{\Game~\algo{G_2}}{} = 1} \\
+    \]
+    and then combining the inequalities:
+    \begin{align*}
+      \advantage{EUF-CMA}{\adv, \algo{LS}[\algo{H, k}]} &= \pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1} \\
+      &= 2 \cdot \pr{\game{\Game~\algo{G_1}}{} = 1} \\
+      &\leq 2k \cdot \pr{\game{\Game~\algo{G_2}}{} = 1} \\
+      &= 2k \cdot \advantage{Preimage}{\algo{E}^\adv, \algo{H}}
+    \end{align*}
+\end{enumerate}
+
