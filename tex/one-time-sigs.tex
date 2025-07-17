@@ -106,7 +106,7 @@
  \begin{tcolorbox}%[left=0mm,right=0mm]
   \begin{pchstack}[center]
   \begin{pcvstack}
-   \procedure{Game $\game{\Game~\algo{EUF-CMA}}{\algo{LS}[\algo{H, k}]}$}{%
+   \procedure{$\game{\Game~\algo{EUF-CMA}}{\algo{LS}[\algo{H, k}]}$}{%
      \params \gets \algo{Gen}(1^\secpar) \\
      (\sk,\pk) \gets \algo{KeyGen}(\params) \\
      \mathcal{Q} \defeq \emptyset\\
@@ -238,7 +238,7 @@
     Moreover, if $\game{\Game~\algo{G_2}}{}$ returns 1, then $\algo{H.Eval}(\sigma_i) = \pk_{i, j}$
     Therefore,
     \[
-    \advantage{Preimage}{\bdv^\adv, \algo{H}} = \pr{\game{\Game~\algo{G_2}}{} = 1} \\
+    \advantage{Preimage}{\bdv^\adv, \algo{H}} = \pr{\game{\Game~\algo{G_2}}{} = 1}
     \]
     and then combining the inequalities:
     \begin{align*}

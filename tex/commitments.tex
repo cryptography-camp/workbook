@@ -52,7 +52,7 @@ Note that in $\game{\algo{ComBind}}{\algo{Com}}$ the adversary $\adv$ is run twi
   \begin{center}
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}[center]
-        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHid}}{\algo{Com}}$}{%
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHide}}{\algo{Com}}$}{%
             \params \sample \algo{Com}.\algo{Setup}(1^\lambda) \\
             (m_0, m_1) \gets \adv(\params) \\
             r \sample \params.\mathcal{R} \\
@@ -70,7 +70,7 @@ Note that in $\game{\algo{ComBind}}{\algo{Com}}$ the adversary $\adv$ is run twi
 \begin{definition}[Hiding]
   A commitment scheme $\algo{Com}$ is hiding if for any p.p.t. algorithm $\adv$,
  \[
-  \advantage{Hid}{\adv, \algo{Com}} \defeq |\pr{\game{\algo{ComHid}}{\algo{Com}} = \pctrue} - \frac{1}{2}| = \negl.
+  \advantage{Hide}{\adv, \algo{Com}} \defeq |\pr{\game{\algo{ComHide}}{\algo{Com}} = \pctrue} - \frac{1}{2}| = \negl.
  \]
  If $\advantage{Bind}{\adv, \algo{Com}} = 0$, then the commitment scheme is said to be \emph{perfectly binding}.
 \end{definition}
@@ -84,7 +84,7 @@ Note that in $\game{\algo{ComBind}}{\algo{Com}}$ the adversary $\adv$ is run twi
   \item Come up with a hash commitment scheme that is strongly binding (or just binding if you didn't manage the previous session). Argue for your solution. Write down the theorem.
   \item Is the trivial commitment scheme in \cref{sec:trivial-com} hiding?
         Prove it.
-        (Hint: if it is not hiding, give an adversary that wins the $\game{\algo{ComHid}}{\algo{Com}}$ with non-negligible probability.)
+        (Hint: if it is not hiding, give an adversary that wins the $\game{\algo{ComHide}}{\algo{Com}}$ with non-negligible probability.)
   \item Let $\algo{H}$ be a collision-resistant hash function and let $\algo{HashCom'}$ be a commitment scheme where
     \begin{itemize}
       \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}, \mathcal{R} \defeq \{\}, \kappa \gets \algo{H.Gen}(1^\lambda))$.
