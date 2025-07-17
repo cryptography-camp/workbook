@@ -96,9 +96,9 @@
     Let $\algo{H}$ be a preimage-resistant hash function.
     Then the Lamport one-time signature scheme $\algo{LS}[\algo{H, k}]$ is EUF-CMA secure.
     More precisely, for any p.p.t. adversary $\adv$ against the EUF-CMA security of $\algo{LS}[\algo{H, k}]$,
-    there exists a p.p.t. adversary $\adv'$ against the preimage resistance of $\algo{H}$ such that
+    there exists a p.p.t. adversary $\bdv$ against the preimage resistance of $\algo{H}$ such that
     \[
-    \advantage{EUF-CMA}{\adv, \algo{LS}[\algo{H, k}]} \leq 2k\advantage{Preimage}{\adv', \algo{H}}.
+    \advantage{EUF-CMA}{\adv, \algo{LS}[\algo{H, k}]} \leq 2k\advantage{Preimage}{\bdv, \algo{H}}.
     \]
 \end{theorem}
 
@@ -193,7 +193,7 @@
         \begin{enumerate}
             \item Express $\pr{\game{\Game~\algo{G_1}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1}$.
             \item Express $\pr{\game{\Game~\algo{G_2}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{G_1}}{} = 1}$.
-            \item Give an algorithm $\algo{E}^\adv$ that wins the preimage game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability $\pr{\game{\Game~\algo{G_2}}{} = 1}$.
+            \item Give an algorithm $\bdv^\adv$ that wins the preimage game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability $\pr{\game{\Game~\algo{G_2}}{} = 1}$.
             \item Put it all together to prove \autoref{thm:ots-lamport-euf-cma}.
         \end{enumerate}
     \item Let $\Game~\algo{G'}$ be the same as $\Game~\algo{EUF-CMA}$ except that the signing oracle can be called twice. Where does your proof break?
@@ -228,7 +228,7 @@
         &\geq \frac{1}{k}\pr{\game{\Game~\algo{G_1}}{} = 1} \\
     \end{align*}
     The last inequality holds because when $\Game~\algo{G_1}$ succeeds, we have $m \neq m^*$ (at least one position differs), $m_i \neq j$, and $i$ is uniformly random. The probability that position $i$ is one where $m$ and $m^*$ differ is at least $1/k$. When they differ at position $i$ and $m_i \neq j$, then $m^*_i = j$ (since the message space is binary).
-    $\Game~\algo{E}$ is the same as $\Game~\algo{G_2}$ except that
+    $\bdv^\adv$ is the same as $\Game~\algo{G_2}$ except that
     \begin{itemize}
         \item it gets a preimage challenge $y$ from a challenger and
         \item replaces $\pk_{i, j}$ with $y$
@@ -238,14 +238,14 @@
     Moreover, if $\game{\Game~\algo{G_2}}{}$ returns 1, then $\algo{H.Eval}(\sigma_i) = \pk_{i, j}$
     Therefore,
     \[
-    \advantage{Preimage}{\algo{E}^\adv, \algo{H}} = \pr{\game{\Game~\algo{G_2}}{} = 1} \\
+    \advantage{Preimage}{\bdv^\adv, \algo{H}} = \pr{\game{\Game~\algo{G_2}}{} = 1} \\
     \]
     and then combining the inequalities:
     \begin{align*}
       \advantage{EUF-CMA}{\adv, \algo{LS}[\algo{H, k}]} &= \pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1} \\
       &= 2 \cdot \pr{\game{\Game~\algo{G_1}}{} = 1} \\
       &\leq 2k \cdot \pr{\game{\Game~\algo{G_2}}{} = 1} \\
-      &= 2k \cdot \advantage{Preimage}{\algo{E}^\adv, \algo{H}}
+      &= 2k \cdot \advantage{Preimage}{\bdv^\adv, \algo{H}}
     \end{align*}
 \end{enumerate}
 
