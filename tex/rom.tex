@@ -1,0 +1,356 @@
+\section{Random Oracle Model}\label{sec:rom}
+
+\subsection{The Random Oracle}
+
+A \emph{random oracle} (RO) is an oracle that can be provided to an algorithm that takes inputs in $\{0, 1\}^*$ and returns elements from some set $S$ where $|S| \geq 2^\secpar$.
+The key property is that the oracle responds consistently: identical queries always yield identical responses, while distinct queries yield independent uniformly random values from $S$.
+
+Formally, a random oracle can be described as follows.
+Consider the random oracle $\pcoracle{H}$ in \autoref{fig:ro-example}.
+The oracle maintains a table $T$ (initially empty) to ensure consistency.
+When queried with input $x$, it checks whether $T[x]$ exists. If not, it samples a uniformly random element from $S$ and stores it as $T[x]$.
+The oracle returns $T[x]$.
+
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=8cm]
+      \begin{pchstack}
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ROExample}}{}(\secpar)$}{%
+          T \defeq \emptyset \\
+          r \sample \{0,1\}^\secpar \\
+          h \defeq \pcoracle{H}(r) \\
+          \pcreturn \adv^{\pcoracle{H}}(h)
+        }
+        \pchspace
+        \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}(x)$}{%
+          \pcif T[x] = \bot \pcthen \\
+          \t T[x] \sample S \\
+          \pcreturn T[x]
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{Random oracle example game\label{fig:ro-example}}
+\end{figure}
+
+Before examining the consequences of random oracles, we present a simple lemma that will be useful for analyzing games that differ only when certain events occur.
+
+\begin{lemma}[Difference Lemma]\label{lem:difference}
+  Let $A$, $B$ and $E$ be events in a probability space. If $\Pr[A \wedge \neg E] = \Pr[B \wedge \neg E]$, then
+  \[
+  |\Pr[A] - \Pr[B]| \leq \Pr[E].
+  \]
+\end{lemma}
+
+\begin{proof}
+  \begin{align*}
+    |\Pr[A] - \Pr[B]| &= |\Pr[A \wedge E] + \Pr[A \wedge \neg E] - (\Pr[B \wedge E] + \Pr[B \wedge \neg E])| \\
+    &= |\Pr[A \wedge E] - \Pr[B \wedge E]|
+  \end{align*}
+  Since $\Pr[A \wedge E] \leq \Pr[E]$ and $\Pr[B \wedge E] \leq \Pr[E]$, both terms are in $[0, \Pr[E]]$, so their difference is at most $\Pr[E]$.
+\end{proof}
+
+
+\begin{lemma}\label{lem:ro-indistinguishable}
+  No adversary against $\algo{ROExample}$ can distinguish between being given $h = \pcoracle{H}(r)$ for a random $r$ and being given a uniformly random value from $S$, except with probability negligible in the number of oracle queries.
+  More precisely, let $\game{\Game~\algo{ROExample}}{}$ be as defined in \autoref{fig:ro-example}.
+  For any adversary $\adv$ making $q$ queries to the random oracle $\pcoracle{H}$, we have
+  \[
+  \left|\Pr[\game{\algo{ROExample}}{} = 1] - \Pr[\game{\algo{ROExample}_1}{} = 1]\right| \leq \frac{q}{2^\secpar}
+  \]
+  where $\game{\algo{ROExample}_1}{}$ is defined in \autoref{fig:ro-game-hop}.
+\end{lemma}
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=8cm]
+      \begin{pchstack}
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ROExample}_1}{}(\secpar)$}{%
+          T \defeq \emptyset \\
+          r \sample \{0,1\}^\secpar \\
+          h \defeq \pcoracle{H}(r) \\
+          \gamechange{$h' \sample S$} \\
+          \pcreturn \adv^{\pcoracle{H}}(\gamechange{$h'$})
+        }
+        \pchspace
+        \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}(x)$}{%
+          \gamechange{$\pcassert x \neq r$} \\
+          \pcif T[x] = \bot \pcthen \\
+          \t T[x] \sample S \\
+          \pcreturn T[x]
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{Game hop for random oracle indistinguishability\label{fig:ro-game-hop}}
+\end{figure}
+
+\begin{proof}
+  By inspection of the code, we observe that $\game{\algo{ROExample}_1}{}$ is identical to $\game{\algo{ROExample}}{}$ except that:
+  \begin{enumerate}
+  \item The input to $\adv$ is changed from $h = \pcoracle{H}(r)$ to a uniformly random $h' \sample S$.
+  \item The oracle $\pcoracle{H}$ asserts that no query equals $r$.
+  \end{enumerate}
+  
+  Since $h'$ is uniformly random in $S$ and has the same distribution as $\pcoracle{H}(r)$ (when $r$ is not queried), the games are identical unless the adversary queries $r$ to the oracle.
+  
+  We apply Lemma~\ref{lem:difference}. Let $E$ denote the event that $\adv$ queries $r$ to the oracle. Let $A$ be the event that $\game{\algo{ROExample}}{} = 1$ and $B$ be the event that $\game{\algo{ROExample}_1}{} = 1$. 
+  
+  When $\neg E$ occurs (i.e., $r$ is not queried), the two games behave identically, so $\Pr[A \wedge \neg E] = \Pr[B \wedge \neg E]$. 
+  
+  By Lemma~\ref{lem:difference}:
+  \begin{align*}
+    \left|\Pr[\game{\algo{ROExample}}{} = 1] - \Pr[\game{\algo{ROExample}_1}{} = 1]\right| &\leq \Pr[E] \\
+    &= \Pr[\exists i \in [q] : x_i = r] \\
+    &\leq \sum_{i=1}^q \Pr[x_i = r] \tag{union bound} \\
+    &= \sum_{i=1}^q \frac{1}{2^\secpar} = \frac{q}{2^\secpar}
+  \end{align*}
+  where $x_1, \ldots, x_q$ are the queries made by $\adv$ to $\pcoracle{H}$.
+\end{proof}
+
+\subsection{Applications and Limitations}
+
+\begin{remark}
+  For a large class of cryptographic schemes, the properties of hash functions seen so far are insufficient to prove security.
+  Instead, we prove security of a modified scheme where hash function evaluations are replaced with random oracle calls.
+  This is the \emph{random oracle model} (ROM).
+  Random oracles cannot be instantiated in the real world because their output must be distributed uniformly at random unless explicitly queried.
+  On the other hand, the output of a hash function is deterministic once the key is known.
+  Moreover, there's no way to formally define an ``explicit query'' for public hash functions.
+
+  There exist contrived schemes provably secure in the ROM that become insecure when instantiated with any concrete hash function (see optional exercise).
+  Despite these theoretical concerns, the ROM has proven very useful in practice for analyzing real-world cryptographic protocols~\cite{BR93}.
+\end{remark}
+
+\subsection{Hash Commitments in the ROM}
+
+\begin{definition}[Hash Commitment Scheme]
+  Let $\algo{H}$ be a hash function.
+  The hash commitment scheme $\algo{HashCom}[\algo{H}]$ is defined as follows:
+  \begin{itemize}
+    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Output $\params = (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{0, 1\}^\secpar)$.
+    \item $\algo{Commit}(\params, m; r) \rightarrow C$: Output $C = \algo{H.Eval}(m \|\| r)$.
+  \end{itemize}
+\end{definition}
+
+\begin{lemma}\label{lem:hash-com-hiding}
+  The hash commitment scheme $\algo{HashCom}[\algo{H}]$ is hiding in the random oracle model for $\algo{H}$.
+  More precisely, for any algorithm $\adv$ making at most $q$ queries to $\algo{H}$,
+  \[
+  \advantage{Hide}{\adv, \algo{HashCom}} \leq \frac{2q}{2^\secpar}.
+  \]
+\end{lemma}
+
+\subsection{Taproot Commitments}
+
+\begin{definition}[Taproot Commitment Scheme]
+  Let $\grgen$ be a group generation algorithm and $\algo{H}$ be a hash function with output in $\ZZ_p$ where $p$ is the group order. 
+  The Taproot commitment scheme $\algo{TapCom}[\grgen, \algo{H}]$ is defined as follows:
+  \begin{itemize}
+    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$ and $\kappa \gets \algo{H.Gen}(1^\secpar)$. Parse $\gparam = (\GG, p, g)$. Output $\params = (\gparam, \kappa, \mathcal{M} \defeq \{0,1\}^*, \mathcal{R} \defeq \GG)$.
+    \item $\algo{Commit}(\params, m; R) \rightarrow C$: Parse $\params$ to obtain $g$ and $\kappa$. Output $C = R \cdot g^{\algo{H.Eval}(\kappa, R \| m)}$.
+  \end{itemize}
+\end{definition}
+
+\begin{lemma}\label{lem:taproot-binding}
+  Let $\grgen$ be a group generation algorithm and $\algo{H}$ be a hash function.
+  The Taproot commitment scheme $\algo{TapCom}[\grgen, \algo{H}]$ is binding in the random oracle model for $\algo{H}$.
+  More precisely, for any algorithm $\adv$ making at most $q$ queries to $\algo{H}$,
+  \[
+  \advantage{Bind}{\adv, \algo{TapCom}} \leq \frac{(q+2)^2}{2^\secpar}.
+  \]
+\end{lemma}
+
+\subsection{Exercises}
+
+\begin{exercise}
+  Consider a modified hash commitment scheme $\algo{HashCom}_y[\algo{H}]$ defined as follows:
+  \begin{itemize}
+    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Same as $\algo{HashCom}[\algo{H}]$.
+    \item $\algo{Commit}(\params, m; r) \rightarrow C$: 
+    \begin{align*}
+      C = \begin{cases}
+        \algo{H.Eval}(m) & \text{if } \algo{H.Eval}(0) = y \\
+        \algo{H.Eval}(m \| r) & \text{otherwise}
+      \end{cases}
+    \end{align*}
+  \end{itemize}
+  
+  \begin{enumerate}
+    \item Using Lemma~\ref{lem:hash-com-hiding}, argue that for all $y \in \{0,1\}^\secpar$, $\algo{HashCom}_y[\algo{H}]$ is hiding in the ROM.
+    \item Show that there exists $y$ such that $\algo{HashCom}_y$ instantiated with SHA256 is not hiding.
+  \end{enumerate}
+\end{exercise}
+
+\begin{proof}[Solution]
+  \begin{enumerate}
+    \item In the ROM, $\algo{H}$ behaves as a random oracle. For any fixed $y$, we have $\Pr[\algo{H.Eval}(0) = y] = \frac{1}{2^\secpar}$, which is negligible. With overwhelming probability, the scheme behaves identically to the standard $\algo{HashCom}[\algo{H}]$, which is hiding by Lemma~\ref{lem:hash-com-hiding}.
+    
+    More formally, the hiding advantage is bounded by:
+    \[
+    \advantage{Hide}{\adv, \algo{HashCom}_y} \leq \Pr[\algo{H.Eval}(0) = y] + \advantage{Hide}{\adv, \algo{HashCom}} \leq \frac{1}{2^\secpar} + \frac{2q}{2^\secpar}
+    \]
+    
+    \item Let $y = \text{SHA256}(0)$. When instantiated with SHA256, we always have $\algo{H.Eval}(0) = y$, so the commitment becomes $C = \text{SHA256}(m)$ without any randomness. This is deterministic and therefore not hiding: given two messages $m_0, m_1$, the adversary can compute $\text{SHA256}(m_0)$ and $\text{SHA256}(m_1)$ and compare with $C$ to determine which message was committed to.
+  \end{enumerate}
+\end{proof}
+
+\begin{exercise}
+  Prove Lemma~\ref{lem:hash-com-hiding} using a similar technique as in Lemma~\ref{lem:ro-indistinguishable}.
+\end{exercise}
+
+\begin{proof}[Solution]
+% TODO change to "Figure bla shows the hiding game for Hashcom where ..."
+Consider the hiding game for $\algo{HashCom}[\algo{H}]$ where $\algo{H}$ is modeled as a random oracle:
+
+\begin{figure}[h]
+  \begin{center}
+    \begin{tcolorbox}[width=8cm]
+      \begin{pchstack}
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHide}}{\algo{HashCom}}(\secpar)$}{%
+          \params \gets \algo{HashCom.Setup}(1^\secpar) \\
+          (m_0, m_1) \gets \adv(\params) \\
+          T \defeq \emptyset \\
+          b \sample \{0,1\} \\
+          r \sample \{0,1\}^\secpar \\
+          c \defeq \pcoracle{H}(m_b \| r) \\
+          b' \gets \adv^{\pcoracle{H}}(c) \\
+          \pcreturn b = b'
+        }
+        \pchspace
+        \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}(x)$}{%
+          \pcif T[x] = \bot \pcthen \\
+          \t T[x] \sample \{0,1\}^\secpar \\
+          \pcreturn T[x]
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+\end{figure}
+
+Now consider the following modified game:
+
+\begin{figure}[h]
+  \begin{center}
+    \begin{tcolorbox}[width=8cm]
+      \begin{pchstack}
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHide}_1}{\algo{HashCom}}(\secpar)$}{%
+          \params \gets \algo{HashCom.Setup}(1^\secpar) \\
+          (m_0, m_1) \gets \adv(\params) \\
+          T \defeq \emptyset \\
+          b \sample \{0,1\} \\
+          r \sample \{0,1\}^\secpar \\
+          c \defeq \pcoracle{H}(m_b \| r) \\
+          \gamechange{$c' \sample \{0,1\}^\secpar$} \\
+          b' \gets \adv^{\pcoracle{H}}(\gamechange{$c'$}) \\
+          \pcreturn b = b'
+        }
+        \pchspace
+        \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}(x)$}{%
+          \gamechange{$\pcassert x \neq m_0 \| r$} \\
+          \gamechange{$\pcassert x \neq m_1 \| r$} \\
+          \pcif T[x] = \bot \pcthen \\
+          \t T[x] \sample \{0,1\}^\secpar \\
+          \pcreturn T[x]
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+\end{figure}
+
+Note that in $\game{\algo{ComHide}_1}{\algo{HashCom}}$, the value $b$ is independent of the adversary's view, so:
+\[
+\Pr[\game{\algo{ComHide}_1}{\algo{HashCom}} = 1] = \frac{1}{2}
+\]
+
+% TODO: mention the difference lemma
+The games differ only when $\adv$ queries either $m_0 \| r$ or $m_1 \| r$ to the oracle. We analyze this probability:
+
+\begin{align*}
+  \advantage{Hide}{\adv, \algo{HashCom}} &= \left|\Pr[\game{\algo{ComHide}}{\algo{HashCom}} = 1] - \frac{1}{2}\right| \\
+  &= \left|\Pr[\game{\algo{ComHide}}{\algo{HashCom}} = 1] - \Pr[\game{\algo{ComHide}_1}{\algo{HashCom}} = 1]\right| \\
+  &\leq \Pr[\exists i \in [q] : x_i \in \{m_0 \| r, m_1 \| r\}]
+\end{align*}
+
+Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and the adversary knows both $m_0$ and $m_1$, we apply the union bound:
+
+\begin{align*}
+  \Pr[\exists i \in [q] : x_i \in \{m_0 \| r, m_1 \| r\}] &\leq \sum_{i=1}^q \Pr[x_i = m_0 \| r \text{ or } x_i = m_1 \| r] \\
+  &\leq \sum_{i=1}^q \left(\Pr[x_i = m_0 \| r] + \Pr[x_i = m_1 \| r]\right) \\
+  &= \sum_{i=1}^q \left(\frac{1}{2^\secpar} + \frac{1}{2^\secpar}\right) \\
+  &= \sum_{i=1}^q \frac{2}{2^\secpar} = \frac{2q}{2^\secpar}
+\end{align*}
+\end{proof}
+
+\begin{exercise}
+  Prove Lemma~\ref{lem:taproot-binding}.
+\end{exercise}
+
+\begin{proof}[Solution]
+  Let $\adv$ be an adversary against the binding property of $\algo{TapCom}[\grgen, \algo{H}]$. The adversary wins if it outputs $(m_0, m_1, R_0, R_1)$ with $m_0 \neq m_1$ such that:
+  \[
+  R_0 \cdot g^{\algo{H}(R_0 \| m_0)} = R_1 \cdot g^{\algo{H}(R_1 \| m_1)}
+  \]
+
+  Rearranging, this equality holds if and only if:
+  \[
+  R_0 \cdot g^{\algo{H}(R_0 \| m_0)} \cdot R_1^{-1} = g^{\algo{H}(R_1 \| m_1)}
+  \]
+
+  Our strategy is to check for binding collisions as queries are made to the random oracle.
+  Consider the distinct queries to the random oracle of the form $R_i \| m_i$ and define the collision predicate:
+  \[
+  c(i, j) = \text{true} \iff R_i \cdot g^{\algo{H}(R_i \| m_i)} \cdot R_j^{-1} = g^{\algo{H}(R_j \| m_j)}
+  \]
+  
+  The probability that the adversary breaks binding is:
+  \[
+  \advantage{Bind}{\adv, \algo{TapCom}} = \Pr\left[\bigvee_{i=1}^{q'} \bigvee_{j=i+1}^{q'} c(i,j) = \text{true}\right]
+  \]
+  where $q'$ is the number of distinct queries.
+  
+  For all $j > i$, we have $\Pr[c(i,j) = \text{true}] = \frac{1}{p}$, since $\algo{H}(R_j \| m_j)$ is a fresh uniformly random value in $\ZZ_p$, independent of $R_i$, $\algo{H}(R_i \| m_i)$, and $R_j$.
+  
+  By the union bound:
+  \begin{align}
+    \advantage{Bind}{\adv, \algo{TapCom}} &= \Pr\left[\bigvee_{i=1}^{q'} \bigvee_{j=i+1}^{q'} c(i,j) = \text{true}\right] \\
+    &\leq \sum_{i=1}^{q'} \sum_{j=i+1}^{q'} \Pr[c(i,j) = \text{true}] \\
+    &= \sum_{i=1}^{q'} \sum_{j=i+1}^{q'} \frac{1}{p} \\
+    &= \binom{q'}{2} \cdot \frac{1}{p} < \frac{(q')^2}{2p}
+  \end{align}
+  
+  The total number of queries includes the adversary's queries (at most $q$) plus the 2 queries made by the binding game when checking $C_0 = C_1$. Thus $q' \leq q + 2$.
+  
+  Since $p \geq 2^\secpar$, we have:
+  \[
+  \advantage{Bind}{\adv, \algo{TapCom}} < \frac{(q+2)^2}{2p} \leq \frac{(q+2)^2}{2 \cdot 2^\secpar} = \frac{(q+2)^2}{2^{\secpar+1}} < \frac{(q+2)^2}{2^\secpar}
+  \]
+\end{proof}
+
+\begin{exercise}[Optional]
+  \begin{enumerate}
+    \item Let $\algo{H}$ be a hash function with output in $\{0,1\}^\secpar$ and let $\kappa$ be chosen uniformly at random. Define $A = \algo{H.Eval}(\kappa, 0) \| \algo{H.Eval}(\kappa, 1)$. Over what size set is $A$ uniformly distributed?
+    \item Let $\algo{H}$ be a random oracle with output in $\{0,1\}^\secpar$. Define $B = \algo{H}(0) \| \algo{H}(1)$. Over what size set is $B$ uniformly distributed?
+  \end{enumerate}
+\end{exercise}
+
+\begin{proof}[Solution]
+  \begin{enumerate}
+    \item There are $2^\secpar$ possibilities for $\kappa$, and each determines a unique value of $A$. Therefore, $A$ is uniformly distributed over a set of size at most $2^\secpar$.
+    \item Since $\algo{H}(0)$ and $\algo{H}(1)$ are independent uniformly random values in $\{0,1\}^\secpar$, $B$ is uniformly distributed over a set of size $2^{2\secpar}$.
+  \end{enumerate}
+\end{proof}
+
+\begin{exercise}[Optional]
+  Let $\algo{H}$ be a random oracle with output in $\{0,1\}^\secpar$. Define the function $G: (\{0,1\}^*)^{\secpar+1} \rightarrow \{0,1\}^\secpar$ as:
+  \[
+  G(x_0, x_1, \ldots, x_\secpar) = \algo{H}(x_0) \oplus \algo{H}(x_1) \oplus \cdots \oplus \algo{H}(x_\secpar)
+  \]
+  where $\oplus$ denotes bitwise XOR. Is $G$ preimage resistant? That is, given $y \in \{0,1\}^\secpar$, is it hard for a p.p.t. adversary with oracle access to $\algo{H}$ to find $(x_0, \ldots, x_\secpar)$ such that $G(x_0, \ldots, x_\secpar) = y$?
+\end{exercise}
+
+\begin{proof}[Solution]
+  % TODO: cite
+  No, $G$ is not preimage resistant. Wagner's algorithm for the generalized birthday problem can find a preimage efficiently.
+\end{proof}
