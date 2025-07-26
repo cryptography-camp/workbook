@@ -1,4 +1,4 @@
-name: Build and release LaTeX document
+name: Build and release LaTeX documents
 on: [push]
 permissions:
   contents: write
@@ -9,21 +9,45 @@ jobs:
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v4
-      - name: Compile LaTeX document
+      
+      - name: Compile workbook (without solutions)
         uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
-      - name: Upload PDF file
+          args: -pdf -latexoption="-interaction=nonstopmode" -outdir=.
+          pre_compile: |
+            # Create workbook version without solutions
+            sed -i 's/\\solutionstrue/\\solutionsfalse/' main.tex
+          post_compile: |
+            mv main.pdf workbook.pdf
+            # Restore the original
+            sed -i 's/\\solutionsfalse/\\solutionstrue/' main.tex
+      
+      - name: Compile solutionbook (with solutions)
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex
+          args: -pdf -latexoption="-interaction=nonstopmode" -outdir=.
+          post_compile: |
+            mv main.pdf solutionbook.pdf
+      
+      - name: Upload PDF files
         uses: actions/upload-artifact@v4
         with:
-          name: PDF
-          path: main.pdf
+          name: PDFs
+          path: |
+            workbook.pdf
+            solutionbook.pdf
+      
       - name: Generate release tag
         id: tag
         run: |
-            echo "::set-output name=release_tag::workbook.pdf_$(date +"%Y.%m.%d_%H-%M")"
+            echo "::set-output name=release_tag::release_$(date +"%Y.%m.%d_%H-%M")"
+      
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-            files: main.pdf
+            files: |
+              workbook.pdf
+              solutionbook.pdf
             tag_name: ${{ steps.tag.outputs.release_tag }}

@@ -183,7 +183,7 @@ Before examining the consequences of random oracles, we present a simple lemma t
   \end{enumerate}
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
   \begin{enumerate}
     \item In the ROM, $\algo{H}$ behaves as a random oracle. For any fixed $y$, we have $\Pr[\algo{H.Eval}(0) = y] = \frac{1}{2^\secpar}$, which is negligible. With overwhelming probability, the scheme behaves identically to the standard $\algo{HashCom}[\algo{H}]$, which is hiding by Lemma~\ref{lem:hash-com-hiding}.
     
@@ -194,13 +194,13 @@ Before examining the consequences of random oracles, we present a simple lemma t
     
     \item Let $y = \text{SHA256}(0)$. When instantiated with SHA256, we always have $\algo{H.Eval}(0) = y$, so the commitment becomes $C = \text{SHA256}(m)$ without any randomness. This is deterministic and therefore not hiding: given two messages $m_0, m_1$, the adversary can compute $\text{SHA256}(m_0)$ and $\text{SHA256}(m_1)$ and compare with $C$ to determine which message was committed to.
   \end{enumerate}
-\end{proof}
+\end{mysolution}
 
 \begin{exercise}
   Prove Lemma~\ref{lem:hash-com-hiding} using a similar technique as in Lemma~\ref{lem:ro-indistinguishable}.
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
 % TODO change to "Figure bla shows the hiding game for Hashcom where ..."
 Consider the hiding game for $\algo{HashCom}[\algo{H}]$ where $\algo{H}$ is modeled as a random oracle:
 
@@ -281,13 +281,13 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
   &= \sum_{i=1}^q \left(\frac{1}{2^\secpar} + \frac{1}{2^\secpar}\right) \\
   &= \sum_{i=1}^q \frac{2}{2^\secpar} = \frac{2q}{2^\secpar}
 \end{align*}
-\end{proof}
+\end{mysolution}
 
 \begin{exercise}
   Prove Lemma~\ref{lem:taproot-binding}.
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
   Let $\adv$ be an adversary against the binding property of $\algo{TapCom}[\grgen, \algo{H}]$. The adversary wins if it outputs $(m_0, m_1, R_0, R_1)$ with $m_0 \neq m_1$ such that:
   \[
   R_0 \cdot g^{\algo{H}(R_0 \| m_0)} = R_1 \cdot g^{\algo{H}(R_1 \| m_1)}
@@ -326,7 +326,7 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
   \[
   \advantage{Bind}{\adv, \algo{TapCom}} < \frac{(q+2)^2}{2p} \leq \frac{(q+2)^2}{2 \cdot 2^\secpar} = \frac{(q+2)^2}{2^{\secpar+1}} < \frac{(q+2)^2}{2^\secpar}
   \]
-\end{proof}
+\end{mysolution}
 
 \begin{exercise}[Optional]
   \begin{enumerate}
@@ -335,12 +335,12 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
   \end{enumerate}
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
   \begin{enumerate}
     \item There are $2^\secpar$ possibilities for $\kappa$, and each determines a unique value of $A$. Therefore, $A$ is uniformly distributed over a set of size at most $2^\secpar$.
     \item Since $\algo{H}(0)$ and $\algo{H}(1)$ are independent uniformly random values in $\{0,1\}^\secpar$, $B$ is uniformly distributed over a set of size $2^{2\secpar}$.
   \end{enumerate}
-\end{proof}
+\end{mysolution}
 
 \begin{exercise}[Optional]
   Let $\algo{H}$ be a random oracle with output in $\{0,1\}^\secpar$. Define the function $G: (\{0,1\}^*)^{\secpar+1} \rightarrow \{0,1\}^\secpar$ as:
@@ -350,7 +350,7 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
   where $\oplus$ denotes bitwise XOR. Is $G$ preimage resistant? That is, given $y \in \{0,1\}^\secpar$, is it hard for a p.p.t. adversary with oracle access to $\algo{H}$ to find $(x_0, \ldots, x_\secpar)$ such that $G(x_0, \ldots, x_\secpar) = y$?
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
   % TODO: cite
   No, $G$ is not preimage resistant. Wagner's algorithm for the generalized birthday problem can find a preimage efficiently.
-\end{proof}
+\end{mysolution}

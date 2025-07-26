@@ -66,7 +66,7 @@ The following proposition demonstrates that careful programming preserves the ad
   Describe the similarities and differences between games $\Game_0$ and $\Game_1$ in \autoref{fig:prog-rom-games}.
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
   In both games:
   \begin{itemize}
     \item The oracle $\pcoracle{H}$ behaves identically as a random oracle
@@ -80,13 +80,16 @@ The following proposition demonstrates that careful programming preserves the ad
     \item In $\Game_1$: $h$ is chosen uniformly at random, then we program the oracle so that $\pcoracle{H}(m \| r) = h$
     \item In $\Game_1$: If $h'$ is a valid hash commitment (i.e., $\exists (m', r')$ such that $\pcoracle{H}(m' \| r') = h'$), then $m \oplus m' = m^*$, where $m^*$ was determined before running $\adv$.
   \end{itemize}
-\end{proof}
+\end{mysolution}
 
 \begin{exercise}
-  Consider $\Game_F$ which is exactly like $\Game_1$ except that $m^* \defeq 0$ (instead of sampling uniformly). Give an adversary $\adv$ that makes one random oracle query and achieves $\left|\Pr[\game{\Game_0}{} = 1] - \Pr[\game{\Game_F}{} = 1]\right| = \frac{1}{2}$.
+  Consider $\Game_F$ which is exactly like $\Game_1$ except that $m^* \defeq 0$ (instead of sampling uniformly). Give an adversary $\adv$ that makes one random oracle query and achieves
+  \[
+    \left|\Pr[\game{\Game_0}{} = 1] - \Pr[\game{\Game_F}{} = 1]\right| = \frac{1}{2}.
+  \]
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
   Consider the following adversary $\adv$:
   
   \textbf{First invocation:}
@@ -107,13 +110,13 @@ The following proposition demonstrates that careful programming preserves the ad
   \end{itemize}
   
   Therefore: $\left|\Pr[\game{\Game_0}{} = 1] - \Pr[\game{\Game_F}{} = 1]\right| = \left|\frac{1}{2} - 0\right| = \frac{1}{2}$.
-\end{proof}
+\end{mysolution}
 
 \begin{exercise}
   Prove Proposition~\ref{prop:prog-rom}.
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
     Let $E$ be the event that the adversary queries $m \| r$ to the oracle during its first invocation (when it outputs $(\state, h')$).
   
   When $\neg E$ occurs, we claim that $\Pr[\game{\Game_0}{} = 1 \wedge \neg E] = \Pr[\game{\Game_1}{} = 1 \wedge \neg E]$. To see this, we analyze the distribution of all values conditioned on $\neg E$:
@@ -157,7 +160,7 @@ The following proposition demonstrates that careful programming preserves the ad
   \[
   \left|\Pr[\game{\Game_0}{} = 1] - \Pr[\game{\Game_1}{} = 1]\right| \leq \frac{q}{2^\secpar}
   \]
-\end{proof}
+\end{mysolution}
 
 \subsection{The Forking Lemma}
 
@@ -242,7 +245,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
   Consider an algorithm $\adv$ that never queries $\pcoracle{H}$. What is $\advantage{Fork}{\adv, \algo{InpGen}}$?
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
   If $\adv$ never queries $\pcoracle{H}$, then the table $T$ remains empty throughout the first execution. In the Fork game:
   
   \begin{itemize}
@@ -259,13 +262,13 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
   \[
   \advantage{Fork}{\adv, \algo{InpGen}} = \advantage{Single}{\adv, \algo{InpGen}}^2
   \]
-\end{proof}
+\end{mysolution}
 
 \begin{exercise}
   Consider an algorithm $\adv$ that makes exactly one query $z \gets \pcoracle{H}(\rho)$ and outputs $(z, \bot)$. What is $\advantage{Fork}{\adv, \algo{InpGen}}$?
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
   In this case, $\adv$ always succeeds in outputting a non-$\bot$ value, so $\advantage{Single}{\adv, \algo{InpGen}} = 1$. In the Fork game:
   
   \begin{itemize}
@@ -286,7 +289,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
   \[
   1 \cdot \left(\frac{1}{1} - \frac{1}{2^\secpar}\right) = 1 - \frac{1}{2^\secpar}
   \]
-\end{proof}
+\end{mysolution}
 
 
 \begin{exercise}
@@ -295,7 +298,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
   Using the forking lemma, give an algorithm $\bdv$ that outputs $x$ and bound its success probability.
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
   We construct $\bdv$ that runs exactly as $\game{\algo{Fork}}{\algo{InpGen}}$, except that instead of returning $\pctrue$ at the end, it extracts and outputs $x$.
   
   At the point where Fork would succeed, we have:
@@ -316,13 +319,13 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
   \[
   \Pr[\bdv \text{ outputs } x] = \advantage{Fork}{\adv, \algo{InpGen}} \geq 1 \cdot \left(\frac{1}{q} - \frac{1}{2^\secpar}\right) = \frac{1}{q} - \frac{1}{2^\secpar}
   \]
-\end{proof}
+\end{mysolution}
 
 \begin{exercise}
   Consider an algorithm $\adv$ that queries $h_0 \gets \pcoracle{H}(0)$ and outputs $(0, \bot)$ if $h_0 \bmod 2 = 0$, otherwise outputs $(h_0, \bot)$. What is $\advantage{Fork}{\adv, \algo{InpGen}}$?
 \end{exercise}
 
-\begin{proof}[Solution]
+\begin{mysolution}
   First, note that $\advantage{Single}{\adv, \algo{InpGen}} = 1$ since $\adv$ always outputs a non-$\bot$ value. 
   
   The adversary only queries $\pcoracle{H}(0)$, so after the first execution, $T[0] = h_0$ and all other entries remain $\bot$.
@@ -352,7 +355,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
   \[
   \advantage{Fork}{\adv, \algo{InpGen}} = \frac{1}{2} \cdot \frac{1}{2} \cdot \left(1 - \frac{1}{2^\secpar}\right) + \frac{1}{2} \cdot 1 = \frac{1}{4} - \frac{1}{2^{\secpar+2}} + \frac{1}{2} \approx \frac{3}{4}
   \]
-\end{proof}
+\end{mysolution}
 
 \begin{exercise}[Optional]
   Find an algorithm $\adv$ making exactly $q$ queries for which $\advantage{Fork}{\adv, \algo{InpGen}}$ is as close to $\advantage{Single}{\adv, \algo{InpGen}} \left( \frac{\advantage{Single}{\adv, \algo{InpGen}}}{q} - \frac{1}{2^\secpar} \right)$ as possible.

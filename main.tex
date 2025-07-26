@@ -5,6 +5,7 @@
 \newif\ifspace
 \newif\ifcameraready
 \newif\ifbibtex
+\newif\ifsolutions
 
 %%% Settings
 %% Full version of the paper
@@ -21,6 +22,8 @@
 % \camerareadytrue
 %% Use legacy BibTeX instead of Biber
 % \bibtextrue
+%% Include solutions in the output
+\solutionsfalse
 
 \documentclass[
   %% Uncomment to enable letterpaper
@@ -210,6 +213,13 @@
 %%% Additional theorem-like environments
 \newtheorem{assumption}{Assumption}
 \Crefname{assumption}{Assumption}{Assumptions}
+
+%%% Solution handling
+\ifsolutions
+  \newenvironment{mysolution}{\begin{proof}[Solution]}{\end{proof}}
+\else
+  \newenvironment{mysolution}{\setbox0\vbox\bgroup}{\egroup}
+\fi
 
 %%% Cryptocode
 \WarningFilter*[theH]{latex}{Command `\string\the}%
