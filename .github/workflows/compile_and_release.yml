@@ -10,72 +10,28 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v4
       
-      - name: Setup TeXLive
-        uses: teatimeguest/setup-texlive-action@v3
+      - name: Compile workbook (without solutions)
+        uses: xu-cheng/latex-action@v3
         with:
-          cache: true
-          packages: |
-            scheme-basic
-            latexmk
-            llncs
-            geometry
-            silence
-            fontenc
-            lmodern
-            babel
-            csquotes
-            microtype
-            xpunctuate
-            dirtytalk
-            pifont
-            tcolorbox
-            pgf
-            tikz
-            xcolor
-            amsmath
-            amsthm
-            mathtools
-            todonotes
-            biblatex
-            biber
-            hyperref
-            cleveref
-            cryptocode
-            xpatch
-            etoolbox
-            xargs
-            forloop
-            array
-            pbox
-            varwidth
-            bigfoot
-            comment
-            environ
-            trimspaces
-            fixcmex
-            xkeyval
-            bookmark
-            graphics
-            tools
-            multirow
-            listings
-            varioref
-            subfigure
-            titlesec
+          pre_compile: |
+            # Create a copy for workbook
+            cp main.tex main_workbook.tex
+            # Disable solutions
+            sed -i 's/\\solutionstrue/\\solutionsfalse/' main_workbook.tex
+          root_file: main_workbook.tex
+          latexmk_use_bibtex: true
       
-      - name: Compile workbook and solutionbook
-        run: |
-          # Compile workbook (without solutions)
-          echo "Building workbook..."
-          cp main.tex main_workbook.tex
-          sed -i 's/\\solutionstrue/\\solutionsfalse/' main_workbook.tex
-          latexmk -pdf -interaction=nonstopmode main_workbook.tex
-          mv main_workbook.pdf workbook.pdf
-          
-          # Compile solutionbook (with solutions) - use original main.tex
-          echo "Building solutionbook..."
-          latexmk -pdf -interaction=nonstopmode main.tex
-          mv main.pdf solutionbook.pdf
+      - name: Move workbook PDF
+        run: mv main_workbook.pdf workbook.pdf
+      
+      - name: Compile solutionbook (with solutions)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          latexmk_use_bibtex: true
+      
+      - name: Move solutionbook PDF
+        run: mv main.pdf solutionbook.pdf
       
       - name: Upload PDF files
         uses: actions/upload-artifact@v4
