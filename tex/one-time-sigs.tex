@@ -27,7 +27,7 @@
 \begin{figure}[tbh]
  \begin{tcolorbox}%[left=0mm,right=0mm]
   \begin{pchstack}[center]
-   \procedure{Game $\game{\Game~\algo{EUF-CMA}}{\algo{OTS}}$}{%
+   \procedure{$\game{\Game~\algo{EUF-CMA}}{\algo{OTS}}$}{%
      \params \gets \algo{Gen}(1^\secpar) \\
      (\sk,\pk) \gets \algo{KeyGen}(\params) \\
      \mathcal{Q} \defeq \emptyset\\
@@ -123,7 +123,7 @@
   \end{pcvstack}
   \pchspace
    \begin{pcvstack}
-    \procedure{Game $\game{\Game~\algo{G_1}}{}$}{%
+    \procedure{$\game{\Game~\algo{G_1}}{}$}{%
       \params \gets \algo{Gen}(1^\secpar) \\
       (\sk,\pk) \gets \algo{KeyGen}(\params) \\
       \gamechange{$i \sample [1, k] \pcsc j \sample \{0, 1\}$} \\
@@ -145,7 +145,7 @@
    \end{pcvstack}
   \pchspace
    \begin{pcvstack}
-    \procedure{Game $\game{\Game~\algo{G_2}}{\algo{OTS}}$}{%
+    \procedure{$\game{\Game~\algo{G_2}}{\algo{OTS}}$}{%
       \params \gets \algo{Gen}(1^\secpar) \\
       (\sk,\pk) \gets \algo{KeyGen}(\params) \\
       i \sample [1, k]  \\
@@ -178,7 +178,7 @@
     \autoref{fig:euf-cma-ots-lamport} shows a sequence of games for the proof that Lamport signatures are EUF-CMA secure.
     The first game is identical to the $\Game~\algo{EUF-CMA}$ game.
     Each subsequent game introduces a small change compared to the previous game.
-    Then we can construct an algorithm that runs a $\Game~\algo{EUF-CMA}$ adversary $\adv$ internally and wins the hash preimage game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with the same probability as $\adv$ winning the last game $\Game~\algo{G_2}$.
+    Then we can construct an algorithm that runs a $\Game~\algo{EUF-CMA}$ adversary $\adv$ internally and wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with the same probability as $\adv$ winning the last  $\Game~\algo{G_2}$.
     The rest of the proof is left as an exercise.
 \end{proof}
 
@@ -196,7 +196,7 @@
 \fi
 
 \begin{exercise}
-  To see why the security definition for signatures includes a signing oracle, consider game $\game{\Game~\algo{G}}{\algo{OTS}}$ which is the same as $\game{\Game~\algo{EUF-CMA}}{\algo{OTS}}$ except that the adversary $\adv$ is not given access to the signing oracle.
+  To see why the security definition for signatures includes a signing oracle, consider $\game{\Game~\algo{G}}{\algo{OTS}}$ which is the same as $\game{\Game~\algo{EUF-CMA}}{\algo{OTS}}$ except that the adversary $\adv$ is not given access to the signing oracle.
   Give an example for a one time signature scheme that is correct and $\pr{\game{\Game~\algo{G}}{\algo{OTS}} = 1} = negl$ for all p.p.t. adversaries $\adv$ but is not EUF-CMA secure.
 \end{exercise}
 
@@ -208,7 +208,7 @@
       \item $\algo{Sign}(\params, \sk, m) = \sk$ (simply outputs the secret key).
       \item $\algo{Verify}(\params, \pk, m, \sigma) = 1$ if and only if $\algo{H.Eval}(\sigma) = \pk$.
   \end{itemize}
-  This scheme is correct and would be secure in game $\Game~\algo{G}$ (without signing oracle) since the adversary cannot forge without knowing $\sk$, which requires solving the preimage problem.
+  This scheme is correct and would be secure in $\Game~\algo{G}$ (without signing oracle) since the adversary cannot forge without knowing $\sk$, which requires solving the preimage problem.
   However, this scheme is obviously insecure in practice: anyone who sees one signature learns the secret key and can forge signatures for any message!
   The $\Game~\algo{EUF-CMA}$ game with signing oracle correctly captures this insecurity.
 \end{mysolution}
@@ -227,7 +227,7 @@
   \begin{enumerate}
       \item Express $\pr{\game{\Game~\algo{G_1}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1}$.
       \item Express $\pr{\game{\Game~\algo{G_2}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{G_1}}{} = 1}$.
-      \item Give an algorithm $\bdv^\adv$ that wins the preimage game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability $\pr{\game{\Game~\algo{G_2}}{} = 1}$.
+      \item Give an algorithm $\bdv^\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability $\pr{\game{\Game~\algo{G_2}}{} = 1}$.
       \item Put it all together to prove \autoref{thm:ots-lamport-euf-cma}.
   \end{enumerate}
 \end{exercise}
@@ -240,7 +240,7 @@
       &= \pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1 | m_i \neq j} \pr{m_i \neq j} \\
       &= \frac{1}{2}\pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1} \\
   \end{align*}
-  In game $\game{\Game~\algo{G_2}}{} = 1$ only when $m^* \neq m$ and $m^*_i = j$.
+  $\game{\Game~\algo{G_2}}{} = 1$ only when $m^* \neq m$ and $m^*_i = j$.
   Therefore,
   \begin{align*}
       \pr{\game{\Game~\algo{G_2}}{} = 1} &= \pr{\game{\Game~\algo{G_1}}{} = 1 \wedge m^*_i = j} \\

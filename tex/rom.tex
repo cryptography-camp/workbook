@@ -16,7 +16,7 @@ The oracle returns $T[x]$.
   \begin{center}
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}
-        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ROExample}}{}(\secpar)$}{%
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ROExample}}{}$}{%
           T \defeq \emptyset \\
           r \sample \{0,1\}^\secpar \\
           h \defeq \pcoracle{H}(r) \\
@@ -66,7 +66,7 @@ Before examining the consequences of random oracles, we present a simple lemma t
   \begin{center}
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}
-        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ROExample}_1}{}(\secpar)$}{%
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ROExample}_1}{}$}{%
           T \defeq \emptyset \\
           r \sample \{0,1\}^\secpar \\
           h \defeq \pcoracle{H}(r) \\
@@ -211,7 +211,7 @@ Consider the hiding game for $\algo{HashCom}[\algo{H}]$ where $\algo{H}$ is mode
   \begin{center}
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}
-        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHide}}{\algo{HashCom}}(\secpar)$}{%
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHide}}{\algo{HashCom}}$}{%
           \params \gets \algo{HashCom.Setup}(1^\secpar) \\
           (m_0, m_1) \gets \adv(\params) \\
           T \defeq \emptyset \\
@@ -238,7 +238,7 @@ Now consider the following modified game:
   \begin{center}
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}
-        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHide}_1}{\algo{HashCom}}(\secpar)$}{%
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHide}_1}{\algo{HashCom}}$}{%
           \params \gets \algo{HashCom.Setup}(1^\secpar) \\
           (m_0, m_1) \gets \adv(\params) \\
           T \defeq \emptyset \\
@@ -363,4 +363,8 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
   % TODO: cite
   No, $G$ is not preimage resistant. Wagner's algorithm for the generalized birthday problem can find a preimage efficiently.
 \end{mysolution}
+
+\begin{exercise}[Optional]
+  Why is the ROM not considered adequate to model quantum computation?
+\end{exercise}
 \fi

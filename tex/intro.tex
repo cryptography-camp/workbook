@@ -5,7 +5,9 @@ Throughout this workbook we will study algorithms, analyse their running time an
 In later sections we will sometimes study these algorithms within idealised computational models.
 
 This workbook primarily contains definitions, propositions, and lemmas, with limited intuitive explanations.
-The goal is to build intuition step-by-step through the exercises, which provide hands-on experience with the theoretical concepts.
+Good cryptography papers should include intuition, but it's never complete---intuition is inherently subjective and what makes sense to one reader may not resonate with another.
+What you need to do is develop your own explanations while reading the mathematics very precisely.
+The goal of this workbook is to build intuition step-by-step through the exercises, which provide hands-on experience with the theoretical concepts.
 
 Note that there is rarely a single standard definition for a concept in cryptography.
 Sometimes we encounter equivalent definitions in the literature, while other times we find definitions that differ in subtle but important ways.
@@ -59,7 +61,7 @@ A function $f: \ZZ \rightarrow \real$ is \emph{negligible} if for every polynomi
   $2^{-\secpar}$ and $2^{-\sqrt{\secpar}}$ are negligible. $1/\secpar$ is not negligible.
 \end{example}
 
-If a function $f$ is negligible, we write $f(\secpar) = \negl(\secpar)$.
+If a function $f$ is negligible, we write $f(\secpar) = \negl$.
 
 
 \begin{proposition}
@@ -317,8 +319,8 @@ We illustrate the concept of reductions through a series of examples.
 \end{proposition}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
-  If $\algo{H}$ is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins game $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability.
-  Assume $\algo{H}$ is a hash function $\{0,1\}^* \rightarrow \{0,1\}^{c\lambda}$ for some constant $c$ and is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
+  If $\algo{H}$ is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability.
+  Assume $\algo{H}$ is a hash function $\{0,1\}^* \rightarrow \{0,1\}^{c\lambda}$ for some constant $c$ and is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
   Let $\bdv^\adv_\algo{H}$ be an algorithm that runs $\adv$ and returns its output (see \autoref{fig:break-hash-either-bdv}).
   \begin{figure}[tbhp]
   \begin{center}
@@ -347,7 +349,7 @@ We illustrate the concept of reductions through a series of examples.
 \end{proposition}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
-  If there exists a p.p.t. algorithm $\adv$ that wins game $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability, then $\algo{H}$ is not preimage-resistant.
+  If there exists a p.p.t. algorithm $\adv$ that wins $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability, then $\algo{H}$ is not preimage-resistant.
   Let $\bdv^\adv_\algo{H}$ be an algorithm as defined in \autoref{fig:break-preimage-bdv} that runs $\adv$ and returns its output.
 \end{proof}
 \begin{figure}[tbhp]
@@ -397,7 +399,7 @@ We illustrate the concept of reductions through a series of examples.
 \end{lemma}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
-  If $\algo{H}$ is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
+  If $\algo{H}$ is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
   Let $\bdv^\adv_\algo{H}$ be an algorithm as defined in \autoref{fig:break-hash-preimage-bdv} that runs $\adv$ and returns its output.
   \begin{figure}[tbhp]
   \begin{center}

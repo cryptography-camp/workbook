@@ -8,13 +8,13 @@ This technique is particularly useful in security reductions.
 For example, consider the hash commitment scheme $\algo{HashCom}[\algo{H}]$ where commitments are of the form $\algo{H}(m \| r)$.
 A reduction can program the oracle such that certain algebraic relations hold between committed messages, while maintaining the adversary's view.
 
-The following proposition demonstrates that careful programming preserves the adversary's advantage. Notably, game $\Game_1$ determines the XOR of committed messages $m^*$ before running the adversary.
+The following proposition demonstrates that careful programming preserves the adversary's advantage. Notably, $\Game_1$ determines the XOR of committed messages $m^*$ before running the adversary.
 
 \begin{figure}[tbhp]
   \begin{center}
     \begin{tcolorbox}[width=\textwidth]
       \begin{pchstack}
-        \procedure[headlinesep=1pt]{$\game{\Game_0}{}(\secpar)$}{%
+        \procedure[headlinesep=1pt]{$\game{\Game_0}{}$}{%
           \params \gets \algo{HashCom.Setup}(1^\secpar) \\
           T \defeq \emptyset \\
           m \sample \{0,1\} \\
@@ -30,7 +30,7 @@ The following proposition demonstrates that careful programming preserves the ad
           \pcreturn T[x]
         }
         \pchspace
-        \procedure[headlinesep=1pt]{$\game{\Game_1}{}(\secpar)$}{%
+        \procedure[headlinesep=1pt]{$\game{\Game_1}{}$}{%
           \params \gets \algo{HashCom.Setup}(1^\secpar) \\
           T \defeq \emptyset \\
           m^* \sample \{0,1\} \\
@@ -76,7 +76,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
     \begin{tcolorbox}[width=\textwidth]
       \begin{pchstack}[center]
         \begin{pcvstack}
-          \procedure[headlinesep=1pt]{$\game{\Game~\algo{Single}}{\algo{InpGen}}(\secpar)$}{%
+          \procedure[headlinesep=1pt]{$\game{\Game~\algo{Single}}{\algo{InpGen}}$}{%
             \mathit{inp} \gets \algo{InpGen}(\secpar) \\
             \rho \sample \mathcal{R} \\
             T \defeq \emptyset \\
@@ -93,7 +93,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
         \end{pcvstack}
         \pchspace
         \begin{pcvstack}
-          \procedure[headlinesep=1pt]{$\game{\Game~\algo{Fork}}{\algo{InpGen}}(\secpar)$}{%
+          \procedure[headlinesep=1pt]{$\game{\Game~\algo{Fork}}{\algo{InpGen}}$}{%
             \mathit{inp} \gets \algo{InpGen}(\secpar) \\
             \rho \sample \mathcal{R} \\
             T \defeq \emptyset \\
@@ -127,8 +127,8 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
   
   For games $\game{\algo{Single}}{\algo{InpGen}}$ and $\game{\algo{Fork}}{\algo{InpGen}}$ defined in \autoref{fig:fork-games}, define:
   \begin{align*}
-    \advantage{Single}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Single}}{\algo{InpGen}}(\secpar) = \pctrue] \\
-    \advantage{Fork}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Fork}}{\algo{InpGen}}(\secpar) = \pctrue]
+    \advantage{Single}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Single}}{\algo{InpGen}} = \pctrue] \\
+    \advantage{Fork}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Fork}}{\algo{InpGen}} = \pctrue]
   \end{align*}
   
   Then:
