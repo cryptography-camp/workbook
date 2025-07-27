@@ -183,69 +183,102 @@
 \end{proof}
 
 \subsection{Exercises}
-\begin{enumerate}
-    \item What is "existential unforgeability" in "EUF-CMA" (\autoref{def:euf-cma-ot}) and what is "chosen message attack"?
-    \item To see why the security definition for signatures includes a signing oracle, consider game $\game{\Game~\algo{G}}{\algo{OTS}}$ which is the same as $\game{\Game~\algo{EUF-CMA}}{\algo{OTS}}$ except that the adversary $\adv$ is not given access to the signing oracle.
-          Give an example for a one time signature scheme that is correct and $\pr{\game{\Game~\algo{G}}{\algo{OTS}} = 1} = negl$ for all p.p.t. adversaries $\adv$ but is not EUF-CMA secure.
-    \item Is $(x_{1,0}, x_{2,0}, x_{3,1})$ a valid signature for the message $m = \{0, 0, 1\}$ under the Lamport signature scheme $\algo{LS}[\algo{H, 3}]$?
-    \item Is the Lamport signature scheme $\algo{LS}[\algo{H, k}]$ correct?
-    \item Prove theorem \autoref{thm:ots-lamport-euf-cma}:
-        \begin{enumerate}
-            \item Express $\pr{\game{\Game~\algo{G_1}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1}$.
-            \item Express $\pr{\game{\Game~\algo{G_2}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{G_1}}{} = 1}$.
-            \item Give an algorithm $\bdv^\adv$ that wins the preimage game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability $\pr{\game{\Game~\algo{G_2}}{} = 1}$.
-            \item Put it all together to prove \autoref{thm:ots-lamport-euf-cma}.
-        \end{enumerate}
-    \item Let $\Game~\algo{G'}$ be the same as $\Game~\algo{EUF-CMA}$ except that the signing oracle can be called twice. Where does your proof break?
-    \item Optional: Why are Lamport signatures considered post-quantum?
-    \item TODO: Consider lamport sigs where the public key is a hash, or where the secret keys are derived.
-\end{enumerate}
 
-\subsection{Solutions}
-\begin{enumerate}
-    \item \textbf{Existential unforgeability:} The adversary wins if it can forge a signature for \emph{any} message of its choice.
-          \textbf{Chosen message attack:} The adversary has access to a signing oracle and can obtain a signature for a message of its choice before attempting the forgery.
-    \item Consider the following scheme:
-          \begin{itemize}
-              \item $\algo{KeyGen}(\params) = (\sk = x, \pk = \algo{H.Eval}(x))$ where $x \sample \{0,1\}^\secpar$.
-              \item $\algo{Sign}(\params, \sk, m) = \sk$ (simply outputs the secret key).
-              \item $\algo{Verify}(\params, \pk, m, \sigma) = 1$ if and only if $\algo{H.Eval}(\sigma) = \pk$.
-          \end{itemize}
-          This scheme is correct and would be secure in game $\Game~\algo{G}$ (without signing oracle) since the adversary cannot forge without knowing $\sk$, which requires solving the preimage problem.
-          However, this scheme is obviously insecure in practice: anyone who sees one signature learns the secret key and can forge signatures for any message!
-          The $\Game~\algo{EUF-CMA}$ game with signing oracle correctly captures this insecurity.
-    \item We have
-    \begin{align*}
-        \pr{\game{\Game~\algo{G_1}}{} = 1} &= \pr{\game{(\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}}) = 1) \wedge (m_i \neq j)} \\
-        &= \pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1 | m_i \neq j} \pr{m_i \neq j} \\
-        &= \frac{1}{2}\pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1} \\
-    \end{align*}
-    In game $\game{\Game~\algo{G_2}}{} = 1$ only when $m^* \neq m$ and $m^*_i = j$.
-    Therefore,
-    \begin{align*}
-        \pr{\game{\Game~\algo{G_2}}{} = 1} &= \pr{\game{\Game~\algo{G_1}}{} = 1 \wedge m^*_i = j} \\
-        &= \pr{m^*_i = j | \game{\Game~\algo{G_1}}{} = 1} \pr{\game{\Game~\algo{G_1}}{} = 1} \\
-        &\geq \frac{1}{k}\pr{\game{\Game~\algo{G_1}}{} = 1} \\
-    \end{align*}
-    The last inequality holds because when $\Game~\algo{G_1}$ succeeds, we have $m \neq m^*$ (at least one position differs), $m_i \neq j$, and $i$ is uniformly random. The probability that position $i$ is one where $m$ and $m^*$ differ is at least $1/k$. When they differ at position $i$ and $m_i \neq j$, then $m^*_i = j$ (since the message space is binary).
-    $\bdv^\adv$ is the same as $\Game~\algo{G_2}$ except that
-    \begin{itemize}
-        \item it gets a preimage challenge $y$ from a challenger and
-        \item replaces $\pk_{i, j}$ with $y$
-        \item it returns $\sigma_i$.
-    \end{itemize}
-    Since $m_i \neq j$, the inputs to the adversary (including the signing oracle call) has the same distribution as in $\Game~\algo{G_2}$.
-    Moreover, if $\game{\Game~\algo{G_2}}{}$ returns 1, then $\algo{H.Eval}(\sigma_i) = \pk_{i, j}$
-    Therefore,
-    \[
-    \advantage{Preimage}{\bdv^\adv, \algo{H}} = \pr{\game{\Game~\algo{G_2}}{} = 1}
-    \]
-    and then combining the inequalities:
-    \begin{align*}
-      \advantage{EUF-CMA}{\adv, \algo{LS}[\algo{H, k}]} &= \pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1} \\
-      &= 2 \cdot \pr{\game{\Game~\algo{G_1}}{} = 1} \\
-      &\leq 2k \cdot \pr{\game{\Game~\algo{G_2}}{} = 1} \\
-      &= 2k \cdot \advantage{Preimage}{\bdv^\adv, \algo{H}}
-    \end{align*}
-\end{enumerate}
+\begin{exercise}
+  What is "existential unforgeability" in "EUF-CMA" (\autoref{def:euf-cma-ot}) and what is "chosen message attack"?
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  \textbf{Existential unforgeability:} The adversary wins if it can forge a signature for \emph{any} message of its choice.
+  \textbf{Chosen message attack:} The adversary has access to a signing oracle and can obtain a signature for a message of its choice before attempting the forgery.
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  To see why the security definition for signatures includes a signing oracle, consider game $\game{\Game~\algo{G}}{\algo{OTS}}$ which is the same as $\game{\Game~\algo{EUF-CMA}}{\algo{OTS}}$ except that the adversary $\adv$ is not given access to the signing oracle.
+  Give an example for a one time signature scheme that is correct and $\pr{\game{\Game~\algo{G}}{\algo{OTS}} = 1} = negl$ for all p.p.t. adversaries $\adv$ but is not EUF-CMA secure.
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  Consider the following scheme:
+  \begin{itemize}
+      \item $\algo{KeyGen}(\params) = (\sk = x, \pk = \algo{H.Eval}(x))$ where $x \sample \{0,1\}^\secpar$.
+      \item $\algo{Sign}(\params, \sk, m) = \sk$ (simply outputs the secret key).
+      \item $\algo{Verify}(\params, \pk, m, \sigma) = 1$ if and only if $\algo{H.Eval}(\sigma) = \pk$.
+  \end{itemize}
+  This scheme is correct and would be secure in game $\Game~\algo{G}$ (without signing oracle) since the adversary cannot forge without knowing $\sk$, which requires solving the preimage problem.
+  However, this scheme is obviously insecure in practice: anyone who sees one signature learns the secret key and can forge signatures for any message!
+  The $\Game~\algo{EUF-CMA}$ game with signing oracle correctly captures this insecurity.
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Is $(x_{1,0}, x_{2,0}, x_{3,1})$ a valid signature for the message $m = \{0, 0, 1\}$ under the Lamport signature scheme $\algo{LS}[\algo{H, 3}]$?
+\end{exercise}
+
+\begin{exercise}
+  Is the Lamport signature scheme $\algo{LS}[\algo{H, k}]$ correct?
+\end{exercise}
+
+\begin{exercise}
+  Prove theorem \autoref{thm:ots-lamport-euf-cma}:
+  \begin{enumerate}
+      \item Express $\pr{\game{\Game~\algo{G_1}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1}$.
+      \item Express $\pr{\game{\Game~\algo{G_2}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{G_1}}{} = 1}$.
+      \item Give an algorithm $\bdv^\adv$ that wins the preimage game $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability $\pr{\game{\Game~\algo{G_2}}{} = 1}$.
+      \item Put it all together to prove \autoref{thm:ots-lamport-euf-cma}.
+  \end{enumerate}
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+   We have
+  \begin{align*}
+      \pr{\game{\Game~\algo{G_1}}{} = 1} &= \pr{\game{(\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}}) = 1) \wedge (m_i \neq j)} \\
+      &= \pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1 | m_i \neq j} \pr{m_i \neq j} \\
+      &= \frac{1}{2}\pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1} \\
+  \end{align*}
+  In game $\game{\Game~\algo{G_2}}{} = 1$ only when $m^* \neq m$ and $m^*_i = j$.
+  Therefore,
+  \begin{align*}
+      \pr{\game{\Game~\algo{G_2}}{} = 1} &= \pr{\game{\Game~\algo{G_1}}{} = 1 \wedge m^*_i = j} \\
+      &= \pr{m^*_i = j | \game{\Game~\algo{G_1}}{} = 1} \pr{\game{\Game~\algo{G_1}}{} = 1} \\
+      &\geq \frac{1}{k}\pr{\game{\Game~\algo{G_1}}{} = 1} \\
+  \end{align*}
+  The last inequality holds because when $\Game~\algo{G_1}$ succeeds, we have $m \neq m^*$ (at least one position differs), $m_i \neq j$, and $i$ is uniformly random. The probability that position $i$ is one where $m$ and $m^*$ differ is at least $1/k$. When they differ at position $i$ and $m_i \neq j$, then $m^*_i = j$ (since the message space is binary).
+  $\bdv^\adv$ is the same as $\Game~\algo{G_2}$ except that
+  \begin{itemize}
+      \item it gets a preimage challenge $y$ from a challenger and
+      \item replaces $\pk_{i, j}$ with $y$
+      \item it returns $\sigma_i$.
+  \end{itemize}
+  Since $m_i \neq j$, the inputs to the adversary (including the signing oracle call) has the same distribution as in $\Game~\algo{G_2}$.
+  Moreover, if $\game{\Game~\algo{G_2}}{}$ returns 1, then $\algo{H.Eval}(\sigma_i) = \pk_{i, j}$
+  Therefore,
+  \[
+  \advantage{Preimage}{\bdv^\adv, \algo{H}} = \pr{\game{\Game~\algo{G_2}}{} = 1}
+  \]
+  and then combining the inequalities:
+  \begin{align*}
+    \advantage{EUF-CMA}{\adv, \algo{LS}[\algo{H, k}]} &= \pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1} \\
+    &= 2 \cdot \pr{\game{\Game~\algo{G_1}}{} = 1} \\
+    &\leq 2k \cdot \pr{\game{\Game~\algo{G_2}}{} = 1} \\
+    &= 2k \cdot \advantage{Preimage}{\bdv^\adv, \algo{H}}
+  \end{align*}
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Let $\Game~\algo{G'}$ be the same as $\Game~\algo{EUF-CMA}$ except that the signing oracle can be called twice. Where does your proof break?
+\end{exercise}
+
+\begin{exercise}[Optional]
+  Why are Lamport signatures considered post-quantum?
+\end{exercise}
+
+\begin{exercise}
+  TODO: Consider lamport sigs where the public key is a hash, or where the secret keys are derived.
+\end{exercise}
 

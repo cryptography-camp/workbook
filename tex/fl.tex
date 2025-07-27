@@ -60,6 +60,83 @@ The following proposition demonstrates that careful programming preserves the ad
   \]
 \end{proposition}
 
+\subsection{The Forking Lemma}
+
+The forking lemma is a fundamental tool for analyzing algorithms that interact with random oracles. It considers an adversary $\adv$ with oracle access to $\pcoracle{H}$, which is executed twice on different but related instances of the oracle:
+
+\begin{itemize}
+  \item In the first execution, all random oracle responses are sampled uniformly as usual.
+  \item In the second execution, the responses are identical to those from the first execution up to a specific query called the \emph{forking point}, after which all subsequent oracle responses are \emph{refreshed} (resampled with fresh randomness).
+\end{itemize}
+
+As a result, the two executions of $\adv$ proceed identically up to the forking point but diverge afterwards. The forking lemma quantifies how often an adversary that succeeds in the first execution also succeeds in the second execution with a different oracle response at the forking point.
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=\textwidth]
+      \begin{pchstack}[center]
+        \begin{pcvstack}
+          \procedure[headlinesep=1pt]{$\game{\Game~\algo{Single}}{\algo{InpGen}}(\secpar)$}{%
+            \mathit{inp} \gets \algo{InpGen}(\secpar) \\
+            \rho \sample \mathcal{R} \\
+            T \defeq \emptyset \\
+            \alpha \gets \adv^{\pcoracle{H}}(\mathit{inp}; \rho) \\
+            \pcassert \alpha \neq \bot \\
+            \pcreturn \pctrue
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}(x)$}{%
+            \pcif T[x] = \bot \pcthen \\
+            \t T[x] \sample S \\
+            \pcreturn T[x]
+          }
+        \end{pcvstack}
+        \pchspace
+        \begin{pcvstack}
+          \procedure[headlinesep=1pt]{$\game{\Game~\algo{Fork}}{\algo{InpGen}}(\secpar)$}{%
+            \mathit{inp} \gets \algo{InpGen}(\secpar) \\
+            \rho \sample \mathcal{R} \\
+            T \defeq \emptyset \\
+            \alpha \gets \adv^{\pcoracle{H}}(\mathit{inp}; \rho) \\
+            \pcassert \alpha \neq \bot \\
+            (z, \mathit{aux}) \defeq \alpha \\
+            T' \defeq T \\
+            T'[z] \sample S \\
+            \alpha' \gets \adv^{\pcoracle{H'}}(\mathit{inp}; \rho) \\
+            \pcassert \alpha' \neq \bot \\
+            (z', \mathit{aux}') \defeq \alpha' \\
+            \pcassert z = z' \wedge T[z] \neq T'[z] \\
+            \pcreturn \pctrue
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H'}(x)$}{%
+            \pcif T'[x] = \bot \pcthen \\
+            \t T'[x] \sample S \\
+            \pcreturn T'[x]
+          }
+        \end{pcvstack}
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{The Single and Fork games\label{fig:fork-games}}
+\end{figure}
+
+\begin{lemma}[Forking Lemma]\label{lem:fork}
+  Let $q \geq 1$ be an integer and $\algo{InpGen}$ be a randomized algorithm that outputs some input $\mathit{inp}$.
+  Let $\adv$ be a randomized algorithm that takes input $\mathit{inp}$ and random coins $\rho \in \mathcal{R}$, has oracle access to $\pcoracle{H}: \{0,1\}^* \rightarrow S$ where $|S| \geq 2^\secpar$, makes at most $q$ queries to $\pcoracle{H}$, and returns either $\bot$ or a pair $(z, \mathit{aux})$ where $z \in \{0,1\}^*$ and $\mathit{aux}$ is auxiliary output.
+  
+  For games $\game{\algo{Single}}{\algo{InpGen}}$ and $\game{\algo{Fork}}{\algo{InpGen}}$ defined in \autoref{fig:fork-games}, define:
+  \begin{align*}
+    \advantage{Single}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Single}}{\algo{InpGen}}(\secpar) = \pctrue] \\
+    \advantage{Fork}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Fork}}{\algo{InpGen}}(\secpar) = \pctrue]
+  \end{align*}
+  
+  Then:
+  \[
+  \advantage{Fork}{\adv, \algo{InpGen}} \geq \advantage{Single}{\adv, \algo{InpGen}} \left( \frac{\advantage{Single}{\adv, \algo{InpGen}}}{q} - \frac{1}{2^\secpar} \right)
+  \]
+\end{lemma}
+
 \subsection{Exercises}
 
 \begin{exercise}
@@ -167,85 +244,6 @@ The following proposition demonstrates that careful programming preserves the ad
   \]
 \end{mysolution}
 \fi
-
-\subsection{The Forking Lemma}
-
-The forking lemma is a fundamental tool for analyzing algorithms that interact with random oracles. It considers an adversary $\adv$ with oracle access to $\pcoracle{H}$, which is executed twice on different but related instances of the oracle:
-
-\begin{itemize}
-  \item In the first execution, all random oracle responses are sampled uniformly as usual.
-  \item In the second execution, the responses are identical to those from the first execution up to a specific query called the \emph{forking point}, after which all subsequent oracle responses are \emph{refreshed} (resampled with fresh randomness).
-\end{itemize}
-
-As a result, the two executions of $\adv$ proceed identically up to the forking point but diverge afterwards. The forking lemma quantifies how often an adversary that succeeds in the first execution also succeeds in the second execution with a different oracle response at the forking point.
-
-\begin{figure}[tbhp]
-  \begin{center}
-    \begin{tcolorbox}[width=\textwidth]
-      \begin{pchstack}[center]
-        \begin{pcvstack}
-          \procedure[headlinesep=1pt]{$\game{\Game~\algo{Single}}{\algo{InpGen}}(\secpar)$}{%
-            \mathit{inp} \gets \algo{InpGen}(\secpar) \\
-            \rho \sample \mathcal{R} \\
-            T \defeq \emptyset \\
-            \alpha \gets \adv^{\pcoracle{H}}(\mathit{inp}; \rho) \\
-            \pcassert \alpha \neq \bot \\
-            \pcreturn \pctrue
-          }
-          \pcvspace
-          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}(x)$}{%
-            \pcif T[x] = \bot \pcthen \\
-            \t T[x] \sample S \\
-            \pcreturn T[x]
-          }
-        \end{pcvstack}
-        \pchspace
-        \begin{pcvstack}
-          \procedure[headlinesep=1pt]{$\game{\Game~\algo{Fork}}{\algo{InpGen}}(\secpar)$}{%
-            \mathit{inp} \gets \algo{InpGen}(\secpar) \\
-            \rho \sample \mathcal{R} \\
-            T \defeq \emptyset \\
-            \alpha \gets \adv^{\pcoracle{H}}(\mathit{inp}; \rho) \\
-            \pcassert \alpha \neq \bot \\
-            (z, \mathit{aux}) \defeq \alpha \\
-            T' \defeq T \\
-            T'[z] \sample S \\
-            \alpha' \gets \adv^{\pcoracle{H'}}(\mathit{inp}; \rho) \\
-            \pcassert \alpha' \neq \bot \\
-            (z', \mathit{aux}') \defeq \alpha' \\
-            \pcassert z = z' \wedge T[z] \neq T'[z] \\
-            \pcreturn \pctrue
-          }
-          \pcvspace
-          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H'}(x)$}{%
-            \pcif T'[x] = \bot \pcthen \\
-            \t T'[x] \sample S \\
-            \pcreturn T'[x]
-          }
-        \end{pcvstack}
-      \end{pchstack}
-    \end{tcolorbox}
-  \end{center}
-  \caption{The Single and Fork games\label{fig:fork-games}}
-\end{figure}
-
-\begin{lemma}[Forking Lemma]\label{lem:fork}
-  Let $q \geq 1$ be an integer and $\algo{InpGen}$ be a randomized algorithm that outputs some input $\mathit{inp}$.
-  Let $\adv$ be a randomized algorithm that takes input $\mathit{inp}$ and random coins $\rho \in \mathcal{R}$, has oracle access to $\pcoracle{H}: \{0,1\}^* \rightarrow S$ where $|S| \geq 2^\secpar$, makes at most $q$ queries to $\pcoracle{H}$, and returns either $\bot$ or a pair $(z, \mathit{aux})$ where $z \in \{0,1\}^*$ and $\mathit{aux}$ is auxiliary output.
-  
-  For games $\game{\algo{Single}}{\algo{InpGen}}$ and $\game{\algo{Fork}}{\algo{InpGen}}$ defined in \autoref{fig:fork-games}, define:
-  \begin{align*}
-    \advantage{Single}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Single}}{\algo{InpGen}}(\secpar) = \pctrue] \\
-    \advantage{Fork}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Fork}}{\algo{InpGen}}(\secpar) = \pctrue]
-  \end{align*}
-  
-  Then:
-  \[
-  \advantage{Fork}{\adv, \algo{InpGen}} \geq \advantage{Single}{\adv, \algo{InpGen}} \left( \frac{\advantage{Single}{\adv, \algo{InpGen}}}{q} - \frac{1}{2^\secpar} \right)
-  \]
-\end{lemma}
-
-\subsection{Exercises}
 
 \begin{exercise}
   Consider an algorithm $\adv$ that never queries $\pcoracle{H}$. What is $\advantage{Fork}{\adv, \algo{InpGen}}$?

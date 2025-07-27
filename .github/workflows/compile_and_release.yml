@@ -19,7 +19,6 @@ jobs:
             # Disable solutions
             sed -i 's/\\solutionstrue/\\solutionsfalse/' main_workbook.tex
           root_file: main_workbook.tex
-          latexmk_use_bibtex: true
       
       - name: Move workbook PDF
         run: mv main_workbook.pdf workbook.pdf
@@ -28,7 +27,6 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
-          latexmk_use_bibtex: true
       
       - name: Move solutionbook PDF
         run: mv main.pdf solutionbook.pdf

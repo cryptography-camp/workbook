@@ -76,21 +76,40 @@ Note that in $\game{\algo{ComBind}}{\algo{Com}}$ the adversary $\adv$ is run twi
 \end{definition}
 
 \subsection{Exercises}
-\begin{itemize}
-  \item Is the trivial commitment scheme in \cref{sec:trivial-com} binding?.
-  \item Informally, a commitment scheme is \emph{strong binding} if commitment cannot be opened to randomness $r$ and $r'$ such that $r \neq r'$. 
-        Define $\game{\algo{ComStrongBind}}{\algo{Com}}$ by changing the definition of $\game{\algo{ComBind}}{\algo{Com}}$.
-  \item Can you imagine situations where strong binding is useful? (Think Taproot randomness is a group element and assume OP\_INTERNALKEY (we haven't introduced taproot at all yet, so this is confusing))
-  \item Come up with a hash commitment scheme that is strongly binding (or just binding if you didn't manage the previous session). Argue for your solution. Write down the theorem.
-  \item Is the trivial commitment scheme in \cref{sec:trivial-com} hiding?
-        Prove it.
-        (Hint: if it is not hiding, give an adversary that wins the $\game{\algo{ComHide}}{\algo{Com}}$ with non-negligible probability.)
-  \item Let $\algo{H}$ be a collision-resistant hash function and let $\algo{HashCom'}$ be a commitment scheme where
-    \begin{itemize}
-      \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}, \mathcal{R} \defeq \{\}, \kappa \gets \algo{H.Gen}(1^\lambda))$.
-      \item $\algo{Commit}(\params,m;r) \defeq  \algo{H.Eval}(\kappa, m)$.
-    \end{itemize}
-    Argue that it is binding and write down the security theorem.
-    Prove that it's not hiding.
-  \item Argue why a collision resistant hash function cannot be enough for hiding (even when the randomness is included in the hash).
-\end{itemize}
+
+\begin{exercise}
+  Is the trivial commitment scheme in \cref{sec:trivial-com} binding?
+\end{exercise}
+
+\begin{exercise}
+  Informally, a commitment scheme is \emph{strong binding} if commitment cannot be opened to randomness $r$ and $r'$ such that $r \neq r'$. 
+  Define $\game{\algo{ComStrongBind}}{\algo{Com}}$ by changing the definition of $\game{\algo{ComBind}}{\algo{Com}}$.
+\end{exercise}
+
+\begin{exercise}
+  Can you imagine situations where strong binding is useful? (Think Taproot randomness is a group element and assume OP\_INTERNALKEY (we haven't introduced taproot at all yet, so this is confusing))
+\end{exercise}
+
+\begin{exercise}
+  Come up with a hash commitment scheme that is strongly binding (or just binding if you didn't manage the previous session). Argue for your solution. Write down the theorem.
+\end{exercise}
+
+\begin{exercise}
+  Is the trivial commitment scheme in \cref{sec:trivial-com} hiding?
+  Prove it.
+  (Hint: if it is not hiding, give an adversary that wins the $\game{\algo{ComHide}}{\algo{Com}}$ with non-negligible probability.)
+\end{exercise}
+
+\begin{exercise}
+  Let $\algo{H}$ be a collision-resistant hash function and let $\algo{HashCom'}$ be a commitment scheme where
+  \begin{itemize}
+    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}, \mathcal{R} \defeq \{\}, \kappa \gets \algo{H.Gen}(1^\lambda))$.
+    \item $\algo{Commit}(\params,m;r) \defeq  \algo{H.Eval}(\kappa, m)$.
+  \end{itemize}
+  Argue that it is binding and write down the security theorem.
+  Prove that it's not hiding.
+\end{exercise}
+
+\begin{exercise}
+  Argue why a collision resistant hash function cannot be enough for hiding (even when the randomness is included in the hash).
+\end{exercise}
