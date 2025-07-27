@@ -214,6 +214,67 @@
 \newtheorem{assumption}{Assumption}
 \Crefname{assumption}{Assumption}{Assumptions}
 
+%%% Exercise environment with section-based numbering
+% Reset exercise counter at each section
+\makeatletter
+\@addtoreset{exercise}{section}
+\makeatother
+% Redefine the exercise environment to use section numbering
+\renewcommand{\theexercise}{\thesection.\arabic{exercise}}
+% Configure cleveref for exercises
+\Crefname{exercise}{Exercise}{Exercises}
+\crefname{exercise}{exercise}{exercises}
+
+%%% Section-based numbering for theorem-like environments
+\makeatletter
+% Reset all theorem-like counters at each section
+\@addtoreset{theorem}{section}
+\@addtoreset{lemma}{section}
+\@addtoreset{proposition}{section}
+\@addtoreset{corollary}{section}
+\@addtoreset{definition}{section}
+\@addtoreset{remark}{section}
+\@addtoreset{assumption}{section}
+% Redefine numbering to use section.number format
+\renewcommand{\thetheorem}{\thesection.\arabic{theorem}}
+\renewcommand{\thelemma}{\thesection.\arabic{lemma}}
+\renewcommand{\theproposition}{\thesection.\arabic{proposition}}
+\renewcommand{\thecorollary}{\thesection.\arabic{corollary}}
+\renewcommand{\thedefinition}{\thesection.\arabic{definition}}
+\renewcommand{\theremark}{\thesection.\arabic{remark}}
+\renewcommand{\theassumption}{\thesection.\arabic{assumption}}
+\makeatother
+
+%%% Configure cleveref for theorem-like environments
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{theorem}{theorem}{theorems}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{lemma}{lemma}{lemmas}
+\Crefname{proposition}{Proposition}{Propositions}
+\crefname{proposition}{proposition}{propositions}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{corollary}{corollary}{corollaries}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{definition}{definition}{definitions}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{remark}{remark}{remarks}
+
+%%% Section-based numbering for figures and tables
+\makeatletter
+% Reset figure and table counters at each section
+\@addtoreset{figure}{section}
+\@addtoreset{table}{section}
+% Redefine numbering to use section.number format
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+\renewcommand{\thetable}{\thesection.\arabic{table}}
+\makeatother
+
+%%% Configure cleveref for figures and tables (usually already configured by cleveref)
+\Crefname{figure}{Figure}{Figures}
+\crefname{figure}{figure}{figures}
+\Crefname{table}{Table}{Tables}
+\crefname{table}{table}{tables}
+
 %%% Solution handling
 \newenvironment{mysolution}{\begin{proof}[Solution]}{\end{proof}}
 
