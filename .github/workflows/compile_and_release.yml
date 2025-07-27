@@ -10,26 +10,72 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v4
       
-      - name: Compile workbook (without solutions)
-        uses: xu-cheng/latex-action@v2
+      - name: Setup TeXLive
+        uses: teatimeguest/setup-texlive-action@v3
         with:
-          root_file: main.tex
-          args: -pdf -latexoption="-interaction=nonstopmode" -outdir=.
-          pre_compile: |
-            # Create workbook version without solutions
-            sed -i 's/\\solutionstrue/\\solutionsfalse/' main.tex
-          post_compile: |
-            mv main.pdf workbook.pdf
-            # Restore the original
-            sed -i 's/\\solutionsfalse/\\solutionstrue/' main.tex
+          cache: true
+          packages: |
+            scheme-basic
+            latexmk
+            llncs
+            geometry
+            silence
+            fontenc
+            lmodern
+            babel
+            csquotes
+            microtype
+            xpunctuate
+            dirtytalk
+            pifont
+            tcolorbox
+            pgf
+            tikz
+            xcolor
+            amsmath
+            amsthm
+            mathtools
+            todonotes
+            biblatex
+            biber
+            hyperref
+            cleveref
+            cryptocode
+            xpatch
+            etoolbox
+            xargs
+            forloop
+            array
+            pbox
+            varwidth
+            bigfoot
+            comment
+            environ
+            trimspaces
+            fixcmex
+            xkeyval
+            bookmark
+            graphics
+            tools
+            multirow
+            listings
+            varioref
+            subfigure
+            titlesec
       
-      - name: Compile solutionbook (with solutions)
-        uses: xu-cheng/latex-action@v2
-        with:
-          root_file: main.tex
-          args: -pdf -latexoption="-interaction=nonstopmode" -outdir=.
-          post_compile: |
-            mv main.pdf solutionbook.pdf
+      - name: Compile workbook and solutionbook
+        run: |
+          # Compile workbook (without solutions)
+          echo "Building workbook..."
+          cp main.tex main_workbook.tex
+          sed -i 's/\\solutionstrue/\\solutionsfalse/' main_workbook.tex
+          latexmk -pdf -interaction=nonstopmode main_workbook.tex
+          mv main_workbook.pdf workbook.pdf
+          
+          # Compile solutionbook (with solutions) - use original main.tex
+          echo "Building solutionbook..."
+          latexmk -pdf -interaction=nonstopmode main.tex
+          mv main.pdf solutionbook.pdf
       
       - name: Upload PDF files
         uses: actions/upload-artifact@v4
@@ -42,7 +88,7 @@ jobs:
       - name: Generate release tag
         id: tag
         run: |
-            echo "::set-output name=release_tag::release_$(date +"%Y.%m.%d_%H-%M")"
+            echo "release_tag=release_$(date +"%Y.%m.%d_%H-%M")" >> $GITHUB_OUTPUT
       
       - name: Release
         uses: softprops/action-gh-release@v1

@@ -23,7 +23,7 @@
 %% Use legacy BibTeX instead of Biber
 % \bibtextrue
 %% Include solutions in the output
-\solutionsfalse
+\solutionstrue
 
 \documentclass[
   %% Uncomment to enable letterpaper
@@ -215,11 +215,7 @@
 \Crefname{assumption}{Assumption}{Assumptions}
 
 %%% Solution handling
-\ifsolutions
-  \newenvironment{mysolution}{\begin{proof}[Solution]}{\end{proof}}
-\else
-  \newenvironment{mysolution}{\setbox0\vbox\bgroup}{\egroup}
-\fi
+\newenvironment{mysolution}{\begin{proof}[Solution]}{\end{proof}}
 
 %%% Cryptocode
 \WarningFilter*[theH]{latex}{Command `\string\the}%
