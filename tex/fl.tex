@@ -77,7 +77,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
       \begin{pchstack}[center]
         \begin{pcvstack}
           \procedure[headlinesep=1pt]{$\game{\Game~\algo{Single}}{\algo{InpGen}}$}{%
-            \mathit{inp} \gets \algo{InpGen}(\secpar) \\
+            \mathit{inp} \gets \algo{InpGen}(1^\secpar) \\
             \rho \sample \mathcal{R} \\
             T \defeq \emptyset \\
             \alpha \gets \adv^{\pcoracle{H}}(\mathit{inp}; \rho) \\
@@ -94,7 +94,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
         \pchspace
         \begin{pcvstack}
           \procedure[headlinesep=1pt]{$\game{\Game~\algo{Fork}}{\algo{InpGen}}$}{%
-            \mathit{inp} \gets \algo{InpGen}(\secpar) \\
+            \mathit{inp} \gets \algo{InpGen}(1^\secpar) \\
             \rho \sample \mathcal{R} \\
             T \defeq \emptyset \\
             \alpha \gets \adv^{\pcoracle{H}}(\mathit{inp}; \rho) \\
@@ -106,7 +106,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
             \pcassert \alpha' \neq \bot \\
             (z', \mathit{aux}') \defeq \alpha' \\
             \pcassert z = z' \wedge T[z] \neq T'[z] \\
-            \pcreturn \pctrue
+            \pcreturn (z, \mathit{aux}, z', \mathit{aux}')
           }
           \pcvspace
           \procedure[headlinesep=1pt]{Oracle $\pcoracle{H'}(x)$}{%
@@ -121,14 +121,14 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
   \caption{The Single and Fork games\label{fig:fork-games}}
 \end{figure}
 
-\begin{lemma}[Forking Lemma]\label{lem:fork}
+\begin{lemma}[Local Forking Lemma~\cite{BellareDL19}]\label{lem:fork}
   Let $q \geq 1$ be an integer and $\algo{InpGen}$ be a randomized algorithm that outputs some input $\mathit{inp}$.
   Let $\adv$ be a randomized algorithm that takes input $\mathit{inp}$ and random coins $\rho \in \mathcal{R}$, has oracle access to $\pcoracle{H}: \{0,1\}^* \rightarrow S$ where $|S| \geq 2^\secpar$, makes at most $q$ queries to $\pcoracle{H}$, and returns either $\bot$ or a pair $(z, \mathit{aux})$ where $z \in \{0,1\}^*$ and $\mathit{aux}$ is auxiliary output.
   
   For games $\game{\algo{Single}}{\algo{InpGen}}$ and $\game{\algo{Fork}}{\algo{InpGen}}$ defined in \autoref{fig:fork-games}, define:
   \begin{align*}
     \advantage{Single}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Single}}{\algo{InpGen}} = \pctrue] \\
-    \advantage{Fork}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Fork}}{\algo{InpGen}} = \pctrue]
+    \advantage{Fork}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Fork}}{\algo{InpGen}} \neq \bot]
   \end{align*}
   
   Then:
@@ -308,9 +308,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
 
 \ifsolutions
 \begin{mysolution}
-  We construct $\bdv$ that runs exactly as $\game{\algo{Fork}}{\algo{InpGen}}$, except that instead of returning $\pctrue$ at the end, it extracts and outputs $x$.
-  
-  At the point where Fork would succeed, we have:
+  We construct $\bdv$ that runs the forking game and extracts $x$ from the outputs. If $\game{\algo{Fork}}{\algo{InpGen}}$ returns $(z, s, z', s') \neq \bot$, then we have:
   \begin{itemize}
     \item From the first execution: $(z, s) = \alpha$ where $s = z + T[z] \cdot x \bmod p$
     \item From the second execution: $(z', s') = \alpha'$ where $s' = z' + T'[z'] \cdot x \bmod p$

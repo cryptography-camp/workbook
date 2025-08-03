@@ -23,7 +23,7 @@ It is a tuple of p.p.t algorithms $(\algo{Gen}, \algo{Init}, \algo{Value}, \algo
 Typically, an accumulator involves two parties: the manager, who uses $\algo{Init}$, $\algo{Value}$, $\algo{Insert}$, $\algo{ProveMembership}$ and the verifier, who uses $\algo{VerifyMembership}$.
 
 \begin{example}
-  An example is the trivial accumulator\label{sec:trivial-com}, where the accumulator value is just the accumulator state and therefore of size linear in the size of the set. In contrast, the accumulator value is usually a constant size value:
+  An example is the trivial accumulator\label{sec:trivial-acc}, where the accumulator value is just the accumulator state and therefore of size linear in the size of the set. In contrast, the accumulator value is usually a constant size value:
   \begin{itemize}
     \item $\algo{Gen}(1^\secpar)\rightarrow \bot$.
     \item $\algo{Init}(\params)\rightarrow ()$

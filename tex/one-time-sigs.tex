@@ -3,9 +3,9 @@
 \subsection{Syntax}
 
 \begin{definition}[One-Time Signature]
-    A one-time signature scheme $\algo{OTS}$ is a tuple of p.p.t algorithms $(\algo{Gen}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with message space $\mathcal{M}$, where
+    A one-time signature scheme $\algo{OTS}$ is a tuple of p.p.t algorithms $(\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with message space $\mathcal{M}$, where
     \begin{itemize}
-        \item $\algo{Gen}(1^\secpar)\rightarrow \params$ is a p.p.t algorithm that generates the public parameters $\params$ for the one-time signature scheme.
+        \item $\algo{Setup}(1^\secpar)\rightarrow \params$ is a p.p.t algorithm that generates the public parameters $\params$ for the one-time signature scheme.
         \item $\algo{KeyGen}(\params)\rightarrow (\sk, \pk)$ is a p.p.t algorithm that generates the key pair $(\sk, \pk)$ of the one-time signature scheme.
         \item $\algo{Sign}(\params, \sk, m) \rightarrow \sigma$ is a p.p.t algorithm that outputs a signature $\sigma$ for the message $m$ under the one-time signature scheme with secret key $\sk$.
         \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow b$ is a p.p.t algorithm that outputs $b = 1$ if the signature $\sigma$ is valid for the message $m$ under the one-time signature scheme with public key $\pk$. Otherwise, it outputs $b = 0$.
@@ -28,7 +28,7 @@
  \begin{tcolorbox}%[left=0mm,right=0mm]
   \begin{pchstack}[center]
    \procedure{$\game{\Game~\algo{EUF-CMA}}{\algo{OTS}}$}{%
-     \params \gets \algo{Gen}(1^\secpar) \\
+     \params \gets \algo{Setup}(1^\secpar) \\
      (\sk,\pk) \gets \algo{KeyGen}(\params) \\
      \mathcal{Q} \defeq \emptyset\\
      (m^*, \sigma) \gets \adv^{\pcoracle{Sign}}(\params, \pk) \\
@@ -50,7 +50,7 @@
  \begin{tcolorbox}
   \begin{pchstack}[center]
   \begin{pcvstack}
-    \procedure{$\algo{Gen}(1^\secpar)$}{%
+    \procedure{$\algo{Setup}(1^\secpar)$}{%
       \params \defeq \algo{H.Gen}(\secparam) \\
       \pcreturn \params
     }
@@ -107,7 +107,7 @@
   \begin{pchstack}[center]
   \begin{pcvstack}
    \procedure{$\game{\Game~\algo{EUF-CMA}}{\algo{LS}[\algo{H, k}]}$}{%
-     \params \gets \algo{Gen}(1^\secpar) \\
+     \params \gets \algo{Setup}(1^\secpar) \\
      (\sk,\pk) \gets \algo{KeyGen}(\params) \\
      \mathcal{Q} \defeq \emptyset\\
      (m^*, \sigma) \gets \adv^{\pcoracle{Sign}}(\params, \pk) \\
@@ -124,7 +124,7 @@
   \pchspace
    \begin{pcvstack}
     \procedure{$\game{\Game~\algo{G_1}}{}$}{%
-      \params \gets \algo{Gen}(1^\secpar) \\
+      \params \gets \algo{Setup}(1^\secpar) \\
       (\sk,\pk) \gets \algo{KeyGen}(\params) \\
       \gamechange{$i \sample [1, k] \pcsc j \sample \{0, 1\}$} \\
       \mathcal{Q} \defeq \emptyset\\
@@ -146,7 +146,7 @@
   \pchspace
    \begin{pcvstack}
     \procedure{$\game{\Game~\algo{G_2}}{\algo{OTS}}$}{%
-      \params \gets \algo{Gen}(1^\secpar) \\
+      \params \gets \algo{Setup}(1^\secpar) \\
       (\sk,\pk) \gets \algo{KeyGen}(\params) \\
       i \sample [1, k]  \\
       j \sample [0, 1]  \\
