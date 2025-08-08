@@ -1,0 +1,32 @@
+\section{Interactive Aggregate Signatures}\label{sec:interactive-aggregate-signatures}
+
+An interactive aggregate signature (IAS) scheme allows $n$ signers, each with their own key pair $(sk_i, pk_i)$ and message $m_i$, to jointly produce a single short signature that proves $m_i$ was signed under $pk_i$ for every $i \in \{1, \ldots, n\}$.
+
+The following exercises are based on the DahLIAS paper~\cite{add:nick2025dahlias}, which presents a discrete logarithm-based IAS scheme with constant-size signatures.
+
+\subsection{Exercises}
+
+\begin{exercise}
+  Read the abstract and the main security theorem (Theorem 2) of DahLIAS.
+  What does the security theorem tell us about the relationship between breaking DahLIAS and solving the underlying computational problems?
+\end{exercise}
+
+\begin{exercise}
+  Read the technical introduction (Section 1.3).
+  Why does the straightforward adaptation of the MuSig2 two-round technique described in the text not yield a secure IAS scheme?
+\end{exercise}
+
+\begin{exercise}
+  Read about IAS syntax and security (Sections 3.1 and 3.3).
+  What is the difference between EUF-CMA and co-EUF-CMA security for IAS?
+\end{exercise}
+
+\begin{exercise}
+  What are the applications where strong binding (Section 6) matters?
+  Explain why this property is important in these contexts.
+\end{exercise}
+
+\begin{exercise}[Optional]
+  Read the proof sketch (Section 5.2).
+  Outline the main proof technique and explain how the security reduction works.
+\end{exercise}
