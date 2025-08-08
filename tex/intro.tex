@@ -23,7 +23,6 @@ There's a bounty of 50 sats (paid out via the Lightning Network) per mistake fou
 % basic sets
 % proof by contraposition
 % union bound
-% what is big-O notation, set builder notation
 % good to have seen before:
 % negligible functions
 % p.p.t. algorithms
@@ -51,7 +50,7 @@ Unless stated otherwise, an adversary is a synonym for algorithm.
 
 
 \begin{definition}
-A function $f: \ZZ \rightarrow \real$ is \emph{negligible} if for every polynomial $p$ there exists $N \in \NN$ such that for all integers $\secpar > N$, $f(\secpar) \le \frac{1}{p(\secpar)}$.
+A function $f: \ZZ \rightarrow \mathbb{R}$ is \emph{negligible} if for every polynomial $p$ there exists $N \in \NN$ such that for all integers $\secpar > N$, $f(\secpar) \le \frac{1}{p(\secpar)}$.
 % Or equivalently.
 % - We denote the set of \emph{polynomially-bounded} functions in the security parameter $\secpar$ by $\poly = \{ f : \exists a \in \NN,\ f(\secpar) \in O(\lambda^a) \}$,. functions in the security parameter $\secpar$ by $\negl = \{ f : f(\secpar)^{-1} \not\in \poly \}$
 % - for all $a \in \NN$, there exists $N \in \NN$ such that for all $\secpar \ge N$, $f(\secpar) \le \frac{1}{\lambda^a}$.

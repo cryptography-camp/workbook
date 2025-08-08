@@ -16,7 +16,7 @@
 
 \subsection{Correctness}
 
-\begin{definition}[Correctness]
+\begin{definition}[Correctness]\label{def:sig-correctness}
   A digital signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ is \emph{correct} if for all $\secpar \in \NN$, all $\params \in \algo{Setup}(1^\secpar)$, all $(\sk, \pk) \in \algo{KeyGen}(\params)$, and all messages $m \in \mathcal{M}$:
   \[
     \Pr[\algo{Verify}(\params, \pk, m, \algo{Sign}(\params, \sk, m)) = 1] = 1
@@ -85,7 +85,7 @@ The standard security notion for digital signatures is existential unforgeabilit
   \end{itemize}
 \end{definition}
 
-\begin{lemma}[Correctness of Schnorr Signatures]
+\begin{lemma}[Correctness of Schnorr Signatures]\label{lem:schnorr-correctness}
   The Schnorr signature scheme $\algo{SchnorrSig}[\grgen, \algo{H}]$ is correct.
 \end{lemma}
 
