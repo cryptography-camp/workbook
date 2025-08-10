@@ -336,8 +336,8 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
 
 \begin{exercise}[Optional]
   \begin{enumerate}
-    \item Let $\algo{H}$ be a hash function with output in $\{0,1\}^\secpar$ and let $\kappa$ be chosen uniformly at random. Define $A = \algo{H.Eval}(\kappa, 0) \| \algo{H.Eval}(\kappa, 1)$. Over what size set is $A$ uniformly distributed?
-    \item Let $\algo{H}$ be a random oracle with output in $\{0,1\}^\secpar$. Define $B = \algo{H}(0) \| \algo{H}(1)$. Over what size set is $B$ uniformly distributed?
+    \item Let $\algo{H}$ be a hash function with output in $\{0,1\}^\secpar$ and let $\kappa$ be chosen uniformly at random from a set of size $2^\secpar$. Define $A = \algo{H.Eval}(\kappa, 0) \| \algo{H.Eval}(\kappa, 1)$. What is the size of the set over which $A$ is uniformly distributed?
+    \item Let $\algo{H}$ be a random oracle with output in $\{0,1\}^\secpar$. Define $B = \algo{H}(0) \| \algo{H}(1)$. What is the size of the set over which $B$ is uniformly distributed?
   \end{enumerate}
 \end{exercise}
 

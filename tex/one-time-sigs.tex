@@ -15,6 +15,8 @@
 
 \subsection{Correctness}
 
+% TODO
+
 \subsection{Security}
 
 \begin{definition}[EUF-CMA Security]\label{def:euf-cma-ot}
@@ -223,7 +225,8 @@
 \end{exercise}
 
 \begin{exercise}
-  Prove theorem \autoref{thm:ots-lamport-euf-cma}:
+  \label{ex:ots-lamport-euf-cma}
+  Complete the proof of \autoref{thm:ots-lamport-euf-cma}:
   \begin{enumerate}
       \item Express $\pr{\game{\Game~\algo{G_1}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1}$.
       \item Express $\pr{\game{\Game~\algo{G_2}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{G_1}}{} = 1}$.
@@ -271,7 +274,7 @@
 \fi
 
 \begin{exercise}
-  Let $\Game~\algo{G'}$ be the same as $\Game~\algo{EUF-CMA}$ except that the signing oracle can be called twice. Where does your proof break?
+  Let $\Game~\algo{G'}$ be the same as $\Game~\algo{EUF-CMA}$ except that the signing oracle can be called twice. Where does the proof of \autoref{ex:ots-lamport-euf-cma} break?
 \end{exercise}
 
 \begin{exercise}[Optional]
