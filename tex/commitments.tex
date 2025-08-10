@@ -46,8 +46,6 @@
  If $\advantage{Bind}{\adv, \algo{Com}} = 0$, then the commitment scheme is said to be \emph{perfectly binding}.
 \end{definition}
 
-Note that in $\game{\algo{ComBind}}{\algo{Com}}$ the adversary $\adv$ is run twice with different arguments, first to output two messages and then to output a bit.
-
 \begin{figure}[tbhp]
   \begin{center}
     \begin{tcolorbox}[width=8cm]
@@ -75,6 +73,8 @@ Note that in $\game{\algo{ComBind}}{\algo{Com}}$ the adversary $\adv$ is run twi
  If $\advantage{Hide}{\adv, \algo{Com}} = 0$, then the commitment scheme is said to be \emph{perfectly hiding}.
 \end{definition}
 
+Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twice with different arguments, first to output two messages and then to output a bit.
+
 \subsection{Exercises}
 
 \begin{exercise}
@@ -86,6 +86,7 @@ Note that in $\game{\algo{ComBind}}{\algo{Com}}$ the adversary $\adv$ is run twi
   Define $\game{\algo{ComStrongBind}}{\algo{Com}}$ by changing the definition of $\game{\algo{ComBind}}{\algo{Com}}$.
 \end{exercise}
 
+% TODO
 \begin{exercise}
   Can you imagine situations where strong binding is useful? (Think Taproot randomness is a group element and assume OP\_INTERNALKEY (we haven't introduced taproot at all yet, so this is confusing))
 \end{exercise}
@@ -110,6 +111,7 @@ Note that in $\game{\algo{ComBind}}{\algo{Com}}$ the adversary $\adv$ is run twi
   Prove that it's not hiding.
 \end{exercise}
 
+% TODO
 \begin{exercise}
   Argue why a collision resistant hash function cannot be enough for hiding (even when the randomness is included in the hash).
 \end{exercise}
