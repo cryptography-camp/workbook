@@ -335,34 +335,16 @@
 %
 % Hint: https://titlecaseconverter.com/
 \title{\texorpdfstring{%
-    Provable Cryptography for Bitcoiners%
+    Provable Cryptography for Bitcoin: An Introduction%
   }{% Title for PDF metadata and bookmarks:
-    Provable Cryptography for Bitcoiners%
+    Provable Cryptography for Bitcoin: An Introduction%
   }
 }
 
 %%% Authors
-\unless\ifanonymous
-  \unless\ifcameraready
-    \RenewDocumentCommand\email{m}{\href{mailto:#1}{\texttt{\textcolor{black}{#1}}}}
-    \RenewDocumentCommand\orcidID{m}{}
-  \fi
-  \author{\texorpdfstring{%
-      Alice Author\inst{1}\orcidID{0000-0000-0000-0000}
-      \and Bob Author\inst{2}\orcidID{0000-0000-0000-0000}
-    }{% Authors for PDF metadata and bookmarks:
-      Alice Author;
-      Bob Author
-    }}
-  \institute{%
-    Some Institute
-    \and Some University
-  }
-\else
-  \ifspace
-    \author{\vspace{-4ex}}\institute{}
-  \fi
-\fi
+\RenewDocumentCommand\email{m}{\href{mailto:#1}{\texttt{\textcolor{black}{#1}}}}
+\author{Jonas Nick}\institute{Blockstream Research\\
+\email{jonas@n-ck.net}}
 
 %%% Notes and Todos
 % Usage: \newuser{a}{Alice}{orange!20}
@@ -375,16 +357,17 @@
 \begin{document}
 
 \maketitle
+
+\begin{center}
+  \textbf{License:} This work is released into the public domain under CC0 1.0\\
+  \url{https://creativecommons.org/publicdomain/zero/1.0/}
+\end{center}
+
 \iffull
   \begin{center}
     \today
   \end{center}
 \fi
-
-%%% Abstract
-\begin{abstract}
-  \input{tex/abstract.tex}
-\end{abstract}
 
 %%% Keywords
 \ifcameraready
@@ -419,8 +402,8 @@
 \section{Appendix: Notation}\label{sec:appendix-notation}
 
 %%% Acknowledgements
-% \section*{Acknowledgements}
-% We thank...
+\section*{Acknowledgements}
+We thank Nadav Kohen for valuable feedback and discussions.
 
 %%% Changelog
 \iffull
