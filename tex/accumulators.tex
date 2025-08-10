@@ -57,7 +57,7 @@ More formally, for all security parameters $\secpar$, all public parameters $\pa
 
 \paragraph{Security}
 
-In game \autoref{fig:break-acc-coll}, the adversary $\adv$ is given access to \emph{oracles}, which he can call, but not look inside.
+In $\Game~\algo{AccColl}$ (defined in \autoref{fig:break-acc-coll}), the adversary $\adv$ is given access to \emph{oracles}, which he can call, but not look inside.
 In other words, the adversary can insert elements into the accumulator and obtain membership proofs, but does not have access to the state directly.
 
 \begin{figure}[tbhp]
@@ -70,7 +70,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
             \state \gets \algo{Acc.Init}(\params) \\
             v \gets \algo{Acc.Value}(\params, \state) \\
             (x^*, \pi^*) \gets \adv^{\algo{Insert}, \algo{ProveMembership}}(\params, v) \\
-            \pcreturn x^* \notin \mathcal{Q} \wedge \algo{Acc.VerifyMembership}(\params, \state, x^*, \pi^*) = 1
+            \pcreturn x^* \notin \mathcal{Q} \wedge \algo{Acc.VerifyMembership}(\params, v, x^*, \pi^*) = 1
         }
         \pcvspace
         \begin{pchstack}[center]
@@ -115,14 +115,17 @@ In other words, the adversary can insert elements into the accumulator and obtai
   Using a collision-resistant hash function, give an example of an accumulator with a constant size accumulator value and argue that it's correct and collision-free.
 \end{exercise}
 
+% TODO: mention that the state is public, so a simpler security game would suffice for merkle trees
 \begin{exercise}[Optional]
   Using a collision-resistant hash function, give an example of an accumulator with a constant size accumulator value and logarithmic membership proofs and argue that it's correct and collision-free.
 \end{exercise}
 
+% todo: add hint?
 \begin{exercise}
   Define syntax, correctness and collision-freeness of an additive universal accumulator, i.e., an additive positive accumulator that supports non-membership proofs.
 \end{exercise}
 
+% todo: add hint
 \begin{exercise}[Optional]
   Using a collision-resistant hash function, give an example of an additive universal accumulator with a constant size accumulator value and logarithmic membership proofs and argue that it's correct and collision-free.
 \end{exercise}
