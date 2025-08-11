@@ -31,7 +31,7 @@ In other words, a signature scheme is correct if honestly generated signatures a
 The standard security notion for digital signatures is existential unforgeability under chosen message attack (EUF-CMA). Unlike one-time signatures, the adversary can request signatures on multiple messages before attempting to forge.
 
 \begin{definition}[EUF-CMA Security]\label{def:euf-cma}
-  A digital signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ is \emph{existentially unforgeable under chosen message attack (EUF-CMA)} if for all p.p.t. adversaries $\adv$:
+  A digital signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ is \emph{existentially unforgeable under chosen message attack (EUF-CMA)} if for all \ppt adversaries $\adv$:
   \[
     \advantage{EUF-CMA}{\adv, \algo{Sig}} \defeq \pr{\game{\Game~\algo{EUF-CMA}}{\algo{Sig}} = 1} = \negl
   \]
@@ -220,8 +220,8 @@ The proof is left as an exercise (see \autoref{ex:schnorr-to-single}).
 \begin{theorem}[Schnorr signatures are EUF-CMA secure]\label{thm:schnorr-euf-cma}
   Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard and let $\algo{H}$ be a hash function.
   Then the Schnorr signature scheme $\algo{SchnorrSig}[\grgen, \algo{H}]$ is EUF-CMA secure in the random oracle model for $\algo{H}$.
-  More precisely, for any p.p.t. adversary $\adv$ against the EUF-CMA security of $\algo{SchnorrSig}[\grgen, \algo{H}]$ making at most $q_s$ queries to the signing oracle and at most $q_h$ queries to the random oracle $\algo{H}$,
-  there exists a p.p.t. adversary $\ddv$ against the discrete logarithm problem such that
+  More precisely, for any \ppt adversary $\adv$ against the EUF-CMA security of $\algo{SchnorrSig}[\grgen, \algo{H}]$ making at most $q_s$ queries to the signing oracle and at most $q_h$ queries to the random oracle $\algo{H}$,
+  there exists a \ppt adversary $\ddv$ against the discrete logarithm problem such that
   \[
     \advantage{EUF-CMA}{\adv, \algo{SchnorrSig}[\grgen, \algo{H}]} \leq \frac{q_s(q_s + q_h)}{2^\secpar} + \sqrt{(q_h + 1) \left(\advantage{DLog}{\ddv, \grgen} + \frac{1}{2^\secpar}\right)}.
   \]
@@ -453,7 +453,7 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
     \advantage{EUF-CMA}{\adv, \algo{SchnorrSig}[\grgen, \algo{H}]} \leq \frac{q_s(q_s + q_h)}{2^\secpar} + \sqrt{(q_h + 1) \left(\advantage{DLog}{\ddv, \grgen} + \frac{1}{2^\secpar}\right)}
   \]
   
-  $q_s, q_h$ are polynomial in $\secpar$ since $\adv$ is p.p.t.
+  $q_s, q_h$ are polynomial in $\secpar$ since $\adv$ is \ppt
   Assuming the discrete logarithm problem is hard (i.e., $\advantage{DLog}{\ddv, \grgen}$ is negligible), we conclude that $\advantage{EUF-CMA}{\adv, \algo{SchnorrSig}[\grgen, \algo{H}]}$ is negligible.
 \end{mysolution}
 \fi

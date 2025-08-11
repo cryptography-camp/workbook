@@ -25,7 +25,7 @@ There's a bounty of 50 sats (paid out via the Lightning Network) per mistake fou
 % union bound
 % good to have seen before:
 % negligible functions
-% p.p.t. algorithms
+% \ppt algorithms
 
 TODO: dummy cite something to make biber happy \textcite{EPRINT:NicRufSeu20}.
 
@@ -40,7 +40,7 @@ An algorithm $\adv$ is
 We write $\adv(x; \rho)$ to denote running algorithm $\adv$ on input $x$ with randomness $\rho$.
 When the randomness is clear from context or unnecessary, we simply write $\adv(x)$.
 \item \emph{polynomial-time} if there exists a polynomial $p$ such that for every $x \in \{0,1\}^\lambda$, $\adv(x)$ terminates in time $p(\lambda)$.
-\item \emph{probabilistic polynomial-time (PPT)} if it is probabilistic and polynomial-time.
+\item \emph{probabilistic polynomial-time (\ppt)} if it is probabilistic and polynomial-time.
 \end{itemize}
 \end{definition}
 
@@ -163,7 +163,7 @@ Note that $\adv$ gets $1^{\secpar}$ (a string of 1s of length $\secpar$) as inpu
  \[
   \advantage{SHAPreIZ}{\adv} \defeq \pr{\game{\algo{SHAPreimgZ}}{} = \pctrue}.
  \]
- Assuming there exists $x$ such that $\algo{SHA256}(x) = 0$, there exists a p.p.t algorithm $\adv$ such that
+ Assuming there exists $x$ such that $\algo{SHA256}(x) = 0$, there exists a \ppt algorithm $\adv$ such that
   \[
   \advantage{SHAPreIZ}{\adv} = 1.
   \]
@@ -200,7 +200,7 @@ In $\game{\Game~\algo{SHAPreimg}}{}$ defined in \autoref{fig:sha-preimg} the val
  \[
   \advantage{SHAPreI}{\adv} \defeq \pr{\game{\algo{SHAPreimg}}{} = \pctrue}.
  \]
- There exists a p.p.t algorithm $\adv$ such that
+ There exists a \ppt algorithm $\adv$ such that
  \[
  \advantage{SHAPreI}{\adv} = 1.
  \]
@@ -225,7 +225,7 @@ In $\game{\Game~\algo{SHAPreimg}}{}$ defined in \autoref{fig:sha-preimg} the val
   \caption{Algorithm for finding the SHA256 preimage of a given value \label{fig:sha-preimg-adv}}
   \end{figure}
   $\adv$ will return the correct solution with probability $1$.
-  The running time of $\adv$ is a constant independent of the security parameter $\secpar$ and, therefore, $\adv$ is p.p.t.
+  The running time of $\adv$ is a constant independent of the security parameter $\secpar$ and, therefore, $\adv$ is \ppt
 \end{proof}
 
 % NOTE: This is strange but it captures the idea that anything can be broken if you have enough time.
@@ -236,7 +236,7 @@ We observe that if the output space of the hash function is independent of the s
 \subsection{Hash Functions}
 
 \begin{definition}[Hash function]
-  A \emph{hash function} $\algo{H}$ is a pair of p.p.t. algorithms $(\algo{Gen}, \algo{Eval})$ where
+  A \emph{hash function} $\algo{H}$ is a pair of \ppt algorithms $(\algo{Gen}, \algo{Eval})$ where
   \begin{itemize}
   \item $\algo{Gen}(\secparam) \rightarrow \kappa$ is a probabilistic algorithm that takes the security parameter $\secparam$ and returns a hashing key $\kappa$ \footnote{We assume $\kappa$ includes $\secparam$ so that $\algo{Eval}$ can run in time polynomial in $\secpar$}.
   \item $\algo{Eval}(\kappa, x) \rightarrow y$ takes the hashing key $\kappa$ and $x\in \{0,1\}^*$ as input and outputs a hash $y\in \{0,1\}^{c\lambda}$ for some integer $c > 0$.
@@ -265,10 +265,10 @@ It effectively allows the $\algo{Gen}$ algorithm to select an $\algo{Eval}$ func
 
 Similar to the algorithm in \autoref{fig:sha-preimg-adv}, there exists an algorithm that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability 1 by just evaluates $\algo{H.Eval}$ on fresh inputs until $H\algo{H.Eval}(x) = y$.
 However, for adequate hash functions this algorithm runs in time exponential in the security parameter.
-Hence, the definition of preimage-resistance only considers p.p.t. adversaries.
+Hence, the definition of preimage-resistance only considers \ppt adversaries.
 
 \begin{definition}[Preimage-resistance]
-  A hash function $\algo{H}$ is \emph{preimage-resistant} if for any p.p.t. algorithm $\adv$,
+  A hash function $\algo{H}$ is \emph{preimage-resistant} if for any \ppt algorithm $\adv$,
  \[
   \advantage{PreI}{\adv, \algo{H}} \defeq \pr{\game{\algo{Preimage}}{\algo{H}} = \pctrue} = \negl.
  \]
@@ -284,7 +284,7 @@ Hence, the definition of preimage-resistance only considers p.p.t. adversaries.
 \section{Reductions}
 We use reductions to relate the hardness of various games.
 If we can reduce a game $X$ to a game $Y$, then the game $Y$ is at least as hard as $X$.
-A reduction is a p.p.t algorithm that wins game $X$ using an algorithm that wins game $Y$.
+A reduction is a \ppt algorithm that wins game $X$ using an algorithm that wins game $Y$.
 We illustrate the concept of reductions through a series of examples.
 
 \begin{figure}[tbhp]
@@ -312,7 +312,7 @@ We illustrate the concept of reductions through a series of examples.
 \end{definition}
 
 \begin{proposition}
-  Let $\algo{H}$ be a hash function. If for all p.p.t. adversaries $\adv$, it holds that
+  Let $\algo{H}$ be a hash function. If for all \ppt adversaries $\adv$, it holds that
   \[
   \advantage{PreIE}{\adv, \algo{H}} = \negl
   \]
@@ -320,8 +320,8 @@ We illustrate the concept of reductions through a series of examples.
 \end{proposition}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
-  If $\algo{H}$ is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability.
-  Assume $\algo{H}$ is a hash function $\{0,1\}^* \rightarrow \{0,1\}^{c\lambda}$ for some constant $c$ and is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
+  If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability.
+  Assume $\algo{H}$ is a hash function $\{0,1\}^* \rightarrow \{0,1\}^{c\lambda}$ for some constant $c$ and is not preimage-resistant, then there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
   Let $\bdv^\adv_\algo{H}$ be an algorithm that runs $\adv$ on random input and returns its output (see \autoref{fig:break-hash-either-bdv}).
   \begin{figure}[tbhp]
   \begin{center}
@@ -337,20 +337,20 @@ We illustrate the concept of reductions through a series of examples.
   \caption{Algorithm for finding the preimage of either of two given values under the hash function \label{fig:break-hash-either-bdv}}
   \end{figure}
 
-  Then $\advantage{PreIE}{\bdv^\adv_\algo{H}, \algo{H}} = \advantage{PreI}{\adv, \algo{H}}$ and non-negligible and $\bdv^\adv_\algo{H}$ is p.p.t.
+  Then $\advantage{PreIE}{\bdv^\adv_\algo{H}, \algo{H}} = \advantage{PreI}{\adv, \algo{H}}$ and non-negligible and $\bdv^\adv_\algo{H}$ is \ppt
 \end{proof}
 
 % Exercise: proof the converse
 
 \begin{proposition}
-  Let $\algo{H}$ be a hash function. If $\algo{H}$ is preimage-resistant, then for all p.p.t. adversaries $\adv$, it holds that
+  Let $\algo{H}$ be a hash function. If $\algo{H}$ is preimage-resistant, then for all \ppt adversaries $\adv$, it holds that
   \[
   \advantage{PreIE}{\adv, \algo{H}} = \negl.
   \]
 \end{proposition}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
-  If there exists a p.p.t. algorithm $\adv$ that wins $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability, then $\algo{H}$ is not preimage-resistant.
+  If there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability, then $\algo{H}$ is not preimage-resistant.
   Let $\bdv^\adv_\algo{H}$ be an algorithm as defined in \autoref{fig:break-preimage-bdv} that runs $\adv$ and returns its output.
   
   \begin{figure}[tbhp]
@@ -397,7 +397,7 @@ We illustrate the concept of reductions through a series of examples.
   Since $\bdv$ succeeds when either ($b = 0$ and $x$ is a preimage of the first argument) or ($b = 1$ and $x$ is a preimage of the second argument), we have:
   $\advantage{PreI}{\bdv^\adv_\algo{H}, \algo{H}} = \frac{1}{2} \cdot \pr{E_1} + \frac{1}{2} \cdot \pr{E_2} = \frac{1}{2} \cdot \advantage{PreIE}{\adv, \algo{H}}$
   
-  Since $\advantage{PreIE}{\adv, \algo{H}}$ is non-negligible and $\bdv^\adv_\algo{H}$ is p.p.t., $\algo{H}$ is not preimage-resistant.
+  Since $\advantage{PreIE}{\adv, \algo{H}}$ is non-negligible and $\bdv^\adv_\algo{H}$ is \ppt, $\algo{H}$ is not preimage-resistant.
 \end{proof}
 
 
@@ -419,7 +419,7 @@ We illustrate the concept of reductions through a series of examples.
 \end{figure}
 
 \begin{definition}[Collision-resistance]
-  Hash function $\algo{H}$ is collision-resistant if for any p.p.t. algorithm $\adv$,
+  Hash function $\algo{H}$ is collision-resistant if for any \ppt algorithm $\adv$,
  \[
   \advantage{Coll}{\adv, \algo{H}} \defeq \pr{\game{\algo{Collision}}{\algo{H}} = \pctrue} = \negl.
  \]
@@ -430,7 +430,7 @@ We illustrate the concept of reductions through a series of examples.
 \end{lemma}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
-  If $\algo{H}$ is not preimage-resistant, then there exists a p.p.t. algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
+  If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
   Let $\bdv^\adv_\algo{H}$ be an algorithm as defined in \autoref{fig:break-hash-preimage-bdv} that runs $\adv$ and returns its output.
   \begin{figure}[tbhp]
   \begin{center}
@@ -466,7 +466,7 @@ We illustrate the concept of reductions through a series of examples.
   Assume for now that $\pr{\bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} } = \negl$ which we will show later.
   Then, since $\advantage{PreI}{\adv, \algo{H}}$ is not negligible and \cref{lem:negl} applies,
   $\advantage{Coll}{\bdv, \algo{H}}$ is not negligible.
-  Since $\bdv$ is p.p.t., $\algo{H}$ is not collision-resistant.
+  Since $\bdv$ is \ppt, $\algo{H}$ is not collision-resistant.
   This proves the contrapositive statement.
 
   We now show that $\pr{\bdv \text{ aborts at \cref{line:break-hash-preimage-bdv-assert}} } = \negl$.

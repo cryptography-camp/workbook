@@ -355,7 +355,7 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
   \[
   G(x_0, x_1, \ldots, x_\secpar) = \algo{H}(x_0) \oplus \algo{H}(x_1) \oplus \cdots \oplus \algo{H}(x_\secpar)
   \]
-  where $\oplus$ denotes bitwise XOR. Is $G$ preimage resistant? That is, given $y \in \{0,1\}^\secpar$, is it hard for a p.p.t. adversary with oracle access to $\algo{H}$ to find $(x_0, \ldots, x_\secpar)$ such that $G(x_0, \ldots, x_\secpar) = y$?
+  where $\oplus$ denotes bitwise XOR. Is $G$ preimage resistant? That is, given $y \in \{0,1\}^\secpar$, is it hard for a \ppt adversary with oracle access to $\algo{H}$ to find $(x_0, \ldots, x_\secpar)$ such that $G(x_0, \ldots, x_\secpar) = y$?
 \end{exercise}
 
 \ifsolutions

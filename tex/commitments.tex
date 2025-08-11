@@ -4,7 +4,7 @@
 
 \subsection{Syntax}
 \begin{definition}[Commitment Scheme]
-  A \emph{commitment scheme} $\algo{Com}$is a pair of p.p.t algorithms $(\algo{Setup}, \algo{Commit})$ where
+  A \emph{commitment scheme} $\algo{Com}$is a pair of \ppt algorithms $(\algo{Setup}, \algo{Commit})$ where
   \begin{itemize}
     \item $\algo{Setup}(1^\lambda) \rightarrow \params$ is a probabilistic algorithm that takes the security parameter $\lambda$ and returns public parameters $\params$, which include the message space $\mathcal{M}$ and the randomness space $\mathcal{R}$.
     \item $\algo{Commit}(\params, m; r) \rightarrow C$ is a deterministic algorithm that takes the public parameters $\params$, a message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$ and returns a commitment $C$.
@@ -39,7 +39,7 @@
 \end{figure}
 
 \begin{definition}[Binding]
-  A commitment scheme $\algo{Com}$ is binding if for any p.p.t. algorithm $\adv$,
+  A commitment scheme $\algo{Com}$ is binding if for any \ppt algorithm $\adv$,
  \[
   \advantage{Bind}{\adv, \algo{Com}} \defeq \pr{\game{\algo{ComBind}}{\algo{Com}} = \pctrue} = \negl.
  \]
@@ -66,7 +66,7 @@
 \end{figure}
 
 \begin{definition}[Hiding]
-  A commitment scheme $\algo{Com}$ is hiding if for any p.p.t. algorithm $\adv$,
+  A commitment scheme $\algo{Com}$ is hiding if for any \ppt algorithm $\adv$,
  \[
   \advantage{Hide}{\adv, \algo{Com}} \defeq |\pr{\game{\algo{ComHide}}{\algo{Com}} = \pctrue} - \frac{1}{2}| = \negl.
  \]

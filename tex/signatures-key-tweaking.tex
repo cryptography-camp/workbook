@@ -100,7 +100,7 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 
 \ifsolutions
 \begin{mysolution}
-  A signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with tweaking scheme $\algo{TwSch} = (\mathcal{T}, \algo{TwSK}, \algo{TwPK})$ is \emph{existentially unforgeable under chosen message attack with tweaking (EUF-CMA-TK)} if for all p.p.t. adversaries $\adv$:
+  A signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with tweaking scheme $\algo{TwSch} = (\mathcal{T}, \algo{TwSK}, \algo{TwPK})$ is \emph{existentially unforgeable under chosen message attack with tweaking (EUF-CMA-TK)} if for all \ppt adversaries $\adv$:
   \[
     \advantage{EUF-CMA-TK}{\adv, \algo{Sig}, \algo{TwSch}} \defeq \pr{\game{\Game~\algo{EUF-CMA-TK}}{\algo{Sig}, \algo{TwSch}} = 1} = \negl
   \]
@@ -135,7 +135,7 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 \fi
 
 \begin{exercise}
-  Give a p.p.t. adversary that breaks the EUF-CMA-TK security of Schnorr signatures with the SchnorrTS tweaking scheme. Hints:
+  Give a \ppt adversary that breaks the EUF-CMA-TK security of Schnorr signatures with the SchnorrTS tweaking scheme. Hints:
   \begin{itemize}
     \item You only need to use the signing oracle once.
     \item Pick a tweak $t$ and look at the Schnorr verification equation for a signature $(R, s)$ under public key $X$. Compute $s'$ by adding a value to $s$ such that $(R, s')$ is a valid signature for $\algo{TwPK}(X, t)$.

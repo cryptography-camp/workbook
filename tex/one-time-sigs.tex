@@ -3,12 +3,12 @@
 \subsection{Syntax}
 
 \begin{definition}[One-Time Signature]
-    A one-time signature scheme $\algo{OTS}$ is a tuple of p.p.t algorithms $(\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with message space $\mathcal{M}$, where
+    A one-time signature scheme $\algo{OTS}$ is a tuple of \ppt algorithms $(\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with message space $\mathcal{M}$, where
     \begin{itemize}
-        \item $\algo{Setup}(1^\secpar)\rightarrow \params$ is a p.p.t algorithm that generates the public parameters $\params$ for the one-time signature scheme.
-        \item $\algo{KeyGen}(\params)\rightarrow (\sk, \pk)$ is a p.p.t algorithm that generates the key pair $(\sk, \pk)$ of the one-time signature scheme.
-        \item $\algo{Sign}(\params, \sk, m) \rightarrow \sigma$ is a p.p.t algorithm that outputs a signature $\sigma$ for the message $m$ under the one-time signature scheme with secret key $\sk$.
-        \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow b$ is a p.p.t algorithm that outputs $b = 1$ if the signature $\sigma$ is valid for the message $m$ under the one-time signature scheme with public key $\pk$. Otherwise, it outputs $b = 0$.
+        \item $\algo{Setup}(1^\secpar)\rightarrow \params$ is a \ppt algorithm that generates the public parameters $\params$ for the one-time signature scheme.
+        \item $\algo{KeyGen}(\params)\rightarrow (\sk, \pk)$ is a \ppt algorithm that generates the key pair $(\sk, \pk)$ of the one-time signature scheme.
+        \item $\algo{Sign}(\params, \sk, m) \rightarrow \sigma$ is a \ppt algorithm that outputs a signature $\sigma$ for the message $m$ under the one-time signature scheme with secret key $\sk$.
+        \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow b$ is a \ppt algorithm that outputs $b = 1$ if the signature $\sigma$ is valid for the message $m$ under the one-time signature scheme with public key $\pk$. Otherwise, it outputs $b = 0$.
     \end{itemize}
 \end{definition}
 
@@ -20,7 +20,7 @@
 \subsection{Security}
 
 \begin{definition}[EUF-CMA Security]\label{def:euf-cma-ot}
-    A one-time signature scheme $\algo{OTS}$ is \emph{EUF-CMA secure} (Existential Unforgeability under Chosen Message Attack) if for all p.p.t. adversaries $\adv$, it holds that
+    A one-time signature scheme $\algo{OTS}$ is \emph{EUF-CMA secure} (Existential Unforgeability under Chosen Message Attack) if for all \ppt adversaries $\adv$, it holds that
     \[
     \advantage{EUF-CMA}{\adv, \algo{OTS}} \defeq \pr{\game{\Game~\algo{EUF-CMA}}{\algo{OTS}} = 1} = \negl.
     \]
@@ -97,8 +97,8 @@
 \begin{theorem}[Lamport signatures are EUF-CMA secure]\label{thm:ots-lamport-euf-cma}
     Let $\algo{H}$ be a preimage-resistant hash function.
     Then the Lamport one-time signature scheme $\algo{LS}[\algo{H, k}]$ is EUF-CMA secure.
-    More precisely, for any p.p.t. adversary $\adv$ against the EUF-CMA security of $\algo{LS}[\algo{H, k}]$,
-    there exists a p.p.t. adversary $\bdv$ against the preimage resistance of $\algo{H}$ such that
+    More precisely, for any \ppt adversary $\adv$ against the EUF-CMA security of $\algo{LS}[\algo{H, k}]$,
+    there exists a \ppt adversary $\bdv$ against the preimage resistance of $\algo{H}$ such that
     \[
     \advantage{EUF-CMA}{\adv, \algo{LS}[\algo{H, k}]} \leq 2k\advantage{Preimage}{\bdv, \algo{H}}.
     \]
@@ -199,7 +199,7 @@
 
 \begin{exercise}
   To see why the security definition for signatures includes a signing oracle, consider $\game{\Game~\algo{G}}{\algo{OTS}}$ which is the same as $\game{\Game~\algo{EUF-CMA}}{\algo{OTS}}$ except that the adversary $\adv$ is not given access to the signing oracle.
-  Give an example for a one time signature scheme that is correct and $\pr{\game{\Game~\algo{G}}{\algo{OTS}} = 1} = negl$ for all p.p.t. adversaries $\adv$ but is not EUF-CMA secure.
+  Give an example for a one time signature scheme that is correct and $\pr{\game{\Game~\algo{G}}{\algo{OTS}} = 1} = negl$ for all \ppt adversaries $\adv$ but is not EUF-CMA secure.
 \end{exercise}
 
 \ifsolutions
@@ -230,7 +230,7 @@
   \begin{enumerate}
       \item Express $\pr{\game{\Game~\algo{G_1}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{EUF-CMA}}{\algo{LS[\algo{H}, k]}} = 1}$.
       \item Express $\pr{\game{\Game~\algo{G_2}}{} = 1}$ in terms of $\pr{\game{\Game~\algo{G_1}}{} = 1}$.
-      \item Give an algorithm $\bdv^\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability $\pr{\game{\Game~\algo{G_2}}{} = 1}$.
+      \item Give a \ppt algorithm $\bdv^\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with probability $\pr{\game{\Game~\algo{G_2}}{} = 1}$.
       \item Put it all together to prove \autoref{thm:ots-lamport-euf-cma}.
   \end{enumerate}
 \end{exercise}

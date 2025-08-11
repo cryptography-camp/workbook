@@ -3,7 +3,7 @@
 \subsection{The Discrete Logarithm Problem}
 
 \begin{definition}[Group Generation Algorithm]
-  A \emph{group generation algorithm} $\grgen$ is a p.p.t. algorithm that takes the security parameter $1^\secpar$ as input and outputs a group description $(\GG, p, g)$, where $\GG$ is a cyclic group of prime order $p$ and $g$ is a generator of $\GG$.
+  A \emph{group generation algorithm} $\grgen$ is a \ppt algorithm that takes the security parameter $1^\secpar$ as input and outputs a group description $(\GG, p, g)$, where $\GG$ is a cyclic group of prime order $p$ and $g$ is a generator of $\GG$.
 \end{definition}
 
 \begin{remark}
@@ -30,7 +30,7 @@
 
 \begin{definition}[Discrete Logarithm Assumption]
   Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{DL}}{\grgen}$ be as defined in \autoref{fig:dl-game}.
-  The discrete logarithm (DL) problem is hard for $\grgen$ if for any p.p.t. algorithm $\adv$,
+  The discrete logarithm (DL) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
   \[
   \advantage{DL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{DL}}{\grgen} = \pctrue} = \negl.
   \]
@@ -56,7 +56,7 @@
 
 \begin{theorem}[Pedersen Commitments are Binding]
   Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard, then the Pedersen commitment scheme $\algo{PedCom}[\grgen]$ is binding.
-  More precisely, for any p.p.t. adversary $\adv$ against the binding property of $\algo{PedCom}[\grgen]$, there exists a p.p.t. adversary $\bdv$ against the discrete logarithm problem such that
+  More precisely, for any \ppt adversary $\adv$ against the binding property of $\algo{PedCom}[\grgen]$, there exists a \ppt adversary $\bdv$ against the discrete logarithm problem such that
   \[
   \advantage{Bind}{\adv, \algo{PedCom}} = \advantage{DL}{\bdv, \grgen}.
   \]
@@ -97,7 +97,7 @@
 
 \begin{definition}[Decisional Diffie-Hellman Assumption]
   Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{DDH}}{\grgen}$ be as defined in \autoref{fig:ddh-game}.
-  The decisional Diffie-Hellman (DDH) problem is hard for $\grgen$ if for any p.p.t. algorithm $\adv$,
+  The decisional Diffie-Hellman (DDH) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
   \[
   \advantage{DDH}{\adv, \grgen} \defeq \left|\pr{\game{\Game~\algo{DDH}}{\grgen} = \pctrue} - \frac{1}{2}\right| = \negl.
   \]
@@ -116,7 +116,7 @@
 
 \begin{theorem}[ElGamal Commitments are Hiding]
   Let $\grgen$ be a group generation algorithm for which the DDH problem is hard, then the ElGamal commitment scheme $\algo{ElGamalCom}[\grgen]$ is hiding.
-  More precisely, for any p.p.t. adversary $\adv$ against the hiding property of $\algo{ElGamalCom}[\grgen]$, there exists a p.p.t. adversary $\bdv$ against DDH such that
+  More precisely, for any \ppt adversary $\adv$ against the hiding property of $\algo{ElGamalCom}[\grgen]$, there exists a \ppt adversary $\bdv$ against DDH such that
   \[
   \advantage{Hide}{\adv, \algo{ElGamalCom}} = 2 \cdot \advantage{DDH}{\bdv, \grgen}.
   \]
@@ -175,7 +175,7 @@
 
 \begin{definition}[One-More Discrete Logarithm Assumption]
   Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{OMDL}}{\grgen}$ be as defined in \autoref{fig:omdl-aomdl-games}.
-  The one-more discrete logarithm (OMDL) problem is hard for $\grgen$ if for any p.p.t. algorithm $\adv$,
+  The one-more discrete logarithm (OMDL) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
   \[
   \advantage{OMDL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{OMDL}}{\grgen} = \pctrue} = \negl.
   \]
@@ -183,7 +183,7 @@
 
 \begin{definition}[Algebraic One-More Discrete Logarithm Assumption]
   Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{AOMDL}}{\grgen}$ be as defined in \autoref{fig:omdl-aomdl-games}.
-  The algebraic one-more discrete logarithm (AOMDL) problem is hard for $\grgen$ if for any p.p.t. algorithm $\adv$,
+  The algebraic one-more discrete logarithm (AOMDL) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
   \[
   \advantage{AOMDL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{AOMDL}}{\grgen} = \pctrue} = \negl.
   \]
@@ -196,7 +196,7 @@
 
 \begin{remark}[Falsifiable Assumptions]
   In order to be able to evaluate whether an assumption is true or not, it must be falsifiable, i.e., there must be a (constructive) way to demonstrate that it is false, if this is the case.
-  More precisely, a cryptographic assumption is \emph{falsifiable} if there exists a p.p.t. challenger algorithm that interacts with an adversary and decides whether the adversary breaks the assumption.
+  More precisely, a cryptographic assumption is \emph{falsifiable} if there exists a \ppt challenger algorithm that interacts with an adversary and decides whether the adversary breaks the assumption.
 \end{remark}
 
 \subsection{Exercises}
@@ -229,7 +229,7 @@
     \item This implies $g^{m_0 - m_1} = h^{r_1 - r_0}$, so $g^{m_0 - m_1} = g^{z(r_1 - r_0)}$.
     \item If $r_0 = r_1$, then $g^{m_0 - m_1} = 1$, which contradicts $m_0 \neq m_1$ (since $g$ generates $\GG$).
     \item Therefore $r_0 \neq r_1$, and we can compute $z = \frac{m_0 - m_1}{r_1 - r_0} \bmod p$.
-    \item $\bdv$ outputs $z$. Also $\bdv$ is p.p.t. if $\adv$ is.
+    \item $\bdv$ outputs $z$. Also $\bdv$ is \ppt if $\adv$ is.
   \end{itemize}
   The reduction is perfect: whenever $\adv$ succeeds in breaking binding, $\bdv$ succeeds in computing the discrete log.
   Therefore, $\advantage{DL}{\bdv, \grgen} = \advantage{Bind}{\adv, \algo{PedCom}}$.
@@ -292,7 +292,7 @@
   &= \frac{1}{2} \cdot \advantage{Hide}{\adv, \algo{ElGamalCom}}
   \end{align}
 
-  This gives us: $\advantage{Hide}{\adv, \algo{ElGamalCom}} = 2 \cdot \advantage{DDH}{\bdv, \grgen}$. $\bdv$ is p.p.t.\ if $\adv$ is.
+  This gives us: $\advantage{Hide}{\adv, \algo{ElGamalCom}} = 2 \cdot \advantage{DDH}{\bdv, \grgen}$. $\bdv$ is \ppt\ if $\adv$ is.
 \end{mysolution}
 \fi
 

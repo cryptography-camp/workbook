@@ -6,12 +6,12 @@ An accumulator is a compact representation of a set of elements and allows certa
 
 \begin{definition}[Accumulator]
 An accumulator that supports insertions of elements and membership proofs is also called an \emph{additive positive accumulator}~\cite{RSA:BalCanYak20}.
-It is a tuple of p.p.t algorithms $(\algo{Gen}, \algo{Init}, \algo{Value}, \algo{Insert}, \algo{ProveMembership}, \algo{VerifyMembership})$, where
+It is a tuple of \ppt algorithms $(\algo{Gen}, \algo{Init}, \algo{Value}, \algo{Insert}, \algo{ProveMembership}, \algo{VerifyMembership})$, where
 
 % TODO: mention something about the set of elements
 
 \begin{itemize}
-    \item $\algo{Gen}(1^\secpar)\rightarrow \params$ is a p.p.t algorithm that generates the public parameters $\params$ for the accumulator.
+    \item $\algo{Gen}(1^\secpar)\rightarrow \params$ is a \ppt algorithm that generates the public parameters $\params$ for the accumulator.
     \item $\algo{Init}(\params)\rightarrow \state$ is a deterministic algorithm that outputs the initial state $\state$ of the accumulator.
     \item $\algo{Value}(\params, \state)\rightarrow v$ outputs the accumulator value $v$ given the accumulator state $\state$.
     \item $\algo{Insert}(\params, \state, x) \rightarrow \state'$ outputs a new state $\state'$ after inserting the element $x \in \mathcal{X}_\mathsf{Acc}$ into the accumulator with state $\state$.
@@ -95,7 +95,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
 
 \begin{definition}[Collision-Freeness]
     An additive positive accumulator is \emph{collision-free} for a given domain $\mathcal{X}_\mathsf{Acc}$ if it is hard to fabricate a membership proof for a value that is not in the set.
-    More formally, an accumulator $\algo{Acc}$ is collision-free if for any p.p.t algorithm $\adv$
+    More formally, an accumulator $\algo{Acc}$ is collision-free if for any \ppt algorithm $\adv$
     \[
       \advantage{Collision}{\adv, \algo{Acc}} \defeq \pr{\game{\algo{AccColl}}{\algo{Acc}} = \pctrue} = \negl.
     \]
