@@ -9,6 +9,7 @@ For example, consider the hash commitment scheme $\algo{HashCom}[\algo{H}]$ wher
 A reduction can program the oracle such that certain algebraic relations hold between committed messages, while maintaining the adversary's view.
 
 The following proposition demonstrates that careful programming preserves the adversary's advantage. Notably, $\Game_1$ determines the XOR of committed messages $m^*$ before running the adversary.
+A similar technique is used in MuSig multi-signature scheme~\cite{DCC:MPSW19} to simulate signing queries (i.e., to answer signing queries without knowledge of the secret key, as explained in the next section).
 
 \begin{figure}[tbhp]
   \begin{center}
