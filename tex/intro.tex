@@ -64,7 +64,7 @@ A function $f: \ZZ \rightarrow \mathbb{R}$ is \emph{negligible} if for every pol
 If a function $f$ is negligible, we write $f(\secpar) = \negl$.
 
 
-\begin{proposition}
+\begin{lemma}[Properties of negligible functions]
   \label{lem:negl}
   \hfill
   \begin{enumerate}
@@ -73,7 +73,7 @@ If a function $f$ is negligible, we write $f(\secpar) = \negl$.
   \item Let $f$ be a negligible function $f(\secpar) \ge 0$ and $c > 0$ be a constant. Then $f + c$ is not negligible.
   \item Let $f$ be a non-negligible function and $g$ be a negligible function. Then $f - g$ is not negligible.
   \end{enumerate}
-\end{proposition}
+\end{lemma}
 \begin{proof}
   \hfill
   \begin{enumerate}
@@ -424,9 +424,9 @@ We illustrate the concept of reductions through a series of examples.
  \]
 \end{definition}
 
-\begin{lemma}
+\begin{theorem}[Collision resistance implies preimage resistance]
   Let $\algo{H}$ be a collision-resistant hash function. Then $\algo{H}$ is preimage-resistant.
-\end{lemma}
+\end{theorem}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
   If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
