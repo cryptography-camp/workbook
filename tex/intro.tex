@@ -1,5 +1,10 @@
 \section{Introduction}\label{sec:intro}
 
+This workbook has two primary goals.
+First, it aims to provide sufficient background to understand state-of-the-art papers on cryptographic signatures, with a focus on discrete-logarithm-based multi-party signatures, including their security proofs.
+Second, it seeks to develop the skills needed to formalize security notions for cryptographic primitives.
+This skill is crucial for selecting appropriate primitives when proposing and reviewing cryptographic protocols, and for defining precisely what a protocol aims to achieve.
+
 The concepts introduced in this section may at first seem abstract, but this level of abstraction is important: it provides the rigorous mathematical framework on which modern provable cryptography is built.
 Throughout this workbook we will study algorithms, analyse their running time and success probability, both for explicit algorithms and for hypothetical adversarial algorithms.
 In later sections we will sometimes study these algorithms within idealised computational models.
@@ -12,12 +17,6 @@ The goal of this workbook is to build intuition step-by-step through the exercis
 Note that there is rarely a single standard definition for a concept in cryptography.
 Sometimes we encounter equivalent definitions in the literature, while other times we find definitions that differ in subtle but important ways.
 This is why contemporary papers in cryptography include a preliminaries section that rigorously defines the concepts they use.
-
-This workbook may contain a lot of mistakes.
-There's a bounty of 50 sats (paid out via the Lightning Network) per mistake found once this document is published.
-
-% NOTE: What we're doing is similar to applied physics. I would like to promise that we're just doing algorithms. who has had a course in theoretical computer science or algorithms?
-% what we're not going to do
 
 % REQUIREMENTS:
 % basic sets
@@ -489,3 +488,9 @@ We illustrate the concept of reductions through a series of examples.
   \end{align*}
   which is negligible.
 \end{proof}
+
+\subsection{Exercises}
+
+\begin{exercise}[Optional]
+  Describe target collision resistance, extended target collision resistance, and multi-target collision resistance~\cite{PKC:HulRijSon16} in your own words and discuss their security against classical and quantum attacks (see Table 1 in the referenced paper).
+\end{exercise}

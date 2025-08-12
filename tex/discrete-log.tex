@@ -54,7 +54,7 @@
   \]
 \end{remark}
 
-\begin{theorem}[Pedersen Commitments are Binding]
+\begin{theorem}[Pedersen Commitments are Binding]\label{thm:pedersen-binding}
   Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard, then the Pedersen commitment scheme $\algo{PedCom}[\grgen]$ is binding.
   More precisely, for any \ppt adversary $\adv$ against the binding property of $\algo{PedCom}[\grgen]$, there exists a \ppt adversary $\bdv$ against the discrete logarithm problem such that
   \[
@@ -62,7 +62,7 @@
   \]
 \end{theorem}
 
-\begin{theorem}[Pedersen Commitments are Hiding]
+\begin{theorem}[Pedersen Commitments are Hiding]\label{thm:pedersen-hiding}
   The Pedersen commitment scheme $\algo{PedCom}[\grgen]$ is perfectly hiding.
   More precisely, for any (possibly unbounded) adversary $\adv$,
   \[
@@ -114,7 +114,7 @@
   The message space is $\mathcal{M} = \ZZ_p$ and the randomness space is $\mathcal{R} = \ZZ_p$.
 \end{definition}
 
-\begin{theorem}[ElGamal Commitments are Hiding]
+\begin{theorem}[ElGamal Commitments are Hiding]\label{thm:elgamal-hiding}
   Let $\grgen$ be a group generation algorithm for which the DDH problem is hard, then the ElGamal commitment scheme $\algo{ElGamalCom}[\grgen]$ is hiding.
   More precisely, for any \ppt adversary $\adv$ against the hiding property of $\algo{ElGamalCom}[\grgen]$, there exists a \ppt adversary $\bdv$ against DDH such that
   \[
@@ -362,13 +362,20 @@
 \fi
 
 \begin{exercise}[Optional]
-  Read about the Generic Group Model (GGM) in the introduction of \textcite{Shoup97} and \textcite{Maurer05}, and argue why the DLP is hard for classical computational models.
+  Read about the Generic Group Model (GGM) in the introduction of~\cite{EC:Shoup97} and~\cite{IMA:Maurer05}, and argue why the DLP is hard for classical computational models.
 \end{exercise}
 
 \begin{exercise}[Optional]
-  Study non-standard discrete logarithm assumptions and their relationships in the GGM or AGM.
+  How does Silent Payments~\cite{add:bip-silentpayments} rely on the DDH assumption?
 \end{exercise}
 
 \begin{exercise}[Optional]
-  Relate silent payments and the DDH assumption.
+  Study the concept of falsifiability of cryptographic assumptions by reading Naor~\cite{C:Naor03}.
+  Analyze the following assumptions and explain the extent to which each one is falsifiable:
+  \begin{itemize}
+    \item Factoring
+    \item The RSA assumption
+    \item The Decisional Diffie-Hellman assumption
+    \item The Knowledge-of-Exponent assumption
+  \end{itemize}
 \end{exercise}

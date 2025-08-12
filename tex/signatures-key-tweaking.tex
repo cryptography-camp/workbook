@@ -396,3 +396,9 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
   The bound $|\advantage{Single}{\cdv, \algo{InpGen}} - \advantage{EUF-CMA-TK}{\adv, \algo{SchnorrSigKP}, \algo{SchnorrTS}}| \leq \frac{q_s(q_s + q_h)}{2^\secpar}$ follows from the same analysis as in Lemma~\ref{lem:schnorr-to-single}, where the error term accounts for the probability of collisions in the programmed oracle.
 \end{mysolution}
 \fi
+
+\begin{exercise}[Optional]
+  Read about signatures with re-randomizable keys in Section 3 of Fleischhacker et al.~\cite{PKC:FKMSSS16}, which presents a notion closely related to key tweaking.
+  Compare their security model with the EUF-CMA-TK model discussed in this section and discuss the practical impact.
+  How can they prove security for Schnorr signatures with re-randomized keys without requiring public key prefixing?
+\end{exercise}

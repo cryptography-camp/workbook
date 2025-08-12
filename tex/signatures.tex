@@ -457,3 +457,8 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
   Assuming the discrete logarithm problem is hard (i.e., $\advantage{DLog}{\ddv, \grgen}$ is negligible), we conclude that $\advantage{EUF-CMA}{\adv, \algo{SchnorrSig}[\grgen, \algo{H}]}$ is negligible.
 \end{mysolution}
 \fi
+
+\begin{exercise}[Optional]
+  Study the formalization of adaptor signatures in Gerhart, Schröder, Soni, and Thyagarajan~\cite{EC:GSST24}.
+  Explain what gaps existed in previous formalizations and how this work addresses them.
+\end{exercise}

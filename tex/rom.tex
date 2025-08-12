@@ -114,13 +114,13 @@ Before examining the consequences of random oracles, we present a simple lemma t
 \begin{remark}
   For a large class of cryptographic schemes, the properties of hash functions seen so far are insufficient to prove security.
   Instead, we prove security of a modified scheme where hash function evaluations are replaced with random oracle calls.
-  This is the \emph{random oracle model} (ROM).
+  This is the \emph{random oracle model} (ROM)~\cite{CCS:BelRog93}.
   Random oracles cannot be instantiated in the real world because their output must be distributed uniformly at random unless explicitly queried.
   On the other hand, the output of a hash function is deterministic once the key is known.
   Moreover, there's no way to formally define an ``explicit query'' for public hash functions.
 
   There exist contrived schemes provably secure in the ROM that become insecure when instantiated with any concrete hash function (see optional exercise).
-  Despite these theoretical concerns, the ROM has proven very useful in practice for analyzing real-world cryptographic protocols~\cite{BR93}.
+  Despite these theoretical concerns, the ROM has proven very useful in practice for analyzing real-world cryptographic protocols~\cite{DCC:KobMen15}.
 \end{remark}
 
 \subsection{Hash Commitments in the ROM}
@@ -144,7 +144,7 @@ Before examining the consequences of random oracles, we present a simple lemma t
 
 \subsection{Taproot Commitments}
 
-\begin{definition}[Taproot Commitment Scheme]
+\begin{definition}[Taproot Commitment Scheme~\cite{add:bip-taproot}]
   Let $\grgen$ be a group generation algorithm and $\algo{H}$ be a hash function with output in $\ZZ_p$ where $p$ is the group order. 
   The Taproot commitment scheme $\algo{TapCom}[\grgen, \algo{H}]$ is defined as follows:
   \begin{itemize}
@@ -164,7 +164,7 @@ Before examining the consequences of random oracles, we present a simple lemma t
 
 \subsection{Exercises}
 
-\begin{exercise}
+\begin{exercise}\label{ex:rom-contrived-hashcom}
   Consider a modified hash commitment scheme $\algo{HashCom}_y[\algo{H}]$ defined as follows:
   \begin{itemize}
     \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Same as $\algo{HashCom}[\algo{H}]$.
@@ -361,10 +361,15 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
 \ifsolutions
 \begin{mysolution}
   % TODO: cite
-  No, $G$ is not preimage resistant. Wagner's algorithm for the generalized birthday problem can find a preimage efficiently.
+  No, $G$ is not preimage resistant. Wagner's algorithm for the generalized birthday problem~\cite{C:Wagner02} can find a preimage efficiently.
 \end{mysolution}
 
 \begin{exercise}[Optional]
   Why is the ROM not considered adequate to model quantum computation?
 \end{exercise}
 \fi
+
+\begin{exercise}[Optional]
+  Study the diagonalization argument in Section 4 of Canetti, Goldreich, and Halevi~\cite{STOC:CanGolHal98}.
+  Explain how this argument demonstrates the existence of a contrived signature scheme that is provably secure in the random oracle model but becomes insecure when the random oracle is instantiated with any concrete hash function (not just a specific fixed hash function as considered in \autoref{ex:rom-contrived-hashcom}).
+\end{exercise}
