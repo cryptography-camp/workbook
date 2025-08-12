@@ -60,8 +60,8 @@
     \procedure{$\algo{KeyGen}(\params)$}{%
       x_{i, j} \sample \{0, 1\}^\secpar \text{ for } i \in [1, k], j \in \{0, 1\} \\
       \sk \defeq (x_{1, 0}, x_{1, 1}, \dots, x_{k, 0}, x_{k, 1}) \\
-      \pk \defeq (\algo{H.Eval}(x_{1, 0}), \algo{H.Eval}(x_{1, 1}), \dots, \\
-      \t \t \algo{H.Eval}(x_{k, 0}), \algo{H.Eval}(x_{k, 1})) \\
+      \pk \defeq (\algo{H.Eval}(\params, x_{1, 0}), \algo{H.Eval}(\params, x_{1, 1}), \dots, \\
+      \t \t \algo{H.Eval}(\params, x_{k, 0}), \algo{H.Eval}(\params, x_{k, 1})) \\
       \pcreturn (\sk, \pk)
     }
   \end{pcvstack}
@@ -79,7 +79,7 @@
     \procedure{$\algo{Verify}(\params, \pk, m, \sigma)$}{%
       (m_1, \ldots, m_k) \defeq m \\
       (\pk_{1, 0}, \pk_{1, 1}), \ldots, (\pk_{k, 0}, \pk_{k, 1}) \defeq \pk \\
-      \pcreturn \bigwedge_{i=1}^k \algo{H.Eval}(\sigma_i) = \pk_{i, m_i}
+      \pcreturn \bigwedge_{i=1}^k \algo{H.Eval}(\params, \sigma_i) = \pk_{i, m_i}
     }
   \end{pcvstack}
   \end{pchstack}
@@ -206,9 +206,9 @@
 \begin{mysolution}
   Consider the following scheme:
   \begin{itemize}
-      \item $\algo{KeyGen}(\params) = (\sk = x, \pk = \algo{H.Eval}(x))$ where $x \sample \{0,1\}^\secpar$.
+      \item $\algo{KeyGen}(\params) = (\sk = x, \pk = \algo{H.Eval}(\params, x))$ where $x \sample \{0,1\}^\secpar$.
       \item $\algo{Sign}(\params, \sk, m) = \sk$ (simply outputs the secret key).
-      \item $\algo{Verify}(\params, \pk, m, \sigma) = 1$ if and only if $\algo{H.Eval}(\sigma) = \pk$.
+      \item $\algo{Verify}(\params, \pk, m, \sigma) = 1$ if and only if $\algo{H.Eval}(\params, \sigma) = \pk$.
   \end{itemize}
   This scheme is correct and would be secure in $\Game~\algo{G}$ (without signing oracle) since the adversary cannot forge without knowing $\sk$, which requires solving the preimage problem.
   However, this scheme is obviously insecure in practice: anyone who sees one signature learns the secret key and can forge signatures for any message!
@@ -258,7 +258,7 @@
       \item it returns $\sigma_i$.
   \end{itemize}
   Since $m_i \neq j$, the inputs to the adversary (including the signing oracle call) has the same distribution as in $\Game~\algo{G_2}$.
-  Moreover, if $\game{\Game~\algo{G_2}}{}$ returns 1, then $\algo{H.Eval}(\sigma_i) = \pk_{i, j}$
+  Moreover, if $\game{\Game~\algo{G_2}}{}$ returns 1, then $\algo{H.Eval}(\params, \sigma_i) = \pk_{i, j}$
   Therefore,
   \[
   \advantage{Preimage}{\bdv^\adv, \algo{H}} = \pr{\game{\Game~\algo{G_2}}{} = 1}
