@@ -62,6 +62,8 @@
   \]
 \end{theorem}
 
+The proof is left as an exercise (see \autoref{ex:pedersen-binding}).
+
 \begin{theorem}[Pedersen Commitments are Hiding]\label{thm:pedersen-hiding}
   The Pedersen commitment scheme $\algo{PedCom}[\grgen]$ is perfectly hiding.
   More precisely, for any (possibly unbounded) adversary $\adv$,
@@ -69,6 +71,8 @@
   \advantage{Hid}{\adv, \algo{PedCom}} = 0.
   \]
 \end{theorem}
+
+The proof is left as an exercise (see \autoref{ex:pedersen-hiding}).
 
 \subsection{The DDH Assumption}
 
@@ -121,6 +125,8 @@
   \advantage{Hide}{\adv, \algo{ElGamalCom}} = 2 \cdot \advantage{DDH}{\bdv, \grgen}.
   \]
 \end{theorem}
+
+The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
 
 \subsection{The OMDL and AOMDL Problems}
 
@@ -213,7 +219,7 @@
 \end{mysolution}
 \fi
 
-\begin{exercise}
+\begin{exercise}\label{ex:pedersen-binding}
   Argue that Pedersen commitments are binding under the DL assumption (\autoref{thm:pedersen-binding}).
 \end{exercise}
 
@@ -236,7 +242,7 @@
 \end{mysolution}
 \fi
 
-\begin{exercise}
+\begin{exercise}\label{ex:pedersen-hiding}
   Prove that Pedersen commitments are perfectly hiding (\autoref{thm:pedersen-hiding}).
 \end{exercise}
 
@@ -250,7 +256,7 @@
 \end{mysolution}
 \fi
 
-\begin{exercise}
+\begin{exercise}\label{ex:elgamal-hiding}
   Prove that ElGamal commitments are hiding under the DDH assumption (\autoref{thm:elgamal-hiding}).
 \end{exercise}
 

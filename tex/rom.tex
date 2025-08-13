@@ -142,6 +142,8 @@ Before examining the consequences of random oracles, we present a simple lemma t
   \]
 \end{lemma}
 
+The proof is left as an exercise (see \autoref{ex:hash-com-hiding}).
+
 \subsection{Taproot Commitments}
 
 \begin{definition}[Taproot Commitment Scheme~\cite{add:bip-taproot}]
@@ -161,6 +163,8 @@ Before examining the consequences of random oracles, we present a simple lemma t
   \advantage{Bind}{\adv, \algo{TapCom}} \leq \frac{(q+2)^2}{2^\secpar}.
   \]
 \end{lemma}
+
+The proof is left as an exercise (see \autoref{ex:taproot-binding}).
 
 \subsection{Exercises}
 
@@ -198,7 +202,7 @@ Before examining the consequences of random oracles, we present a simple lemma t
 \end{mysolution}
 \fi
 
-\begin{exercise}
+\begin{exercise}\label{ex:hash-com-hiding}
   Prove Lemma~\ref{lem:hash-com-hiding} using a similar technique as in Lemma~\ref{lem:ro-indistinguishable}.
 \end{exercise}
 
@@ -287,7 +291,7 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
 \end{mysolution}
 \fi
 
-\begin{exercise}
+\begin{exercise}\label{ex:taproot-binding}
   Prove Lemma~\ref{lem:taproot-binding}.
 \end{exercise}
 

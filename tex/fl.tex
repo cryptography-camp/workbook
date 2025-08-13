@@ -61,6 +61,8 @@ A similar technique is used in MuSig multi-signature scheme~\cite{DCC:MPSW19} to
   \]
 \end{proposition}
 
+The proof is left as an exercise (see \autoref{ex:prog-rom}).
+
 \subsection{The Forking Lemma}
 
 The forking lemma is a fundamental tool for analyzing algorithms that interact with random oracles. It considers an adversary $\adv$ with oracle access to $\pcoracle{H}$, which is executed twice on different but related instances of the oracle:
@@ -194,7 +196,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
 \end{mysolution}
 \fi
 
-\begin{exercise}
+\begin{exercise}\label{ex:prog-rom}
   Prove Proposition~\ref{prop:prog-rom}.
 \end{exercise}
 
