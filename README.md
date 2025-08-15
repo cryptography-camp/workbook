@@ -33,10 +33,3 @@ latexmk             # Compile the document
 10. If half a day has passed since assigning groups, it is a good time to reshuffle and go back to 2. Otherwise go to 3.
 
 At the end, ask if people want to work on optional exercises.
-
-### TODO
-- Figure out how to do yesterday recap quiz ("kahoot"?)
-- Workbook
-    - Make sure exercises are structured such that presenting solutions doesn't take longer than 20 minutes...
-    - Make sure to have "Explain in your own words exercises"
-    - Have mandatory and optional exercises for groups that finish early.
