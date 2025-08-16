@@ -399,11 +399,45 @@
 \appendix
 \crefalias{section}{appendix}
 
+\section{Appendix: Proofs of Negligible Function Properties}\label{sec:appendix-negl-proofs}
+
+This appendix contains the proofs of properties (2)-(4) from Lemma~\ref{lem:negl}.
+
+\begin{proof}[Proof of Lemma~\ref{lem:negl}(2)]
+  Let $f_1, f_2$ be negligible functions.
+  We need to show that $f_1 + f_2$ is negligible.
+  Let $q(\secpar)$ be an arbitrary polynomial, and let $a$ be a positive integer such that $q(\lambda) \le \lambda^a$ for sufficiently large $\lambda$.
+  Since $f_1$ and $f_2$ are negligible, for the polynomial $\lambda^{a+1}$, there exist $N_1, N_2 \in \NN$ such that
+  \[
+  \forall \secpar \ge N_1, f_1(\secpar) \le \frac{1}{\lambda^{a+1}} \quad \text{and} \quad \forall \secpar \ge N_2, f_2(\secpar) \le \frac{1}{\lambda^{a+1}}
+  \]
+  Let $N = \max(N_1, N_2, 2)$. Then for all $\secpar \ge N$:
+  \[
+    f_1(\secpar) + f_2(\secpar) \le \frac{1}{\lambda^{a+1}} + \frac{1}{\lambda^{a+1}} = \frac{2}{\lambda^{a+1}} \le \frac{1}{\lambda^{a}} \le \frac{1}{q(\secpar)}
+  \]
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:negl}(3)]
+  Let $f$ be a negligible function with $f(\secpar) \ge 0$ and $c > 0$ be a constant.
+  We need to show that $f + c$ is not negligible.
+  Let $c'$ be a constant such that $c' > \frac{1}{c}$.
+  Then $c > c'^{-1}$, so $f(\secpar) + c > c'^{-1}$ for all $\secpar$.
+  For the polynomial $p(\secpar) = c'$, we have $f(\secpar) + c > \frac{1}{p(\secpar)}$ for all $\secpar$, which means $f + c$ is not negligible.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:negl}(4)]
+  Let $f$ be a non-negligible function and $g$ be a negligible function.
+  Assume for contradiction that $f - g$ is negligible.
+  Then by property (2), $(f - g) + g = f$ would be negligible (as the sum of two negligible functions).
+  This contradicts the assumption that $f$ is non-negligible.
+\end{proof}
+
 \section{Appendix: Notation}\label{sec:appendix-notation}
 
 %%% Acknowledgements
 \section*{Acknowledgements}
 We thank Nadav Kohen for valuable feedback and discussions.
+We also thank Claude for assistance with revisions and exercises.
 
 %%% Changelog
 \iffull
