@@ -1,20 +1,18 @@
 \section{Commitments}\label{sec:commitments}
 
-% TODO: mention that the params are often given implicitly
-
 \subsection{Syntax}
 \begin{definition}[Commitment Scheme]
-  A \emph{commitment scheme} $\algo{Com}$is a pair of \ppt algorithms $(\algo{Setup}, \algo{Commit})$ where
+  A \emph{commitment scheme} $\algo{Com}$ with message space $\mathcal{M}$ is a pair of \ppt algorithms $(\algo{Setup}, \algo{Commit})$ where
   \begin{itemize}
-    \item $\algo{Setup}(1^\lambda) \rightarrow \params$ is a probabilistic algorithm that takes the security parameter $\lambda$ and returns public parameters $\params$, which include the message space $\mathcal{M}$ and the randomness space $\mathcal{R}$.
-    \item $\algo{Commit}(\params, m; r) \rightarrow C$ is a deterministic algorithm that takes the public parameters $\params$, a message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$ and returns a commitment $C$.
+    \item $\algo{Setup}(1^\lambda) \rightarrow \params$\footnote{The security parameter $1^\lambda$ is often left implicit in algorithm inputs to simplify notation, e.g., writing $\algo{Setup}()$ instead of $\algo{Setup}(1^\lambda)$.} is a probabilistic algorithm that takes the security parameter $\lambda$ and returns public parameters $\params$, which includes the randomness space $\mathcal{R}$.
+    \item $\algo{Commit}(\params, m; r) \rightarrow C$\footnote{Public parameters $\params$ are often left implicit in algorithm inputs to simplify notation, e.g., writing $\algo{Commit}(m; r)$ instead of $\algo{Commit}(\params, m; r)$.} is a deterministic algorithm that takes the public parameters $\params$, a message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$ and returns a commitment $C$.
   \end{itemize}
 \end{definition}
 
 \begin{example}
-  An example is the trivial commitment scheme\label{sec:trivial-com}:
+  An example is the trivial commitment scheme\label{sec:trivial-com} with message space $\mathcal{M} = \{0, 1\}^*$:
   \begin{itemize}
-    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{\})$
+    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{R} \defeq \{\})$
     \item $\algo{Commit}(\params,m;r) \defeq m$
   \end{itemize}
 \end{example}
@@ -79,39 +77,192 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
 
 \begin{exercise}
   Is the trivial commitment scheme in \cref{sec:trivial-com} binding?
+  Prove it.
 \end{exercise}
 
+\ifsolutions
+\begin{mysolution}
+  Yes, the trivial commitment scheme is perfectly binding.
+  
+  Proof by contradiction: Assume the binding game succeeds, i.e., $\game{\algo{ComBind}}{\algo{Com}} = \pctrue$.
+  This means:
+  \begin{itemize}
+    \item $C_0 = C_1$ (the commitments are equal)
+    \item $m_0 \neq m_1$ (the messages are different)
+  \end{itemize}
+  
+  However, by the definition of the trivial commitment scheme:
+  \begin{itemize}
+    \item $C_0 = \algo{Commit}(\params, m_0; r_0) = m_0$
+    \item $C_1 = \algo{Commit}(\params, m_1; r_1) = m_1$
+  \end{itemize}
+  
+  Therefore, $C_0 = C_1$ implies $m_0 = m_1$, which contradicts $m_0 \neq m_1$.
+  
+  Since no adversary can win the binding game, we have $\advantage{Bind}{\adv, \algo{Com}} = 0$ for all adversaries $\adv$.
+  The trivial commitment scheme is therefore perfectly binding.
+\end{mysolution}
+\fi
+
 \begin{exercise}
-  Informally, a commitment scheme is \emph{strong binding} if commitment cannot be opened to randomness $r$ and $r'$ such that $r \neq r'$. 
-  Define $\game{\algo{ComStrongBind}}{\algo{Com}}$ by changing the definition of $\game{\algo{ComBind}}{\algo{Com}}$.
+  A commitment scheme is \emph{strongly binding} if a commitment cannot be opened with two different randomness values.
+  Formally define the strong binding game $\game{\algo{ComStrongBind}}{\algo{Com}}$ by modifying $\game{\algo{ComBind}}{\algo{Com}}$.
 \end{exercise}
 
-% TODO
-\begin{exercise}
-  Can you imagine situations where strong binding is useful? (Think Taproot randomness is a group element and assume OP\_INTERNALKEY (we haven't introduced taproot at all yet, so this is confusing))
+\ifsolutions
+\begin{mysolution}
+  The strong binding game $\game{\algo{ComStrongBind}}{\algo{Com}}$ is defined as follows:
+  
+  \begin{center}
+    \begin{tcolorbox}[width=8cm]
+      \begin{pchstack}[center]
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComStrongBind}}{\algo{Com}}$}{%
+            \params \sample \algo{Com.Setup}(1^\lambda) \\
+            (m_0, m_1, r_0, r_1) \gets \adv(\params) \\
+            C_0 \gets \algo{Com.Commit}(\params, m_0; r_0) \\
+            C_1 \gets \algo{Com.Commit}(\params, m_1; r_1) \\
+            \pcreturn (C_0 = C_1) \wedge ((m_0 \neq m_1) \vee (r_0 \neq r_1))
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  
+  The key difference from the regular binding game is in the return condition:
+  \begin{itemize}
+    \item Regular binding: $(C_0 = C_1) \wedge (m_0 \neq m_1)$
+    \item Strong binding: $(C_0 = C_1) \wedge ((m_0 \neq m_1) \vee (r_0 \neq r_1))$
+  \end{itemize}
+  
+  Strong binding prevents an adversary from finding the same commitment with either different messages OR different randomness.
+\end{mysolution}
+\fi
+
+\begin{exercise}[Optional]
+  Describe a scenario where strong binding is important.
 \end{exercise}
 
+\ifsolutions
+\begin{mysolution}
+  Strong binding is crucial when the randomness itself has semantic meaning in the protocol.
+
+  Consider the Taproot commitment scheme where the randomness space $\mathcal{R}$ is a group $\GG$.
+  For hash function $\algo{H}$ and group generator $g$, the commitment is computed as:
+  \[
+    \algo{Commit}(m; R) = R \cdot g^{\algo{H.Eval}(\kappa, R \| m)}
+  \]
+
+  In this scheme, $m$ represents the root of a Merkle tree containing Tapscripts, and $R$ serves as an internal key.
+  Assume that the Tapscript language includes an opcode OP\_INTERNALKEY that pushes $R$ onto the execution stack.
+
+  Without strong binding, an adversary could potentially find an alternative opening $(R', m)$ where $R' \neq R$ but still produces the same commitment $C$.
+  This would allow the adversary to execute scripts with OP\_INTERNALKEY pushing their chosen $R'$ onto the stack instead of the original $R$.
+
+  Strong binding prevents this attack by ensuring that each commitment $C$ has a unique valid opening, making it impossible for an adversary to substitute a different internal key while maintaining the same commitment.
+\end{mysolution}
+\fi
+
 \begin{exercise}
-  Come up with a hash commitment scheme that is strongly binding (or just binding if you didn't manage the previous session). Argue for your solution. Write down the theorem.
+  Design a hash-based commitment scheme $\algo{HashCom}[\algo{H}]$\footnote{The notation $\algo{Scheme}[\algo{Primitive}]$ indicates that the scheme is parameterized by a cryptographic primitive.} that is strongly binding when used with a collision-resistant hash function $\algo{H}$.
+  State and prove the security theorem.
+  
+  Note: We do not yet have the tools to prove that $\algo{HashCom}[\algo{H}]$ is hiding; we will return to this in later chapters.
 \end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  Define the hash commitment scheme $\algo{HashCom}[\algo{H}]$ with message space $\mathcal{M} = \{0, 1\}^*$ as follows:
+  \begin{itemize}
+    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{R} \defeq \{0, 1\}^\lambda, \kappa \gets \algo{H.Gen}(1^\lambda))$
+    \item $\algo{Commit}(\params, m; r) \defeq \algo{H.Eval}(\kappa, r \| m)$
+  \end{itemize}
+  
+  \textbf{Theorem:} Let $\algo{H}$ be a collision-resistant hash function. Then $\algo{HashCom}[\algo{H}]$ is strongly binding.
+  More precisely, for any \ppt adversary $\adv$ against the strong binding property of $\algo{HashCom}[\algo{H}]$, there exists a \ppt adversary $\bdv$ against the collision resistance of $\algo{H}$ such that
+  \[
+  \advantage{StrongBind}{\adv, \algo{HashCom}[\algo{H}]} = \advantage{Coll}{\bdv^\adv_\algo{H}, \algo{H}}.
+  \]
+  
+  \textbf{Proof:} We prove the contrapositive: if $\algo{HashCom}[\algo{H}]$ is not strongly binding, then $\algo{H}$ is not collision-resistant.
+  
+  Assume $\algo{HashCom}[\algo{H}]$ is not strongly binding.
+  Then there exists a \ppt adversary $\adv$ that wins $\game{\algo{ComStrongBind}}{\algo{HashCom}[\algo{H}]}$ with non-negligible probability, finding $(m_0, r_0)$ and $(m_1, r_1)$ such that:
+  \begin{itemize}
+    \item $\algo{H.Eval}(\kappa, r_0 \| m_0) = \algo{H.Eval}(\kappa, r_1 \| m_1)$
+    \item Either $m_0 \neq m_1$ or $r_0 \neq r_1$
+  \end{itemize}
+  
+  If either $m_0 \neq m_1$ or $r_0 \neq r_1$, then $r_0 \| m_0 \neq r_1 \| m_1$.
+  This means $\adv$ has found a collision in $\algo{H}$: two different inputs that hash to the same output.
+  
+  We can construct an adversary $\bdv$ against the collision resistance of $\algo{H}$ that runs $\adv$ and outputs $(r_0 \| m_0, r_1 \| m_1)$.
+  Since $\adv$ succeeds with non-negligible probability, so does $\bdv$, showing that $\algo{H}$ is not collision-resistant.
+  
+  Therefore, if $\algo{H}$ is collision-resistant, then $\algo{HashCom}[\algo{H}]$ is strongly binding.
+  Note that strong binding implies regular binding, so this scheme is also binding.
+\end{mysolution}
+\fi
 
 \begin{exercise}
   Is the trivial commitment scheme in \cref{sec:trivial-com} hiding?
   Prove it.
-  (Hint: if it is not hiding, give an adversary that wins the $\game{\algo{ComHide}}{\algo{Com}}$ with non-negligible probability.)
 \end{exercise}
 
+\ifsolutions
+\begin{mysolution}
+  No, the trivial commitment scheme is not hiding.
+
+  We construct a \ppt adversary $\adv$ that wins the hiding game with probability 1:
+
+  \begin{enumerate}
+    \item $\adv$ receives $\params$ from the setup.
+    \item $\adv$ outputs two distinct messages: $m_0 = 0$ and $m_1 = 1$.
+    \item The game samples $b \sample \{0, 1\}$ and computes $C = \algo{Commit}(\params, m_b; r) = m_b$.
+    \item $\adv$ receives $C$ and outputs $b' = C$.
+    \item Since $C = m_b = b$ (because $m_0 = 0$ and $m_1 = 1$), we have $b' = b$.
+  \end{enumerate}
+
+  Therefore, $\pr{\game{\algo{ComHide}}{\algo{Com}} = \pctrue} = 1$, and 
+  \[
+    \advantage{Hide}{\adv, \algo{Com}} = |1 - \frac{1}{2}| = \frac{1}{2}
+  \]
+  which is not negligible.
+
+  Intuitively, the trivial commitment scheme completely reveals the message, providing no hiding at all.
+\end{mysolution}
+\fi
+
 \begin{exercise}
-  Let $\algo{H}$ be a collision-resistant hash function and let $\algo{HashCom'}$ be a commitment scheme where
+  Let $\algo{H}$ be a collision-resistant hash function and define the commitment scheme $\algo{HashCom'}[\algo{H}]$ with message space $\mathcal{M} = \{0, 1\}$ as:
   \begin{itemize}
-    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}, \mathcal{R} \defeq \{\}, \kappa \gets \algo{H.Gen}(1^\lambda))$.
-    \item $\algo{Commit}(\params,m;r) \defeq  \algo{H.Eval}(\kappa, m)$.
+    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{R} \defeq \{\}, \kappa \gets \algo{H.Gen}(1^\lambda))$
+    \item $\algo{Commit}(\params,m;r) \defeq  \algo{H.Eval}(\kappa, m)$
   \end{itemize}
-  Argue that it is binding and write down the security theorem.
-  Prove that it's not hiding.
+  Note that $\algo{HashCom'}[\algo{H}]$ is binding.
+  Is it hiding?
+  Prove it.
 \end{exercise}
 
-% TODO
-\begin{exercise}
-  Argue why a collision resistant hash function cannot be enough for hiding (even when the randomness is included in the hash).
-\end{exercise}
+\ifsolutions
+\begin{mysolution}
+  No, $\algo{HashCom'}[\algo{H}]$ is not hiding.
+  The issue is that there's no randomness in the commitment.
+  
+  We construct an adversary $\adv$ that wins the hiding game with high probability:
+  
+  \begin{enumerate}
+    \item $\adv$ receives $\params$ containing $\kappa$.
+    \item $\adv$ outputs $m_0 = 0$ and $m_1 = 1$.
+    \item The game samples $b \sample \{0, 1\}$ and computes $C = \algo{H.Eval}(\kappa, m_b)$.
+    \item $\adv$ receives $C$ and computes:
+      \begin{itemize}
+        \item $h_0 = \algo{H.Eval}(\kappa, 0)$
+        \item $h_1 = \algo{H.Eval}(\kappa, 1)$
+      \end{itemize}
+    \item If $C = h_0$, output $b' = 0$; if $C = h_1$, output $b' = 1$.
+  \end{enumerate}
+  
+  Since $\algo{H}$ is collision-resistant, with overwhelming probability $\algo{H.Eval}(\kappa, 0) \neq \algo{H.Eval}(\kappa, 1)$.
+  Therefore, $\adv$ correctly identifies $b$ with overwhelming probability, making the scheme not hiding.
+\end{mysolution}
+\fi
+
