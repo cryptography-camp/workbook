@@ -21,7 +21,7 @@ This is why contemporary papers in cryptography include a preliminaries section 
 % REQUIREMENTS:
 % basic sets
 % proof by contraposition
-% union bound
+% basic probability and union bound
 % good to have seen before:
 % negligible functions
 % \ppt algorithms
@@ -79,7 +79,6 @@ The proofs of properties (2)-(4) can be found in Appendix~\ref{sec:appendix-negl
 \subsection{Games \& Asymptotic Security}
 
 In this section we will introduce the concept of security games (also called "experiments") and asymptotic security through a series of toy examples.
-% THere are other frameworks such as "concrete" security and UC
 
 The $\game{\Game~\algo{Guess}}{}$ defined in \autoref{fig:guessing-game} takes an algorithm $\adv$ and the security parameter $\secpar$ as input and outputs $\pctrue$ or $\pcfalse$.
 The game first sets $n = 2^\lambda$ and samples $x$ uniformly at random from $\ZZ_n$.
@@ -120,8 +119,6 @@ The probability that $x$ sampled independently and uniformly at random from $[1,
 While the guessing game above provides a clean security definition, formalizing the security of concrete hash functions like SHA256 requires a fundamentally different approach.
 To illustrate this, consider the $\game{\Game~\algo{SHAPreimgZ}}{}$ defined in \autoref{fig:sha-preimg-0}, which outputs $\pctrue$ if the algorithm $\adv$ outputs a preimage of 0 under the hash function $\algo{SHA256}: \{0, 1\}^* \rightarrow \{0, 1\}^{256}$.
 Note that $\adv$ gets $1^{\secpar}$ (a string of 1s of length $\secpar$) as input in order to characterise the running time of $\adv$ as a function of the security parameter $\secpar$.
-
-% What does this mean? We can make the probability as close to 0 as we want by increasing the security parameter.
 
 \begin{figure}[tbhp]
   \begin{center}
@@ -209,7 +206,6 @@ In $\game{\Game~\algo{SHAPreimg}}{}$ defined in \autoref{fig:sha-preimg} the val
   The running time of $\adv$ is a constant independent of the security parameter $\secpar$ and, therefore, $\adv$ is \ppt
 \end{proof}
 
-% NOTE: This is strange but it captures the idea that anything can be broken if you have enough time.
 % There is also an algorithm which just has all preimages of SHA256 hardcoded and stored in order. Then use binary search.
 
 We observe that if the output space of the hash function is independent of the security parameter, then the hash function is not preimage-resistant.
@@ -254,12 +250,9 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
  \]
 \end{definition}
 
-% why we cannot hardcode all solutions:
-% It could have all possible keys hardcoded in a sorted list and then search through them in $O(log lambda)$ time.
-% No that's because of uniformity. we need to show advantage for a specific machine and then vary the lambda.
-% well we solved this problem through the correct definition of hash functions.
-
-% TODO: some exercises here?
+% The key is necessary to make the security definitions work in a non-uniform model (where we have a different adversary for every security parameter).
+% If there was no key, then, given the security parameter, there exists an algorithm where the state transitions encode a sorted map from all $2^\secpar$ possible hash function outputs y to a preimage x.
+% Then the algorithm could look up the challenge y in $O(\log(2^\secpar)) = O(\secpar)$ time.
 
 \subsection{Exercises}
 
