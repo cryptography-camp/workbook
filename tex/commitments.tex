@@ -2,17 +2,17 @@
 
 \subsection{Syntax}
 \begin{definition}[Commitment Scheme]
-  A \emph{commitment scheme} $\algo{Com}$ with message space $\mathcal{M}$ is a pair of \ppt algorithms $(\algo{Setup}, \algo{Commit})$ where
+  A \emph{commitment scheme} $\algo{Com}$ is a pair of \ppt algorithms $(\algo{Setup}, \algo{Commit})$ where
   \begin{itemize}
-    \item $\algo{Setup}(1^\lambda) \rightarrow \params$\footnote{The security parameter $1^\lambda$ is often left implicit in algorithm inputs to simplify notation, e.g., writing $\algo{Setup}()$ instead of $\algo{Setup}(1^\lambda)$.} is a probabilistic algorithm that takes the security parameter $\lambda$ and returns public parameters $\params$, which includes the randomness space $\mathcal{R}$.
+    \item $\algo{Setup}(1^\lambda) \rightarrow \params$\footnote{The security parameter $1^\lambda$ is often left implicit in algorithm inputs to simplify notation, e.g., writing $\algo{Setup}()$ instead of $\algo{Setup}(1^\lambda)$.} is a probabilistic algorithm that takes the security parameter $\lambda$ and returns public parameters $\params$, which includes the message space $\mathcal{M}$ and the randomness space $\mathcal{R}$.
     \item $\algo{Commit}(\params, m; r) \rightarrow C$\footnote{Public parameters $\params$ are often left implicit in algorithm inputs to simplify notation, e.g., writing $\algo{Commit}(m; r)$ instead of $\algo{Commit}(\params, m; r)$.} is a deterministic algorithm that takes the public parameters $\params$, a message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$ and returns a commitment $C$.
   \end{itemize}
 \end{definition}
 
 \begin{example}
-  An example is the trivial commitment scheme\label{sec:trivial-com} with message space $\mathcal{M} = \{0, 1\}^*$:
+  An example is the trivial commitment scheme\label{sec:trivial-com}:
   \begin{itemize}
-    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{R} \defeq \{\})$
+    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{\})$
     \item $\algo{Commit}(\params,m;r) \defeq m$
   \end{itemize}
 \end{example}
@@ -170,9 +170,9 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
 
 \ifsolutions
 \begin{mysolution}
-  Define the hash commitment scheme $\algo{HashCom}[\algo{H}]$ with message space $\mathcal{M} = \{0, 1\}^*$ as follows:
+  Define the hash commitment scheme $\algo{HashCom}[\algo{H}]$ as follows:
   \begin{itemize}
-    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{R} \defeq \{0, 1\}^\lambda, \kappa \gets \algo{H.Gen}(1^\lambda))$
+    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{0, 1\}^\lambda, \kappa \gets \algo{H.Gen}(1^\lambda))$
     \item $\algo{Commit}(\params, m; r) \defeq \algo{H.Eval}(\kappa, r \| m)$
   \end{itemize}
   
@@ -232,9 +232,9 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
 \fi
 
 \begin{exercise}
-  Let $\algo{H}$ be a collision-resistant hash function and define the commitment scheme $\algo{HashCom'}[\algo{H}]$ with message space $\mathcal{M} = \{0, 1\}$ as:
+  Let $\algo{H}$ be a collision-resistant hash function and define the commitment scheme $\algo{HashCom'}[\algo{H}]$ as:
   \begin{itemize}
-    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{R} \defeq \{\}, \kappa \gets \algo{H.Gen}(1^\lambda))$
+    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}, \mathcal{R} \defeq \{\}, \kappa \gets \algo{H.Gen}(1^\lambda))$
     \item $\algo{Commit}(\params,m;r) \defeq  \algo{H.Eval}(\kappa, m)$
   \end{itemize}
   Note that $\algo{HashCom'}[\algo{H}]$ is binding.

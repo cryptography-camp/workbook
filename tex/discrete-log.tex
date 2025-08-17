@@ -39,10 +39,10 @@
 \subsection{Pedersen Commitments}
 
 \begin{definition}[Pedersen Commitment Scheme]
-  The Pedersen commitment scheme $\algo{PedCom}[\grgen]$ with message space $\mathcal{M} = \ZZ_p$ is parameterized by a group generation algorithm $\grgen$ and defined as follows:
+  The Pedersen commitment scheme $\algo{PedCom}[\grgen]$ is parameterized by a group generation algorithm $\grgen$ and defined as follows:
   \begin{itemize}
-  \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, sample $h \sample \GG \setminus \{1_\GG\}$, and output $\params = (\gparam, h, \mathcal{R} \defeq \ZZ_p)$.
-  \item $\algo{Commit}(\params, m; r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{R})$. For message $m \in \ZZ_p$ and randomness $r \in \mathcal{R}$, output $C = g^m h^r$.
+  \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, sample $h \sample \GG \setminus \{1_\GG\}$, and output $\params = (\gparam, h, \mathcal{M} \defeq \ZZ_p, \mathcal{R} \defeq \ZZ_p)$.
+  \item $\algo{Commit}(\params, m; r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{M}, \mathcal{R})$. For message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$, output $C = g^m h^r$.
   \end{itemize}
 \end{definition}
 
@@ -109,10 +109,10 @@ The proof is left as an exercise (see \autoref{ex:pedersen-hiding}).
 \subsection{ElGamal Commitments}
 
 \begin{definition}[ElGamal Commitment Scheme]
-  The ElGamal commitment scheme $\algo{ElGamalCom}[\grgen]$ with message space $\mathcal{M} = \ZZ_p$ is parameterized by a group generation algorithm $\grgen$ and defined as follows:
+  The ElGamal commitment scheme $\algo{ElGamalCom}[\grgen]$ is parameterized by a group generation algorithm $\grgen$ and defined as follows:
   \begin{itemize}
-  \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, sample $h \sample \GG \setminus \{1_\GG\}$, and output $\params = (\gparam, h, \mathcal{R} \defeq \ZZ_p)$.
-  \item $\algo{Commit}(\params, m; r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{R})$. For message $m \in \ZZ_p$ and randomness $r \in \mathcal{R}$, output $C = (g^r, h^{m+r})$.
+  \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, sample $h \sample \GG \setminus \{1_\GG\}$, and output $\params = (\gparam, h, \mathcal{M} \defeq \ZZ_p, \mathcal{R} \defeq \ZZ_p)$.
+  \item $\algo{Commit}(\params, m; r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{M}, \mathcal{R})$. For message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$, output $C = (g^r, h^{m+r})$.
   \end{itemize}
 \end{definition}
 

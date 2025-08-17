@@ -127,9 +127,9 @@ Before examining the consequences of random oracles, we present a simple lemma t
 
 \begin{definition}[Hash Commitment Scheme]
   Let $\algo{H}$ be a hash function.
-  The hash commitment scheme $\algo{HashCom}[\algo{H}]$ with message space $\mathcal{M} = \{0, 1\}^*$ is defined as follows:
+  The hash commitment scheme $\algo{HashCom}[\algo{H}]$ is defined as follows:
   \begin{itemize}
-    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Output $\params = (\mathcal{R} \defeq \{0, 1\}^\secpar)$.
+    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Output $\params = (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{0, 1\}^\secpar)$.
     \item $\algo{Commit}(\params, m; r) \rightarrow C$: Output $C = \algo{H.Eval}(m \|\| r)$.
   \end{itemize}
 \end{definition}
@@ -148,9 +148,9 @@ The proof is left as an exercise (see \autoref{ex:hash-com-hiding}).
 
 \begin{definition}[Taproot Commitment Scheme~\cite{add:bip-taproot}]
   Let $\grgen$ be a group generation algorithm and $\algo{H}$ be a hash function with output in $\ZZ_p$ where $p$ is the group order. 
-  The Taproot commitment scheme $\algo{TapCom}[\grgen, \algo{H}]$ with message space $\mathcal{M} = \{0,1\}^*$ is defined as follows:
+  The Taproot commitment scheme $\algo{TapCom}[\grgen, \algo{H}]$ is defined as follows:
   \begin{itemize}
-    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$ and $\kappa \gets \algo{H.Gen}(1^\secpar)$. Parse $\gparam = (\GG, p, g)$. Output $\params = (\gparam, \kappa, \mathcal{R} \defeq \GG)$.
+    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$ and $\kappa \gets \algo{H.Gen}(1^\secpar)$. Parse $\gparam = (\GG, p, g)$. Output $\params = (\gparam, \kappa, \mathcal{M} \defeq \{0,1\}^*, \mathcal{R} \defeq \GG)$.
     \item $\algo{Commit}(\params, m; R) \rightarrow C$: Parse $\params$ to obtain $g$ and $\kappa$. Output $C = R \cdot g^{\algo{H.Eval}(\kappa, R \| m)}$.
   \end{itemize}
 \end{definition}
