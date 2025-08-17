@@ -1,0 +1,254 @@
+\section{Reductions}
+We use \emph{reductions} to relate the hardness of various games.
+If we can reduce a game $X$ to a game $Y$, then the game $Y$ is at least as hard as $X$.
+A reduction is a \ppt algorithm that wins game $X$ using an algorithm that wins game $Y$.
+We illustrate the concept of reductions through a series of examples.
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=7cm]
+      \begin{pchstack}[center]
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{PreimageEither}}{\algo{H}}$}{%
+          \kappa \gets \algo{H.Gen}(\secpar) \\
+          y_1, y_2 \sample \{0, 1\}^\lambda\\
+          x \gets \adv(\kappa, y_1, y_2) \\
+          \pcreturn \algo{H.Eval}(\kappa, x) = y_1 \vee \algo{H.Eval}(\kappa, x) = y_2
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{Game for finding the preimage of either of two given values under the hash function \label{fig:break-hash-either}}
+\end{figure}
+
+
+\begin{definition}
+  For $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ as defined in \autoref{fig:break-hash-either} we define the advantage of $\adv$ as
+ \[
+  \advantage{PreIE}{\adv, \algo{H}} \defeq \pr{\game{\algo{PreimageEither}}{\algo{H}} = \pctrue}.
+ \]
+\end{definition}
+
+\begin{proposition}
+  Let $\algo{H}$ be a hash function. If for all \ppt adversaries $\adv$, it holds that
+  \[
+  \advantage{PreIE}{\adv, \algo{H}} = \negl
+  \]
+  then $\algo{H}$ is preimage-resistant.
+\end{proposition}
+\begin{proof}
+  We prove the contrapositive statement (which is equivalent to the statement in the proposition):
+  If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\bdv$ that wins $\game{\Game~\algo{PreimageEither}}{\algo{H}}[\bdv]$ with non-negligible probability.
+
+  If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
+  Let $\bdv^\adv_\algo{H}$ be the algorithm defined in \autoref{fig:break-hash-either-bdv}.
+  It gets both challenges $y_1, y_2$, runs $\adv$ on $y_1$ and returns its output.
+  \begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=5cm]
+      \begin{pchstack}[center]
+          \procedure[headlinesep=1pt]{$\bdv^\adv_\algo{H}(\kappa, y_1, y_2)$}{%
+            x \gets \adv(\kappa, y_1) \\
+            \pcreturn x
+          }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{Algorithm for finding the preimage of either of two given values under the hash function \label{fig:break-hash-either-bdv}}
+  \end{figure}
+
+  The success probability of $\bdv$ is at least that of $\adv$.
+  When $\adv$ successfully finds a preimage of $y_1$, then $\bdv$ succeeds in $\Game~\algo{PreimageEither}$.
+  Additionally, there is a non-zero probability that $\algo{H.Eval}(\kappa, x) = y_2$ even when $\algo{H.Eval}(\kappa, x) \neq y_1$.
+  Therefore, $\advantage{PreIE}{\bdv^\adv_\algo{H}, \algo{H}} \ge \advantage{PreI}{\adv, \algo{H}}$.
+  Since $\advantage{PreI}{\adv, \algo{H}}$ is non-negligible and $\bdv^\adv_\algo{H}$ is \ppt, we have found a \ppt algorithm with non-negligible advantage for $\Game~\algo{PreimageEither}$.
+\end{proof}
+
+\begin{proposition}\label{prop:preimage-either-reverse}
+  Let $\algo{H}$ be a preimage-resistant hash function.
+  Then $\advantage{PreIE}{\adv, \algo{H}}$ is negligible for all \ppt adversaries $\adv$.
+  More precisely, for any \ppt adversary $\adv$ against $\Game~\algo{PreimageEither}$ of $\algo{H}$, there exists a \ppt adversary $\bdv$ against the preimage-resistance of $\algo{H}$ such that
+    \[
+    \advantage{PreIE}{\adv, \algo{H}} = 2\advantage{PreI}{\bdv^\adv_\algo{H}, \algo{H}}.
+    \]
+\end{proposition}
+
+The proof is left as an exercise (see \autoref{ex:preimage-either-reverse}).
+
+
+\subsection{Collision Resistance}
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=8cm]
+      \begin{pchstack}[center]
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{Collision}}{\algo{H}}$}{%
+          \kappa \gets \algo{H.Gen}(\secpar) \\
+          (x,x') \gets \adv(\kappa) \\
+          \pcreturn (x \neq x' \wedge \algo{H.Eval}(\kappa, x) = \algo{H.Eval}(\kappa, x'))
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{Game for finding a collision under the hash function \label{fig:break-hash-collision}}
+\end{figure}
+
+\begin{definition}[Collision-resistance]
+  Hash function $\algo{H}$ is collision-resistant if for any \ppt algorithm $\adv$,
+ \[
+  \advantage{Coll}{\adv, \algo{H}} \defeq \pr{\game{\algo{Collision}}{\algo{H}} = \pctrue} = \negl.
+ \]
+\end{definition}
+
+\begin{theorem}[Collision-resistance implies preimage-resistance]\label{thm:collision-implies-preimage}
+  Let $\algo{H}$ be a collision-resistant hash function. Then $\algo{H}$ is preimage-resistant.
+  More precisely, for any \ppt adversary $\adv$ against $\Game~\algo{Preimage}$ of $\algo{H}$, there exists a \ppt adversary $\bdv$ against $\Game~\algo{Collision}$ of $\algo{H}$ such that
+    \[
+    \advantage{PreI}{\adv, \algo{H}} \le \advantage{Coll}{\bdv^\adv_\algo{H}, \algo{H}} + 2^{-\secpar}.
+    \]
+
+\end{theorem}
+
+The proof is left as an exercise (see \autoref{ex:collision-implies-preimage}).
+
+\subsection{Exercises}
+
+\begin{exercise}\label{ex:preimage-either-reverse}
+  Prove \autoref{prop:preimage-either-reverse}.
+  
+  \textbf{Hint:} Construct a reduction that randomly places the challenge in either the first or second position.
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  We prove the contrapositive statement:
+  If there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ with non-negligible probability, then $\algo{H}$ is not preimage-resistant.
+  Let $\bdv^\adv_\algo{H}$ be an algorithm that runs $\adv$ and returns its output:
+
+  \begin{center}
+    \begin{tcolorbox}[width=6cm]
+      \begin{pchstack}[center]
+          \procedure[headlinesep=1pt]{$\bdv^\adv_\algo{H}(\kappa, y)$}{%
+            y' \sample \{0, 1\}^{\lambda} \\
+            b \sample \{0, 1\} \\
+            \pcif b = 0 \pcthen \\
+            \t x \gets \adv(\kappa, y, y') \\
+            \pcelse \\
+            \t x \gets \adv(\kappa, y', y) \\
+            \pcreturn x
+          }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  
+  Let us analyze the success probability of $\bdv$.
+  Define the following events:
+  \begin{itemize}
+    \item Let $E_1$ be the event that $\algo{H.Eval}(\kappa, x) = y_1$ where $x$ is the output of $\adv(\kappa, y_1, y_2)$
+    \item Let $E_2$ be the event that $\algo{H.Eval}(\kappa, x) = y_2$ where $x$ is the output of $\adv(\kappa, y_1, y_2)$
+    \item Let $E$ be the event that $\algo{H.Eval}(\kappa, x) \in \{y_1, y_2\}$, i.e., $E = E_1 \vee E_2$
+  \end{itemize}
+  
+  By definition, $\pr{E} = \advantage{PreIE}{\adv, \algo{H}}$ since this is exactly the success probability of $\adv$ in the PreimageEither game.
+  
+  Note that $E_1$ and $E_2$ are disjoint events (since $x$ cannot simultaneously be a preimage of two different values).
+  Therefore, $\pr{E} = \pr{E_1 \vee E_2} = \pr{E_1} + \pr{E_2}$.
+  
+  In the PreimageEither game, both $y_1$ and $y_2$ are chosen uniformly at random from $\{0,1\}^{\lambda}$ and independently, so by symmetry we have $\pr{E_1} = \pr{E_2}$.
+  
+  Thus: $\advantage{PreIE}{\adv, \algo{H}} = \pr{E} = \pr{E_1} + \pr{E_2} = 2 \cdot \pr{E_1}$
+  
+  Therefore: $\pr{E_1} = \frac{1}{2} \cdot \advantage{PreIE}{\adv, \algo{H}}$
+  
+  In $\bdv$'s execution, when $b = 0$, it calls $\adv(\kappa, y, y')$ and succeeds if the output is a preimage of $y$ (the first argument).
+  When $b = 1$, it calls $\adv(\kappa, y', y)$ and succeeds if the output is a preimage of $y$ (now the second argument).
+  
+  Since $\bdv$ succeeds when either ($b = 0$ and $x$ is a preimage of the first argument) or ($b = 1$ and $x$ is a preimage of the second argument), we have:
+  $\advantage{PreI}{\bdv^\adv_\algo{H}, \algo{H}} = \frac{1}{2} \cdot \pr{E_1} + \frac{1}{2} \cdot \pr{E_2} = \frac{1}{2} \cdot \advantage{PreIE}{\adv, \algo{H}}$
+  
+  Since $\advantage{PreIE}{\adv, \algo{H}}$ is non-negligible and $\bdv^\adv_\algo{H}$ is \ppt, $\algo{H}$ is not preimage-resistant.
+\end{mysolution}
+\fi
+
+\begin{exercise}\label{ex:collision-implies-preimage}
+  Prove \autoref{thm:collision-implies-preimage} (collision-resistance implies preimage-resistance).
+  
+  \textbf{Hint:} Construct a reduction that samples a random $x$, computes $y = \algo{H.Eval}(\kappa, x)$, and uses the preimage-finding adversary to find $x'$ such that $\algo{H.Eval}(\kappa, x') = y$. What is the probability that $x = x'$?
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  We prove the contrapositive statement:
+  If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
+  Let $\bdv^\adv_\algo{H}$ be an algorithm that runs $\adv$ and returns its output:
+  
+  \begin{center}
+    \begin{tcolorbox}[width=4cm]
+      \begin{pchstack}[center]
+        \procedure[linenumbering, headlinesep=1pt]{$\bdv^\adv_\algo{H}(\kappa)$}{%
+          x \sample \{0, 1\}^{(c+1)\lambda} \\
+          y \defeq \algo{H.Eval}(\kappa, x) \\
+          x' \gets \adv(\kappa, y) \\
+          \pcassert x \neq x' \label{line:break-hash-preimage-bdv-assert-sol} \\
+          \pcreturn (x, x')
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  
+  If $\adv$ succeeds and $\bdv$ does not abort in line 4, then $\bdv$ wins game $\game{Collision}{\algo{H}}$, or more precisely:
+
+  \begin{align*}
+  \pr{\game{Collision}{\algo{H}} = \pcfalse} &= \pr{\game{Preimage}{\algo{H}} = \pcfalse \vee \bdv \text{ aborts at line 4} } \\
+  &\le \pr{\game{Preimage}{\algo{H}} = \pcfalse} + \pr{\bdv \text{ aborts at line 4} } \\
+  \end{align*}
+  using union bound.
+  Then, by the definition of $\advantage{Coll}{\bdv, \algo{H}}$ and $\advantage{PreI}{\adv, \algo{H}}$ we have
+  \begin{align*}
+    1 - \advantage{Coll}{\bdv, \algo{H}} &\le 1 - \advantage{PreI}{\adv, \algo{H}} + \pr{\bdv \text{ aborts at line 4} }\\
+  \end{align*}
+  and
+  \begin{align*}
+    \advantage{Coll}{\bdv, \algo{H}} &\ge \advantage{PreI}{\adv, \algo{H}} - \pr{\bdv \text{ aborts at line 4} }.\\
+  \end{align*}
+  
+  We now show that $\pr{\bdv \text{ aborts at line 4} } = \negl$.
+  Let us denote this event by $A$.
+  Let $B_y$ denote the event that $\algo{H.Eval}(\kappa, x) = y$ and $\Ima \algo{H.Eval}(\kappa, \cdot)$ be the image of $\algo{H.Eval}$ for a fixed $\kappa$.
+  Then, by the law of total probability and the definition of conditional probability we have
+  \begin{align*}
+    \pr{A} &= \sum_{y \in \Ima \algo{H.Eval}(\kappa, \cdot)} \pr{A \wedge B_y} \\
+           &= \sum_{y \in \Ima \algo{H.Eval}(\kappa, \cdot)} \pr{B_y} \pr{A \mid B_y}
+  \end{align*}
+  
+  Let $H^{-1}(y) = \{x \in \{0, 1\}^{(c+1)\lambda} : H(x) = y\}$, i.e., the preimage of $y$.
+  Since $x$ is uniformly random from a set of size $2^{(c+1)\lambda}$, the probability $\pr{B_y}$ that $\algo{H.Eval}(\kappa, x) = y$ is $\frac{|\algo{H}^{-1}(y)|} {2^{(c+1)\lambda}}$.
+  Also, the probability $\pr{A \mid B_y}$ that the sampled value $x$ matches the adversary's answer $x'$ given that $\algo{H.Eval}(\kappa, x) = y$ is $\frac{1}{|\algo{H}^{-1}(y)|}$.
+  Therefore, we have
+  \begin{align*}
+    \pr{A} &= \sum_{y \in \Ima \algo{H.Eval}(\kappa, \cdot)} \frac{|\algo{H}^{-1}(y)|} {2^{(c+1)\lambda}} \frac{1}{|\algo{H}^{-1}(y)|}  \\
+           &= \sum_{y \in \Ima \algo{H.Eval}(\kappa, \cdot)} \frac{1} {2^{(c+1)\lambda}} \\
+           &= \frac{|\Ima \algo{H.Eval}(\kappa, \cdot)|} {2^{(c+1)\lambda}} \\
+           &\le 2^{-\lambda} \\
+  \end{align*}
+  which is negligible.
+  
+  Since $\advantage{PreI}{\adv, \algo{H}}$ is not negligible and $\pr{\bdv \text{ aborts}} = \negl$, by \cref{lem:negl}, $\advantage{Coll}{\bdv, \algo{H}}$ is not negligible.
+  Since $\bdv$ is \ppt, $\algo{H}$ is not collision-resistant.
+\end{mysolution}
+\fi
+
+\begin{exercise}[Optional]
+  Describe target collision resistance, extended target collision resistance, and multi-target collision resistance~\cite{PKC:HulRijSon16} in your own words and discuss their security against classical and quantum attacks (see Table 1 in the referenced paper).
+\end{exercise}
+
+\begin{exercise}[Optional]
+  Drijvers et al.~\cite{SP:DEFKLN19} give a \emph{metareduction} showing that MuSig(1)~\cite{DCC:MPSW19} without the first nonce-commitment round cannot be proven secure under the one-more discrete logarithm (OMDL) assumption.
+  Interpret Theorem 1 and Figure 2 in their paper.
+  Complete the following informal statement: If there exists an algorithm $\bdv$ that reduces $n$-OMDL to the EUF-CMA security of the MuSig(1) variant, then there exists a reduction $\mdv$ and a forger $\mathcal{F}$ that solve the \underline{\hspace{3cm}} problem.
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  $(n + k)$-OMDL
+\end{mysolution}
+\fi
