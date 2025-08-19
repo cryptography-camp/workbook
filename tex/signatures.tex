@@ -2,7 +2,7 @@
 
  Unlike one-time signatures, a digital signature scheme allows signing multiple messages with the same key pair.
 
-\subsection{Syntax}
+\subsection{Syntax \& Correctness}
 
 \begin{definition}[Signature Scheme]
   A signature scheme $\algo{Sig}$ consists of four polynomial-time algorithms:
@@ -13,8 +13,6 @@
     \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow \{0, 1\}$: The verification algorithm takes the public parameters, a public key $\pk$, a message $m \in \mathcal{M}$, and a signature $\sigma \in \mathcal{S}$, and outputs $1$ (accept) or $0$ (reject).
   \end{itemize}
 \end{definition}
-
-\subsection{Correctness}
 
 \begin{definition}[Correctness]\label{def:sig-correctness}
   A digital signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ is \emph{correct} if for all $\secpar \in \NN$, all $\params \in \algo{Setup}(1^\secpar)$, all $(\sk, \pk) \in \algo{KeyGen}(\params)$, and all messages $m \in \mathcal{M}$:

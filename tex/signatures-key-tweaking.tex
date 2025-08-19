@@ -2,6 +2,8 @@
 
 Key tweaking is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\cite{add:bip-hdwallets} and Taproot commitments~\cite{add:bip-taproot}, enabling the derivation of multiple keys from a single master key and the commitment of additional data to public keys.
 
+\subsection{Syntax}
+
 \begin{definition}[Tweaking Scheme for Signatures]
   A tweaking scheme $\algo{TwSch}$ for a signature scheme $\algo{Sig}$ is a tuple $(\mathcal{T}, \algo{TwSK}, \algo{TwPK})$ where:
   \begin{itemize}
@@ -10,6 +12,8 @@ Key tweaking is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\
     \item $\algo{TwPK}$ is a deterministic public key tweaking algorithm that takes a public key $\pk$ and tweak $t \in \mathcal{T}$ as input and returns a tweaked public key $\tilde{\pk}$.
   \end{itemize}
 \end{definition}
+
+\subsection{Key Tweaking for Schnorr Signatures}
 
 \begin{definition}[SchnorrTS]\label{def:schnorrts}
   The tweaking scheme $\algo{SchnorrTS}$ for Schnorr signatures is defined as follows:
@@ -27,8 +31,6 @@ Key tweaking is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\
     for every $X \in \GG$.
   \end{itemize}
 \end{definition}
-
-\subsection{Schnorr Signatures with Key Prefixing}
 
 \begin{definition}[Schnorr Signature with Key Prefixing]\label{def:schnorr-kp}
   The Schnorr signature scheme with key prefixing $\algo{SchnorrSigKP}[\grgen, \algo{H}]$ is identical to $\algo{SchnorrSig}[\grgen, \algo{H}]$ except that the hash is computed as:

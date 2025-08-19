@@ -1,6 +1,6 @@
 \section{Random Oracle Model}\label{sec:rom}
 
-\subsection{The Random Oracle}
+\subsection{Random Oracles}
 
 A \emph{random oracle} (RO) is an oracle that can be provided to an algorithm that takes inputs in $\{0, 1\}^*$ and returns elements from some set $S$ where $|S| \geq 2^\secpar$.
 The key property is that the oracle responds consistently: identical queries always yield identical responses, while distinct queries yield independent uniformly random values from $S$.
@@ -109,9 +109,8 @@ Before examining the consequences of random oracles, we present a simple lemma t
   where $x_1, \ldots, x_q$ are the queries made by $\adv$ to $\pcoracle{H}$.
 \end{proof}
 
-\subsection{Applications and Limitations}
+\subsection{ROM}
 
-\begin{remark}
   For a large class of cryptographic schemes, the properties of hash functions seen so far are insufficient to prove security.
   Instead, we prove security of a modified scheme where hash function evaluations are replaced with random oracle calls.
   This is the \emph{random oracle model} (ROM)~\cite{CCS:BelRog93}.
@@ -121,9 +120,8 @@ Before examining the consequences of random oracles, we present a simple lemma t
 
   There exist contrived schemes provably secure in the ROM that become insecure when instantiated with any concrete hash function (see optional exercise).
   Despite these theoretical concerns, the ROM has proven very useful in practice for analyzing real-world cryptographic protocols~\cite{DCC:KobMen15}.
-\end{remark}
 
-\subsection{Hash Commitments in the ROM}
+\subsection{Hash Commitments}
 
 \begin{definition}[Hash Commitment Scheme]
   Let $\algo{H}$ be a hash function.

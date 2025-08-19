@@ -1,6 +1,6 @@
 \section{Accumulators}\label{sec:accumulators}
 
-\subsection{Syntax}
+\subsection{Syntax \& Correctness}
 
 An accumulator is a compact representation of a set of elements and allows certain operations on the set.
 
@@ -32,8 +32,6 @@ Typically, an accumulator involves two parties: the manager, who uses $\algo{Ini
   \end{itemize}
 \end{example}
 
-\paragraph{Correctness}
-
 \begin{definition}[Correctness]
 An additive positive accumulator is considered \emph{correct} if, for any element $x$ that was inserted into the accumulator, the membership proof $\pi$ generated honestly for $x$ is successfully verified.
 More formally, for all security parameters $\secpar$, all public parameters $\params \gets \algo{Gen}(1^\secpar)$, all values $x \in \mathcal{X}_\mathsf{Acc}$, all positive integers $t$ polynomial in $\secpar$, all integers $t_x \in [1, t]$, all tuples $\vec{y} \in \mathcal{X}_\mathsf{Acc}^{t- 1}$, the following holds:
@@ -53,7 +51,7 @@ More formally, for all security parameters $\secpar$, all public parameters $\pa
 \]
 \end{definition}
 
-\paragraph{Security}
+\subsection{Security}
 
 In $\Game~\algo{AccColl}$ (defined in \autoref{fig:break-acc-coll}), the adversary $\adv$ is given access to \emph{oracles}, which he can call, but not look inside.
 In other words, the adversary can insert elements into the accumulator and obtain membership proofs, but does not have access to the state directly.
