@@ -40,6 +40,15 @@ Key tweaking is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\
   instead of $c = \algo{H.Eval}(\kappa, R \| m)$, where $X$ is the public key.
 \end{definition}
 
+\subsection{Security with Tweaked Keys}
+
+The security notion of \emph{existential unforgeability under chosen message attack with tweaked keys (EUF-CMA-TK)} extends the standard EUF-CMA notion to capture security when an adversary can obtain signatures under tweaked keys.
+Informally, the adversary is given a public key and can request signatures on messages of their choice, but now with an additional capability: for each signing query, they can specify a tweak in addition to the message.
+The signing oracle will return a signature that verifies under the tweaked public key (i.e., a signature created with the correspondingly tweaked secret key).
+The adversary wins by outputting $(m^*, t^*, \sigma^*)$ such that the signature verifies under the tweaked public key for $t^*$, and the pair $(m^*, t^*)$ was never queried to the signing oracle.
+
+The formal definition of EUF-CMA-TK is left as an exercise (see \autoref{ex:euf-cma-tk-def}).
+
 \begin{theorem}[SchnorrSigKP with SchnorrTS is EUF-CMA-TK secure]\label{thm:schnorrkp-euf-cma-tk}
   Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard and let $\algo{H}$ be a hash function.
   Then the Schnorr signature scheme with key prefixing $\algo{SchnorrSigKP}[\grgen, \algo{H}]$ with tweaking scheme $\algo{SchnorrTS}$ is EUF-CMA-TK secure in the random oracle model for $\algo{H}$.
@@ -89,16 +98,10 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 \end{mysolution}
 \fi
 
-\begin{exercise}
-  Define the security notion of \emph{existential unforgeability under chosen message attack with tweaking (EUF-CMA-TK)} for signature schemes with tweaking.
-  
-  Informally, this security notion captures the following:
-  The adversary is given a public key and can request signatures on messages of their choice, but now with an additional capability---for each signing query, they can specify a tweak in addition to the message.
-  The signing oracle will return a signature that verifies under the tweaked public key (i.e., a signature created with the correspondingly tweaked secret key).
-  The adversary wins by outputting $(m^*, t^*, \sigma^*)$ such that the signature verifies under the tweaked public key for $t^*$, and the pair $(m^*, t^*)$ was never queried to the signing oracle.
-  
-  Adapt the EUF-CMA security definition (Definition~\ref{def:euf-cma}) to formalize this intuition.
-\end{exercise}
+\begin{exercise}\label{ex:euf-cma-tk-def}
+  Formalize the EUF-CMA-TK security notion by adapting the EUF-CMA security definition (Definition~\ref{def:euf-cma}).
+  Your definition should capture the informal description given above.
+\end{exercise>
 
 \ifsolutions
 \begin{mysolution}
