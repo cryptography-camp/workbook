@@ -78,7 +78,7 @@ The proofs of properties (2)-(4) can be found in Appendix~\ref{sec:appendix-negl
 
 \subsection{Games \& Asymptotic Security}
 
-In this section we will introduce the concept of security games (also called "experiments") and asymptotic security through a series of toy examples.
+In this section we will introduce the concept of security games (sometimes called ``experiments'') and asymptotic security through a series of toy examples.
 
 The $\game{\Game~\algo{Guess}}{}$ defined in \autoref{fig:guessing-game} takes an algorithm $\adv$ and the security parameter $\secpar$ as input and outputs $\pctrue$ or $\pcfalse$.
 The game first sets $n = 2^\lambda$ and samples $x$ uniformly at random from $\ZZ_n$.
@@ -353,7 +353,7 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \begin{mysolution}
   The adversary's running time is indeed polynomial in $\secpar$—it's a constant independent of $\secpar$, which is $O(1)$ and therefore polynomial.
   However, this constant is potentially $2^{256}$, which is astronomically large.
-  The problem is that the output size (256 bits) doesn't grow with $\secpar$, so even exhaustive search becomes "polynomial time" in $\secpar$.
+  The problem is that the output size (256 bits) doesn't grow with $\secpar$, so even exhaustive search becomes ``polynomial time'' in $\secpar$.
   This shows that asymptotic security only makes sense when the problem size grows with the security parameter.
 \end{mysolution}
 \fi
@@ -410,7 +410,7 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
   
   \textbf{Proof:} The proof is identical to Proposition~\ref{prop:guessing-game}, but we emphasize that the bound $2^{-\lambda}$ holds for \emph{all} $t$, not just polynomial time.
   
-  Note: This shows that in the concrete setting, we explicitly state the security level ($2^{-\lambda}$) rather than saying it's "negligible."
+  Note: This shows that in the concrete setting, we explicitly state the security level ($2^{-\lambda}$) rather than saying it's ``negligible''.
   The concrete approach gives precise bounds rather than asymptotic statements.
 \end{mysolution}
 \fi

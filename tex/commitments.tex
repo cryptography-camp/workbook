@@ -194,8 +194,8 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
   If either $m_0 \neq m_1$ or $r_0 \neq r_1$, then $r_0 \| m_0 \neq r_1 \| m_1$.
   This means $\adv$ has found a collision in $\algo{H}$: two different inputs that hash to the same output.
   
-  We can construct an adversary $\bdv$ against the collision resistance of $\algo{H}$ that runs $\adv$ and outputs $(r_0 \| m_0, r_1 \| m_1)$.
-  Since $\adv$ succeeds with non-negligible probability, so does $\bdv$, showing that $\algo{H}$ is not collision-resistant.
+  We can construct a \ppt adversary $\bdv$ against the collision resistance of $\algo{H}$ that runs $\adv$ and outputs $(r_0 \| m_0, r_1 \| m_1)$.
+  Since $\adv$ succeeds with non-negligible probability and $\bdv$ is \ppt (as it simply runs $\adv$ once), $\bdv$ breaks collision resistance.
   
   Therefore, if $\algo{H}$ is collision-resistant, then $\algo{HashCom}[\algo{H}]$ is strongly binding.
   Note that strong binding implies regular binding, so this scheme is also binding.
@@ -247,7 +247,7 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
   No, $\algo{HashCom'}[\algo{H}]$ is not hiding.
   The issue is that there's no randomness in the commitment.
   
-  We construct an adversary $\adv$ that wins the hiding game with high probability:
+  We construct a \ppt adversary $\adv$ that wins the hiding game with high probability:
   
   \begin{enumerate}
     \item $\adv$ receives $\params$ containing $\kappa$.

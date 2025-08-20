@@ -391,7 +391,7 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
 
 \ifsolutions
 \begin{mysolution}
-  We construct an algorithm $\ddv$ that solves the discrete logarithm problem using a successful EUF-CMA adversary $\adv$ against Schnorr signatures.
+  We construct a \ppt algorithm $\ddv$ that solves the discrete logarithm problem using a \ppt EUF-CMA adversary $\adv$ against Schnorr signatures.
   
   Given a discrete logarithm instance $((\GG, p, g), X)$ where $X = g^x$ for unknown $x$, algorithm $\ddv$ works as follows:
   \begin{enumerate}

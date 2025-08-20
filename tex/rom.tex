@@ -323,12 +323,12 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
   For all $j > i$, we have $\Pr[c(i,j) = \text{true}] = \frac{1}{p}$, since $\algo{H}(R_j \| m_j)$ is a fresh uniformly random value in $\ZZ_p$, independent of $R_i$, $\algo{H}(R_i \| m_i)$, and $R_j$.
   
   By the union bound:
-  \begin{align}
+  \begin{align*}
     \advantage{Bind}{\adv, \algo{TapCom}} &= \Pr\left[\bigvee_{i=1}^{q'} \bigvee_{j=i+1}^{q'} c(i,j) = \text{true}\right] \\
     &\leq \sum_{i=1}^{q'} \sum_{j=i+1}^{q'} \Pr[c(i,j) = \text{true}] \\
     &= \sum_{i=1}^{q'} \sum_{j=i+1}^{q'} \frac{1}{p} \\
     &= \binom{q'}{2} \cdot \frac{1}{p} < \frac{(q')^2}{2p}
-  \end{align}
+  \end{align*}
   
   The total number of queries includes the adversary's queries (at most $q$) plus the 2 queries made by the binding game when checking $C_0 = C_1$. Thus $q' \leq q + 2$.
   

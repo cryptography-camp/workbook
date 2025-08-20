@@ -186,12 +186,12 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
   \end{itemize}
   
   The verification succeeds because:
-  \begin{align}
+  \begin{align*}
     g^{s + c} &= g^s \cdot g^c \\
     &= R \cdot X^c \cdot g^c \\
     &= R \cdot (X \cdot g)^c \\
     &= R \cdot \algo{TwPK}(X, (1, 1))^c
-  \end{align}
+  \end{align*}
   
   Since $(m, (0, 1)) \neq (m, (1, 1))$, this is a valid forgery that breaks EUF-CMA-TK security.
 \end{mysolution}

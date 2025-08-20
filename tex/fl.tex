@@ -311,7 +311,8 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
 
 \ifsolutions
 \begin{mysolution}
-  We construct $\bdv$ that runs the forking game and extracts $x$ from the outputs. If $\game{\algo{Fork}}{\algo{InpGen}}$ returns $(z, s, z', s') \neq \bot$, then we have:
+  We construct a \ppt algorithm $\bdv$ that runs the forking game and extracts $x$ from the outputs.
+  If $\game{\algo{Fork}}{\algo{InpGen}}$ returns $(z, s, z', s') \neq \bot$, then we have:
   \begin{itemize}
     \item From the first execution: $(z, s) = \alpha$ where $s = z + T[z] \cdot x \bmod p$
     \item From the second execution: $(z', s') = \alpha'$ where $s' = z' + T'[z'] \cdot x \bmod p$

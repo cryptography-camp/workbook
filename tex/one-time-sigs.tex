@@ -190,7 +190,7 @@ The proof of \autoref{prop:lamport-correctness} is left as an exercise (see \aut
     \autoref{fig:euf-cma-ots-lamport} shows a sequence of games for the proof that Lamport signatures are EUF-CMA secure.
     The first game is identical to the $\Game~\algo{EUF\text{-}CMA}$ game.
     Each subsequent game introduces a small change compared to the previous game.
-    Then we can construct an algorithm that runs a $\Game~\algo{EUF\text{-}CMA}$ adversary $\adv$ internally and wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with the same probability as $\adv$ winning the last  $\Game~\algo{G_2}$.
+    Then we can construct a \ppt algorithm that runs a $\Game~\algo{EUF\text{-}CMA}$ adversary $\adv$ internally and wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with the same probability as $\adv$ winning the last  $\Game~\algo{G_2}$.
     The rest of the proof is left as an exercise (see \autoref{ex:ots-lamport-euf-cma}).
 \end{proof}
 
@@ -396,7 +396,7 @@ The proof of \autoref{prop:lamport-correctness} is left as an exercise (see \aut
     Let $\Game~\algo{G_2}$ be the game where we guess $(i^*, j^*)$ and abort unless the adversary queries $m$ with $m_{i^*} \neq j^*$ and forges on $m^*$ with $m^*_{i^*} = j^*$.
     As in the original proof, $\Pr[\Game~\algo{G_2} = 1] \geq \frac{1}{2k} \cdot \advantage{EUF-CMA}{\adv, \algo{LS\text{-}Acc}}$.
     
-    Now we build $\bdv_1$ that simulates $\Game~\algo{G_2}$:
+    Now we build a \ppt reduction $\bdv_1$ that simulates $\Game~\algo{G_2}$:
     \begin{itemize}
       \item $\bdv_1$ receives preimage challenge $y$, embeds it as $\pk_{i^*,j^*} = y$, and runs $\Game~\algo{G_2}$ with the adversary.
       \item When the adversary succeeds in $\Game~\algo{G_2}$, they provide $(x^*_{i^*,j^*}, \pi^*_{i^*})$ where the membership proof verifies for some value $\pk' = \algo{H.Eval}(\params, x^*_{i^*,j^*})$.
@@ -405,7 +405,7 @@ The proof of \autoref{prop:lamport-correctness} is left as an exercise (see \aut
     
     However, the adversary might succeed with $\pk' \neq y$.
     This means the adversary found a valid membership proof for a value different from what we inserted at position $(i^*, j^*)$.
-    To handle this, we build $\bdv_2$:
+    To handle this, we build a \ppt reduction $\bdv_2$:
     \begin{itemize}
       \item $\bdv_2$ also simulates $\Game~\algo{G_2}$ but generates all keys honestly (no preimage challenge).
       \item When the adversary succeeds with some $(x^*_{i^*,j^*}, \pi^*_{i^*})$ where $\pk' = \algo{H.Eval}(\params, x^*_{i^*,j^*}) \neq \pk_{i^*,j^*}$, this constitutes a collision for the accumulator.
@@ -413,10 +413,10 @@ The proof of \autoref{prop:lamport-correctness} is left as an exercise (see \aut
     \end{itemize}
     
     We have:
-    \begin{align}
+    \begin{align*}
       \Pr[\Game~\algo{G_2} = 1] &= \Pr[\Game~\algo{G_2} = 1 \wedge \pk' = \pk_{i^*,j^*}] + \Pr[\Game~\algo{G_2} = 1 \wedge \pk' \neq \pk_{i^*,j^*}]\\
       &\leq \advantage{Preimage}{\bdv_1, \algo{H}} + \advantage{Coll}{\bdv_2, \algo{Acc}}
-    \end{align}
+    \end{align*}
     
     Since $\advantage{EUF-CMA}{\adv, \algo{LS\text{-}Acc}} \leq 2k \cdot \Pr[\Game~\algo{G_2} = 1]$ (from the original proof), we get:
     \[

@@ -225,7 +225,7 @@ The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
 \begin{mysolution}
   Let $\adv$ be an adversary that breaks the binding property of Pedersen commitments.
   That is, $\adv$ outputs $(m_0, r_0, m_1, r_1)$ such that $m_0 \neq m_1$ and $g^{m_0}h^{r_0} = g^{m_1}h^{r_1}$.
-  We construct $\bdv$ that breaks DL as follows:
+  We construct a \ppt reduction $\bdv$ that breaks DL as follows:
   \begin{itemize}
     \item $\bdv$ receives $(\gparam, h)$ where $h = g^z$ for unknown $z$.
     \item $\bdv$ runs $\adv$ with parameters $\params = (\gparam, h)$.
@@ -233,7 +233,7 @@ The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
     \item This implies $g^{m_0 - m_1} = h^{r_1 - r_0}$, so $g^{m_0 - m_1} = g^{z(r_1 - r_0)}$.
     \item If $r_0 = r_1$, then $g^{m_0 - m_1} = 1$, which contradicts $m_0 \neq m_1$ (since $g$ generates $\GG$).
     \item Therefore $r_0 \neq r_1$, and we can compute $z = \frac{m_0 - m_1}{r_1 - r_0} \bmod p$.
-    \item $\bdv$ outputs $z$. Also $\bdv$ is \ppt if $\adv$ is.
+    \item $\bdv$ outputs $z$.
   \end{itemize}
   The reduction is perfect: whenever $\adv$ succeeds in breaking binding, $\bdv$ succeeds in computing the discrete log.
   Therefore, $\advantage{DL}{\bdv, \grgen} = \advantage{Bind}{\adv, \algo{PedCom}}$.
@@ -261,7 +261,7 @@ The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
 \ifsolutions
 \begin{mysolution}
    Let $\adv$ be an adversary against the hiding property of ElGamal.
-  We construct $\bdv$ against DDH:
+  We construct a \ppt reduction $\bdv$ against DDH:
   \begin{itemize}
     \item $\bdv$ receives $(\gparam, A, B, C)$ where $A = g^a$, $B = g^b$, and either $C = g^{ab}$ or $C = g^c$ for random $c$.
     \item $\bdv$ sets $h = B$ and gives $\params = (\gparam, h)$ to $\adv$.
@@ -278,7 +278,7 @@ The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
       \item When $C = g^c$ (random tuple): The commitment reveals no information about $e$, so $\Pr[e = e' | C = g^c] = \frac{1}{2}$.
   \end{itemize}
   For the DDH advantage:
-  \begin{align}
+  \begin{align*}
   \advantage{DDH}{\bdv, \grgen} &= |\Pr[d = d'] - \frac{1}{2}|\\
   \Pr[d = d'] &= \Pr[d' = 1 \wedge d = 1] + \Pr[d' = 0 \wedge d = 0]\\
   &= \Pr[d' = 1 \wedge C = g^{ab}] + \Pr[d' = 0 \wedge C = g^c]\\
@@ -286,15 +286,15 @@ The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
   &= \frac{1}{2} \Pr[d' = 1 | C = g^{ab}] + \frac{1}{2} \Pr[d' = 0 | C = g^c]\\
   &= \frac{1}{2} \Pr[d' = 1 | C = g^{ab}] + \frac{1}{2}(1 - \Pr[d' = 1 | C = g^c])\\
   &= \frac{1}{2} \Pr[d' = 1 | C = g^{ab}] + \frac{1}{2} - \frac{1}{2}\Pr[d' = 1 | C = g^c]
-  \end{align}
+  \end{align*}
   Therefore:
-  \begin{align}
+  \begin{align*}
   \advantage{DDH}{\bdv, \grgen} &= \left|\frac{1}{2} \Pr[d' = 1 | C = g^{ab}] - \frac{1}{2}\Pr[d' = 1 | C = g^c]\right|\\
   &= \frac{1}{2} |\Pr[d' = 1 | C = g^{ab}] - \Pr[d' = 1 | C = g^c]|\\
   &= \frac{1}{2} |\Pr[e = e' | C = g^{ab}] - \Pr[e = e' | C = g^c]|\\
   &= \frac{1}{2} \left|\Pr[e = e' | C = g^{ab}] - \frac{1}{2}\right|\\
   &= \frac{1}{2} \cdot \advantage{Hide}{\adv, \algo{ElGamalCom}}
-  \end{align}
+  \end{align*}
 
   This gives us: $\advantage{Hide}{\adv, \algo{ElGamalCom}} = 2 \cdot \advantage{DDH}{\bdv, \grgen}$. $\bdv$ is \ppt\ if $\adv$ is.
 \end{mysolution}
@@ -307,7 +307,7 @@ The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
 \ifsolutions
 \begin{mysolution}
   If OMDL is hard, then DL must be hard.
-  Given a DL adversary $\adv$, we construct an OMDL adversary $\bdv$:
+  Given a \ppt DL adversary $\adv$, we construct a \ppt OMDL adversary $\bdv$:
   \begin{itemize}
     \item $\bdv$ calls $\pcoracle{Chal}()$ once to get $X_1$.
     \item $\bdv$ runs $\adv(\gparam, X_1)$ to get $x_1'$.
