@@ -206,8 +206,7 @@ The proof is left as an exercise (see \autoref{ex:taproot-binding}).
 
 \ifsolutions
 \begin{mysolution}
-% TODO change to "Figure bla shows the hiding game for Hashcom where ..."
-Consider the hiding game for $\algo{HashCom}[\algo{H}]$ where $\algo{H}$ is modeled as a random oracle:
+\autoref{fig:hashcom-hiding-rom} shows the hiding game for $\algo{HashCom}[\algo{H}]$ where $\algo{H}$ is modeled as a random oracle.
 
 \begin{figure}[h]
   \begin{center}
@@ -232,9 +231,11 @@ Consider the hiding game for $\algo{HashCom}[\algo{H}]$ where $\algo{H}$ is mode
       \end{pchstack}
     \end{tcolorbox}
   \end{center}
+  \caption{The hiding game for $\algo{HashCom}[\algo{H}]$ in the random oracle model.}
+  \label{fig:hashcom-hiding-rom}
 \end{figure}
 
-Now consider the following modified game:
+Now consider the modified game shown in \autoref{fig:hashcom-hiding-rom-modified}:
 
 \begin{figure}[h]
   \begin{center}
@@ -262,6 +263,8 @@ Now consider the following modified game:
       \end{pchstack}
     \end{tcolorbox}
   \end{center}
+  \caption{Modified hiding game for $\algo{HashCom}[\algo{H}]$ with changes \gamechange{highlighted}.}
+  \label{fig:hashcom-hiding-rom-modified}
 \end{figure}
 
 Note that in $\game{\algo{ComHide}_1}{\algo{HashCom}}$, the value $b$ is independent of the adversary's view, so:
@@ -269,8 +272,8 @@ Note that in $\game{\algo{ComHide}_1}{\algo{HashCom}}$, the value $b$ is indepen
 \Pr[\game{\algo{ComHide}_1}{\algo{HashCom}} = 1] = \frac{1}{2}
 \]
 
-% TODO: mention the difference lemma
-The games differ only when $\adv$ queries either $m_0 \| r$ or $m_1 \| r$ to the oracle. We analyze this probability:
+The games differ only when $\adv$ queries either $m_0 \| r$ or $m_1 \| r$ to the oracle.
+By the Difference Lemma (\autoref{lem:difference}), we can bound the difference between the games by the probability of this event:
 
 \begin{align*}
   \advantage{Hide}{\adv, \algo{HashCom}} &= \left|\Pr[\game{\algo{ComHide}}{\algo{HashCom}} = 1] - \frac{1}{2}\right| \\
@@ -362,14 +365,13 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
 
 \ifsolutions
 \begin{mysolution}
-  % TODO: cite
   No, $G$ is not preimage resistant. Wagner's algorithm for the generalized birthday problem~\cite{C:Wagner02} can find a preimage efficiently.
 \end{mysolution}
+\fi
 
 \begin{exercise}[Optional]
   Why is the ROM not considered adequate to model quantum computation?
 \end{exercise}
-\fi
 
 \begin{exercise}[Optional]
   Study the diagonalization argument in Section 4 of Canetti, Goldreich, and Halevi~\cite{STOC:CanGolHal98}.
