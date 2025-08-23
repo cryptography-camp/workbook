@@ -3,12 +3,12 @@
 \subsection{Syntax \& Correctness}
 
 \begin{definition}[One-Time Signature]
-    A one-time signature scheme $\algo{OTS}$ is a tuple of \ppt algorithms $(\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ with message space $\mathcal{M}$, where
+    A one-time signature scheme $\algo{OTS}$ is a tuple of polynomial-time algorithms $(\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ where:
     \begin{itemize}
-        \item $\algo{Setup}(1^\secpar)\rightarrow \params$ is a \ppt algorithm that generates the public parameters $\params$ for the one-time signature scheme.
-        \item $\algo{KeyGen}(\params)\rightarrow (\sk, \pk)$ is a \ppt algorithm that generates the key pair $(\sk, \pk)$ of the one-time signature scheme.
-        \item $\algo{Sign}(\params, \sk, m) \rightarrow \sigma$ is a \ppt algorithm that outputs a signature $\sigma$ for the message $m$ under the one-time signature scheme with secret key $\sk$.
-        \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow b$ is a \ppt algorithm that outputs $b = 1$ if the signature $\sigma$ is valid for the message $m$ under the one-time signature scheme with public key $\pk$. Otherwise, it outputs $b = 0$.
+        \item $\algo{Setup}(1^\secpar) \rightarrow \params$ is a probabilistic algorithm that takes the security parameter as input and outputs public parameters $\params$ including the message space $\mathcal{M}$.
+        \item $\algo{KeyGen}(\params) \rightarrow (\sk, \pk)$ is a probabilistic algorithm that takes public parameters $\params$ as input and outputs a secret key $\sk$ and a public key $\pk$.
+        \item $\algo{Sign}(\params, \sk, m) \rightarrow \sigma$ is a probabilistic algorithm that takes public parameters $\params$, a secret key $\sk$, and a message $m \in \mathcal{M}$ as input and outputs a signature $\sigma$.
+        \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, a public key $\pk$, a message $m \in \mathcal{M}$, and a signature $\sigma$ as input and outputs $1$ (accept) if the signature is valid, and outputs $0$ (reject) otherwise.
     \end{itemize}
 \end{definition}
 

@@ -7,9 +7,9 @@ Key tweaking is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\
 \begin{definition}[Tweaking Scheme for Signatures]
   A tweaking scheme $\algo{TwSch}$ for a signature scheme $\algo{Sig}$ is a tuple $(\mathcal{T}, \algo{TwSK}, \algo{TwPK})$ where:
   \begin{itemize}
-    \item $\mathcal{T}$ is a set of allowed tweaks, parameterized by the parameters $\params$ output by $\algo{Setup}$.
-    \item $\algo{TwSK}$ is a deterministic secret key tweaking algorithm that takes a secret key $\sk$ and tweak $t \in \mathcal{T}$ as input and returns a tweaked secret key $\tilde{\sk}$.
-    \item $\algo{TwPK}$ is a deterministic public key tweaking algorithm that takes a public key $\pk$ and tweak $t \in \mathcal{T}$ as input and returns a tweaked public key $\tilde{\pk}$.
+    \item $\mathcal{T}$ is a set of allowed tweaks, parameterized by the public parameters $\params$ output by $\algo{Setup}$.
+    \item $\algo{TwSK}(\sk, t) \rightarrow \tilde{\sk}$ is a deterministic polynomial-time algorithm that takes a secret key $\sk$ and a tweak $t \in \mathcal{T}$ as input and outputs a tweaked secret key $\tilde{\sk}$.
+    \item $\algo{TwPK}(\pk, t) \rightarrow \tilde{\pk}$ is a deterministic polynomial-time algorithm that takes a public key $\pk$ and a tweak $t \in \mathcal{T}$ as input and outputs a tweaked public key $\tilde{\pk}$.
   \end{itemize}
 \end{definition}
 

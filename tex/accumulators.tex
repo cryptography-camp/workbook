@@ -6,15 +6,15 @@ An accumulator is a compact representation of a set of elements and allows certa
 
 \begin{definition}[Accumulator]\label{def:accumulator}
 An accumulator that supports insertions of elements and membership proofs is also called an \emph{additive positive accumulator}~\cite{RSA:BalCanYak20}.
-It is a tuple of \ppt algorithms $(\algo{Gen}, \algo{Init}, \algo{Value}, \algo{Insert}, \algo{ProveMembership}, \algo{VerifyMembership})$, where
+It is a tuple of polynomial-time algorithms $(\algo{Gen}, \algo{Init}, \algo{Value}, \algo{Insert}, \algo{ProveMembership}, \algo{VerifyMembership})$ where:
 
 \begin{itemize}
-    \item $\algo{Gen}(1^\secpar)\rightarrow \params$ is a \ppt algorithm that generates the public parameters $\params$, which includes the domain $\mathcal{X}_\mathsf{Acc}$ of elements that can be accumulated.
-    \item $\algo{Init}(\params)\rightarrow \state$ is a deterministic algorithm that outputs the initial state $\state$ of the accumulator.
-    \item $\algo{Value}(\params, \state)\rightarrow v$ outputs the accumulator value $v$ given the accumulator state $\state$.
-    \item $\algo{Insert}(\params, \state, x) \rightarrow \state'$ outputs a new state $\state'$ after inserting the element $x \in \mathcal{X}_\mathsf{Acc}$ into the accumulator with state $\state$.
-    \item $\algo{ProveMembership}(\params, \state, x) \rightarrow \pi$ outputs a proof $\pi$ that attests to the membership of $x$ in the accumulator with state $\state$.
-    \item $\algo{VerifyMembership}(\params, v, x, \pi) \rightarrow b$ outputs $b = 1$ if the proof $\pi$ proves that $x \in \mathcal{X}_\mathsf{Acc}$ is a member of the set represented by accumulator value $v$. Otherwise, it outputs $b = 0$.
+    \item $\algo{Gen}(1^\secpar) \rightarrow \params$ is a probabilistic algorithm that takes the security parameter as input and outputs public parameters $\params$ including the domain $\mathcal{X}_\mathsf{Acc}$ of elements that can be accumulated.
+    \item $\algo{Init}(\params) \rightarrow \state$ is a deterministic algorithm that takes public parameters $\params$ as input and outputs the initial state $\state$ of the accumulator.
+    \item $\algo{Value}(\params, \state) \rightarrow v$ is a deterministic algorithm that takes public parameters $\params$ and an accumulator state $\state$ as input and outputs the accumulator value $v$.
+    \item $\algo{Insert}(\params, \state, x) \rightarrow \state'$ is a deterministic algorithm that takes public parameters $\params$, an accumulator state $\state$, and an element $x \in \mathcal{X}_\mathsf{Acc}$ as input and outputs a new state $\state'$ after inserting $x$.
+    \item $\algo{ProveMembership}(\params, \state, x) \rightarrow \pi$ is a probabilistic algorithm that takes public parameters $\params$, an accumulator state $\state$, and an element $x$ as input and outputs a membership proof $\pi$.
+    \item $\algo{VerifyMembership}(\params, v, x, \pi) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, an accumulator value $v$, an element $x \in \mathcal{X}_\mathsf{Acc}$, and a proof $\pi$ as input and outputs $1$ (accept) if the proof validates that $x$ is a member of the set represented by $v$, and outputs $0$ (reject) otherwise.
 \end{itemize}
 \end{definition}
 
@@ -181,16 +181,15 @@ In other words, the adversary can insert elements into the accumulator and obtai
 
 \ifsolutions
 \begin{mysolution}
-  \textbf{Syntax:} An additive universal accumulator is a tuple of \ppt algorithms 
+  \textbf{Syntax:} An additive universal accumulator is a tuple of polynomial-time algorithms 
   \begin{align*}
     &(\algo{Gen}, \algo{Init}, \algo{Value}, \algo{Insert}, \algo{ProveMembership}, \algo{VerifyMembership},\\
     &\quad \algo{ProveNonMembership}, \algo{VerifyNonMembership}),
   \end{align*}
   where the first six algorithms are as in the additive positive accumulator, and:
   \begin{itemize}
-    \item $\algo{ProveNonMembership}(\params, \state, x) \rightarrow \pi$ outputs a proof $\pi$ that attests to the non-membership of $x$ in the accumulator with state $\state$.
-    \item $\algo{VerifyNonMembership}(\params, v, x, \pi) \rightarrow b$ outputs $b = 1$ if the proof $\pi$ proves that $x \in \mathcal{X}_\mathsf{Acc}$ is not a member of the set represented by accumulator value $v$.
-    Otherwise, it outputs $b = 0$.
+    \item $\algo{ProveNonMembership}(\params, \state, x) \rightarrow \pi$ is a probabilistic algorithm that takes public parameters $\params$, an accumulator state $\state$, and an element $x$ as input and outputs a non-membership proof $\pi$.
+    \item $\algo{VerifyNonMembership}(\params, v, x, \pi) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, an accumulator value $v$, an element $x \in \mathcal{X}_\mathsf{Acc}$, and a proof $\pi$ as input and outputs $1$ (accept) if the proof validates that $x$ is not a member of the set represented by $v$, and outputs $0$ (reject) otherwise.
   \end{itemize}
   
   \textbf{Correctness:} An additive universal accumulator is \emph{correct} if both membership and non-membership proofs verify correctly.
