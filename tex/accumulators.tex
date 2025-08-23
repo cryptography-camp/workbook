@@ -61,24 +61,24 @@ In other words, the adversary can insert elements into the accumulator and obtai
     \begin{tcolorbox}[width=13cm]
       \begin{pcvstack}[center]
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{AccColl}}{\algo{Acc}}$}{%
-            \params \sample \algo{Acc.Gen}(1^\secpar) \\
+            \params \sample \algo{Gen}(1^\secpar) \\
             \mathcal{Q} \gets \emptyset \\
-            \state \gets \algo{Acc.Init}(\params) \\
-            v \gets \algo{Acc.Value}(\params, \state) \\
+            \state \gets \algo{Init}(\params) \\
+            v \gets \algo{Value}(\params, \state) \\
             (x^*, \pi^*) \gets \adv^{\algo{Insert}, \algo{ProveMembership}}(\params, v) \\
-            \pcreturn x^* \notin \mathcal{Q} \wedge \algo{Acc.VerifyMembership}(\params, v, x^*, \pi^*) = 1
+            \pcreturn x^* \notin \mathcal{Q} \wedge \algo{VerifyMembership}(\params, v, x^*, \pi^*) = 1
         }
         \pcvspace
         \begin{pchstack}[center]
         \procedure[headlinesep=1pt]{Oracle $\pcoracle{Insert}(x)$}{%
             \mathcal{Q} \gets \mathcal{Q} \cup \{x\} \\
-            \state \gets \algo{Acc.Insert}(\params, \state, x) \\
-            \pcreturn \algo{Acc.Value}(\params, \state)
+            \state \gets \algo{Insert}(\params, \state, x) \\
+            \pcreturn \algo{Value}(\params, \state)
         }
         \pchspace
         \procedure[headlinesep=1pt]{Oracle $\pcoracle{ProveMembership}(x)$}{%
             \pcif x \in \mathcal{Q} \pcthen\\
-                \t \pcreturn \algo{Acc.ProveMembership}(\params, \state, x) \\
+                \t \pcreturn \algo{ProveMembership}(\params, \state, x) \\
             \pcelse \\
                 \t \pcreturn \bot
         }
@@ -228,21 +228,21 @@ In other words, the adversary can insert elements into the accumulator and obtai
     \begin{tcolorbox}[width=13cm]
       \begin{pcvstack}[center]
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{UnivAccColl}}{\algo{Acc}}$}{%
-            \params \sample \algo{Acc.Gen}(1^\secpar) \\
+            \params \sample \algo{Gen}(1^\secpar) \\
             \mathcal{Q} \gets \emptyset \\
-            \state \gets \algo{Acc.Init}(\params) \\
-            v \gets \algo{Acc.Value}(\params, \state) \\
+            \state \gets \algo{Init}(\params) \\
+            v \gets \algo{Value}(\params, \state) \\
             (x^*, \pi^*, b^*) \gets \adv^{\algo{Insert}, \algo{ProveMembership}, \algo{ProveNonMembership}}(\params, v) \\
             \pcif b^* = 1 \pcthen \\
-            \t \pcreturn x^* \notin \mathcal{Q} \wedge \algo{Acc.VerifyMembership}(\params, v, x^*, \pi^*) = 1 \\
+            \t \pcreturn x^* \notin \mathcal{Q} \wedge \algo{VerifyMembership}(\params, v, x^*, \pi^*) = 1 \\
             \pcelse \\
-            \t \pcreturn x^* \in \mathcal{Q} \wedge \algo{Acc.VerifyNonMembership}(\params, v, x^*, \pi^*) = 1
+            \t \pcreturn x^* \in \mathcal{Q} \wedge \algo{VerifyNonMembership}(\params, v, x^*, \pi^*) = 1
         }
       \end{pcvstack}
     \end{tcolorbox}
   \end{center}
   
-  The oracles $\pcoracle{Insert}$ and $\pcoracle{ProveMembership}$ are as before, and $\pcoracle{ProveNonMembership}(x)$ returns $\algo{Acc.ProveNonMembership}(\params, \state, x)$ if $x \notin \mathcal{Q}$ and $\bot$ otherwise.
+  The oracles $\pcoracle{Insert}$ and $\pcoracle{ProveMembership}$ are as before, and $\pcoracle{ProveNonMembership}(x)$ returns $\algo{ProveNonMembership}(\params, \state, x)$ if $x \notin \mathcal{Q}$ and $\bot$ otherwise.
   
   An accumulator $\algo{Acc}$ is collision-free if for any \ppt algorithm $\adv$:
   \[

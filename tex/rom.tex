@@ -214,7 +214,7 @@ The proof is left as an exercise (see \autoref{ex:taproot-binding}).
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHide}}{\algo{HashCom}}$}{%
-          \params \gets \algo{HashCom.Setup}(1^\secpar) \\
+          \params \gets \algo{Setup}(1^\secpar) \\
           (m_0, m_1) \gets \adv(\params) \\
           T \defeq \emptyset \\
           b \sample \{0,1\} \\
@@ -243,7 +243,7 @@ Now consider the modified game shown in \autoref{fig:hashcom-hiding-rom-modified
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHide}_1}{\algo{HashCom}}$}{%
-          \params \gets \algo{HashCom.Setup}(1^\secpar) \\
+          \params \gets \algo{Setup}(1^\secpar) \\
           (m_0, m_1) \gets \adv(\params) \\
           T \defeq \emptyset \\
           b \sample \{0,1\} \\
