@@ -3,7 +3,7 @@
 \subsection{The Discrete Logarithm Problem}
 
 \begin{definition}[Group Generation Algorithm]
-  A \emph{group generation algorithm} $\grgen$ is a \ppt algorithm that takes the security parameter $1^\secpar$ as input and outputs a group description $(\GG, p, g)$, where $\GG$ is a cyclic group of prime order $p$ and $g$ is a generator of $\GG$.
+  A \emph{group generation algorithm} $\grgen$ is a \ppt algorithm that takes the security parameter $1^\secpar$ as input and outputs a group description $(\GG, p, g)$, where $\GG$ is a cyclic group of prime order $p$ with $p \geq 2^{\secpar-1}$, and $g$ is a generator of $\GG$.
 \end{definition}
 
 \begin{remark}
@@ -213,7 +213,7 @@ The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
 \begin{mysolution}
   The DL problem on secp256k1 is not hard in the asymptotic security framework because secp256k1 has a fixed 256-bit group order, independent of the security parameter $\secpar$.
   For asymptotic hardness, the group size must grow with $\secpar$.
-  The group generation algorithm $\grgen$ generates groups of size polynomial in $\secpar$ (typically $p \approx 2^\secpar$), ensuring that the problem scales appropriately with the security parameter.
+  The group generation algorithm $\grgen$ generates groups where $p \geq 2^{\secpar-1}$, ensuring that the problem scales appropriately with the security parameter.
 \end{mysolution}
 \fi
 

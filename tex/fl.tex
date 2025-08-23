@@ -304,7 +304,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
 
 
 \begin{exercise}
-  Let $\algo{InpGen}$ output $\mathit{inp} = (\GG,p,g)$ where $g$ is a generator of a cyclic group $\GG$ of prime order $p \geq 2^\secpar$.
+  Let $\algo{InpGen}$ output $\mathit{inp} = (\GG,p,g)$ where $g$ is a generator of a cyclic group $\GG$ of prime order $p \geq 2^{\secpar-1}$.
   Let $\adv$ be an algorithm that makes at most $q$ queries to a random oracle $\pcoracle{H}: \{0,1\}^* \rightarrow \ZZ_p$ and always succeeds in outputting $(z, s)$ such that $s = z + \pcoracle{H}(z) \cdot x \bmod p$ for some fixed $x \in \ZZ_p$.
   Using the forking lemma, give a \ppt algorithm $\bdv$ that outputs $x$ and bound its success probability.
 \end{exercise}

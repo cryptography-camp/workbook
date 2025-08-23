@@ -333,9 +333,9 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
   
   The total number of queries includes the adversary's queries (at most $q$) plus the 2 queries made by the binding game when checking $C_0 = C_1$. Thus $q' \leq q + 2$.
   
-  Since $p \geq 2^\secpar$, we have:
+  Since $p \geq 2^{\secpar-1}$, we have:
   \[
-  \advantage{Bind}{\adv, \algo{TapCom}} < \frac{(q+2)^2}{2p} \leq \frac{(q+2)^2}{2 \cdot 2^\secpar} = \frac{(q+2)^2}{2^{\secpar+1}} < \frac{(q+2)^2}{2^\secpar}
+  \advantage{Bind}{\adv, \algo{TapCom}} < \frac{(q+2)^2}{2p} \leq \frac{(q+2)^2}{2 \cdot 2^{\secpar-1}} = \frac{(q+2)^2}{2^\secpar}
   \]
 \end{mysolution}
 \fi
