@@ -15,7 +15,7 @@
 \end{definition}
 
 \begin{definition}[Correctness]\label{def:sig-correctness}
-  A digital signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ is \emph{correct} if for all $\secpar \in \NN$, all $\params \in \algo{Setup}(1^\secpar)$, all $(\sk, \pk) \in \algo{KeyGen}(\params)$, and all messages $m \in \mathcal{M}$:
+  A signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ is \emph{correct} if for all $\secpar \in \NN$, all $\params \in \algo{Setup}(1^\secpar)$, all $(\sk, \pk) \in \algo{KeyGen}(\params)$, and all messages $m \in \mathcal{M}$:
   \[
     \Pr[\algo{Verify}(\params, \pk, m, \algo{Sign}(\params, \sk, m)) = 1] = 1
   \]
@@ -29,7 +29,7 @@ In other words, a signature scheme is correct if honestly generated signatures a
 The standard security notion for digital signatures is existential unforgeability under chosen message attack (EUF-CMA). Unlike one-time signatures, the adversary can request signatures on multiple messages before attempting to forge.
 
 \begin{definition}[EUF-CMA Security]\label{def:euf-cma}
-  A digital signature scheme $\algo{Sig} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify})$ is \emph{existentially unforgeable under chosen message attack (EUF-CMA)} if for all \ppt adversaries $\adv$:
+  A signature scheme $\algo{Sig}$ is \emph{existentially unforgeable under chosen message attack (EUF-CMA)} if for all \ppt adversaries $\adv$:
   \[
     \advantage{EUF-CMA}{\adv, \algo{Sig}} \defeq \pr{\game{\Game~\algo{EUF-CMA}}{\algo{Sig}} = 1} = \negl
   \]
@@ -84,7 +84,7 @@ The standard security notion for digital signatures is existential unforgeabilit
 \end{definition}
 
 \begin{lemma}[Correctness of Schnorr Signatures]\label{lem:schnorr-correctness}
-  The Schnorr signature scheme $\algo{SchnorrSig}[\grgen, \algo{H}]$ is correct.
+  The Schnorr signature scheme\\ $\algo{SchnorrSig}[\grgen, \algo{H}]$ is correct.
 \end{lemma}
 
 \begin{proof}

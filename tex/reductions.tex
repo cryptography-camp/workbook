@@ -37,7 +37,7 @@ We illustrate the concept of reductions through a series of examples.
 \end{proposition}
 \begin{proof}
   We prove the contrapositive statement (which is equivalent to the statement in the proposition):
-  If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\bdv$ that wins $\game{\Game~\algo{PreimageEither}}{\algo{H}}[\bdv]$ with non-negligible probability.
+  If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\bdv$ that wins\\ $\game{\Game~\algo{PreimageEither}}{\algo{H}}[\bdv]$ with non-negligible probability.
 
   If $\algo{H}$ is not preimage-resistant, then there exists a \ppt algorithm $\adv$ that wins $\game{\Game~\algo{Preimage}}{\algo{H}}$ with non-negligible probability.
   Let $\bdv^\adv_\algo{H}$ be the algorithm defined in \autoref{fig:break-hash-either-bdv}.

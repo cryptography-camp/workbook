@@ -95,9 +95,10 @@ Before examining the consequences of random oracles, we present a simple lemma t
   
   Since $h'$ is uniformly random in $S$ and has the same distribution as $\pcoracle{H}(r)$ (when $r$ is not queried), the games are identical unless the adversary queries $r$ to the oracle.
   
-  We apply Lemma~\ref{lem:difference}. Let $E$ denote the event that $\adv$ queries $r$ to the oracle. Let $A$ be the event that $\game{\algo{ROExample}}{} = 1$ and $B$ be the event that $\game{\algo{ROExample}_1}{} = 1$. 
+  We apply the Difference Lemma (\autoref{lem:difference}).
+  Let $E$ denote the event that $\adv$ queries $r$ to the oracle.
   
-  When $\neg E$ occurs (i.e., $r$ is not queried), the two games behave identically, so $\Pr[A \wedge \neg E] = \Pr[B \wedge \neg E]$. 
+  When $\neg E$ occurs (i.e., $r$ is not queried), the two games behave identically, so $\Pr[\game{\algo{ROExample}}{} = 1 \wedge \neg E] = \Pr[\game{\algo{ROExample}_1}{} = 1 \wedge \neg E]$. 
   
   By Lemma~\ref{lem:difference}:
   \begin{align*}

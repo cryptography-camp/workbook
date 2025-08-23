@@ -181,7 +181,12 @@ In other words, the adversary can insert elements into the accumulator and obtai
 
 \ifsolutions
 \begin{mysolution}
-  \textbf{Syntax:} An additive universal accumulator is a tuple of \ppt algorithms $(\algo{Gen}, \algo{Init}, \algo{Value}, \algo{Insert}, \algo{ProveMembership}, \algo{VerifyMembership}, \algo{ProveNonMembership}, \algo{VerifyNonMembership})$, where the first six algorithms are as in the additive positive accumulator, and:
+  \textbf{Syntax:} An additive universal accumulator is a tuple of \ppt algorithms 
+  \begin{align*}
+    &(\algo{Gen}, \algo{Init}, \algo{Value}, \algo{Insert}, \algo{ProveMembership}, \algo{VerifyMembership},\\
+    &\quad \algo{ProveNonMembership}, \algo{VerifyNonMembership}),
+  \end{align*}
+  where the first six algorithms are as in the additive positive accumulator, and:
   \begin{itemize}
     \item $\algo{ProveNonMembership}(\params, \state, x) \rightarrow \pi$ outputs a proof $\pi$ that attests to the non-membership of $x$ in the accumulator with state $\state$.
     \item $\algo{VerifyNonMembership}(\params, v, x, \pi) \rightarrow b$ outputs $b = 1$ if the proof $\pi$ proves that $x \in \mathcal{X}_\mathsf{Acc}$ is not a member of the set represented by accumulator value $v$.

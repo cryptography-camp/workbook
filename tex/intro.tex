@@ -293,10 +293,10 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \fi
 
 \begin{exercise}\label{ex:guessing-game-equivalence}
-  Consider the game $\game{\Game~\algo{Guess'}}{}$ which is identical to $\game{\Game~\algo{Guess}}{}$ except that $x$ is sampled \emph{after} $\adv$ is run.
+  Consider the $\game{\Game~\algo{Guess2}}{}$ which is identical to $\game{\Game~\algo{Guess}}{}$ except that $x$ is sampled \emph{after} $\adv$ is run.
   That is, the game first runs $x' \gets \adv()$, then samples $x \sample \ZZ_n$, and returns $\pctrue$ if $x = x'$.
   \begin{enumerate}
-    \item Are these two games equivalent? That is, does $\advantage{Guess}{\adv} = \advantage{Guess'}{\adv}$ for all algorithms $\adv$?
+    \item Are these two games equivalent? That is, does $\advantage{Guess}{\adv} = \advantage{Guess2}{\adv}$ for all algorithms $\adv$?
     \item Does this change affect the proof of the proposition above?
   \end{enumerate}
   
@@ -399,14 +399,14 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \begin{exercise}[Optional]\label{ex:concrete-security}
   An alternative to the asymptotic approach is the \emph{concrete security} approach.
   In this approach, we define $(t,\epsilon)$-hardness as follows:
-  The game $\game{\Game~\algo{Guess}}{}$ as defined in \autoref{fig:guessing-game} is $(t,\epsilon)$-hard if for any algorithm $\adv$ running in time $t$, we have $\pr{\game{\Game~\algo{Guess}}{} = \pctrue} \le \epsilon$.
+  The $\game{\Game~\algo{Guess}}{}$ as defined in \autoref{fig:guessing-game} is $(t,\epsilon)$-hard if for any algorithm $\adv$ running in time $t$, we have $\pr{\game{\Game~\algo{Guess}}{} = \pctrue} \le \epsilon$.
   
   Give a proposition about the concrete hardness of the guessing game, analogous to Proposition~\ref{prop:guessing-game}.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  \textbf{Proposition:} For any $t$ and $\lambda$, the game $\game{\Game~\algo{Guess}}{}$ is $(t, 2^{-\lambda})$-hard.
+  \textbf{Proposition:} For any $t$ and $\lambda$, the $\game{\Game~\algo{Guess}}{}$ is $(t, 2^{-\lambda})$-hard.
   
   \textbf{Proof:} The proof is identical to Proposition~\ref{prop:guessing-game}, but we emphasize that the bound $2^{-\lambda}$ holds for \emph{all} $t$, not just polynomial time.
   
