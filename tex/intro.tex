@@ -89,7 +89,7 @@ Then it runs algorithm $\adv$ without input, sets its output to $x'$ and returns
     \begin{tcolorbox}[width=3cm]
       \begin{pchstack}[center]
           \procedure[headlinesep=1pt]{$\game{\Game~\algo{Guess}}{}$}{%
-            n := 2^\lambda\\
+            n \defeq 2^\lambda\\
             x \sample \ZZ_n \\
             x' \gets \adv() \\
             \pcreturn x = x'
@@ -125,7 +125,7 @@ Note that $\adv$ gets $1^{\secpar}$ (a string of 1s of length $\secpar$) as inpu
     \begin{tcolorbox}[width=5cm]
       \begin{pchstack}[center]
           \procedure[headlinesep=1pt]{$\game{\Game~\algo{SHAPreimgZ}}{}$}{%
-            y := 0 \\
+            y \defeq 0 \\
             x \gets \adv(\secparam) \\
             \pcreturn \algo{SHA256}(x) = y
           }
@@ -191,9 +191,9 @@ In $\game{\Game~\algo{SHAPreimg}}{}$ defined in \autoref{fig:sha-preimg} the val
     \begin{tcolorbox}[width=5cm]
       \begin{pchstack}[center]
           \procedure[headlinesep=1pt]{$\adv(y)$}{%
-          x := 0 \\
+          x \defeq 0 \\
           \pcwhile \algo{SHA256}(x) \neq y \pcdo \\
-            \t x := x + 1 \\
+            \t x \defeq x + 1 \\
           \pcendwhile \\
           \pcreturn x
           }

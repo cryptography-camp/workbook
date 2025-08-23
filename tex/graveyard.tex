@@ -90,7 +90,7 @@ Therefore any event—here $B$—can be written as the union of the disjoint int
 \[
   \Pr[B] = \sum_{y\in\mathcal T} \Pr\bigl[ B \wedge (H(x)=y) \bigr].
 \]
-For each fixed $y$ let $S_y := H^{-1}(y)$ be the set of inputs that hash to $y$.
+For each fixed $y$ let $S_y \defeq H^{-1}(y)$ be the set of inputs that hash to $y$.
 
 •  The probability that the randomly chosen $x$ lands in $S_y$ is $|S_y|/|\mathcal S|$.  \\
 •  Conditioned on that event, $x$ is uniform in $S_y$ \\emph{and} the adversary's answer $x'$ is chosen independently, uniformly at random from the \\emph{same} set $S_y$.  Two independent uniform draws from a set of size $|S_y|$ coincide with probability $1/|S_y|$, so
