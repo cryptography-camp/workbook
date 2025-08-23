@@ -29,6 +29,10 @@
     \]
 \end{definition}
 
+\begin{remark}[Assert notation]
+Given a predicate $P$, we use ``$\pcassert P$'' as a shorthand for ``$\pcif \neg P \pcthen \pcreturn 0$'' in the main procedure or ``$\pcif \neg P \pcthen \pcreturn \bot$'' in an oracle procedure.
+\end{remark}
+
 \begin{figure}[tbh]
  \begin{tcolorbox}%[left=0mm,right=0mm]
   \begin{pchstack}[center]

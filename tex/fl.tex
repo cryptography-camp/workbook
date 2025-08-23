@@ -85,7 +85,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
             T \defeq \emptyset \\
             \alpha \gets \adv^{\pcoracle{H}}(\mathit{inp}; \rho) \\
             \pcassert \alpha \neq \bot \\
-            \pcreturn \pctrue
+            \pcreturn 1
           }
           \pcvspace
           \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}(x)$}{%
@@ -130,7 +130,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
   
   For games $\game{\algo{Single}}{\algo{InpGen}}$ and $\game{\algo{Fork}}{\algo{InpGen}}$ defined in \autoref{fig:fork-games}, define:
   \begin{align*}
-    \advantage{Single}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Single}}{\algo{InpGen}} = \pctrue] \\
+    \advantage{Single}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Single}}{\algo{InpGen}} = 1] \\
     \advantage{Fork}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Fork}}{\algo{InpGen}} \neq \bot]
   \end{align*}
   

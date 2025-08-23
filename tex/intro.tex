@@ -80,9 +80,9 @@ The proofs of properties (2)-(4) can be found in Appendix~\ref{sec:appendix-negl
 
 In this section we will introduce the concept of security games (sometimes called ``experiments'') and asymptotic security through a series of toy examples.
 
-The $\game{\Game~\algo{Guess}}{}$ defined in \autoref{fig:guessing-game} takes an algorithm $\adv$ and the security parameter $\secpar$ as input and outputs $\pctrue$ or $\pcfalse$.
+The $\game{\Game~\algo{Guess}}{}$ defined in \autoref{fig:guessing-game} takes an algorithm $\adv$ and the security parameter $\secpar$ as input and outputs $1$ or $0$.
 The game first sets $n = 2^\lambda$ and samples $x$ uniformly at random from $\ZZ_n$.
-Then it runs algorithm $\adv$ without input, sets its output to $x'$ and returns $\pctrue$ if $x = x'$.
+Then it runs algorithm $\adv$ without input, sets its output to $x'$ and returns $1$ if $x = x'$.
 
 \begin{figure}[tbhp]
   \begin{center}
@@ -103,7 +103,7 @@ Then it runs algorithm $\adv$ without input, sets its output to $x'$ and returns
 \begin{definition}[Guessing game advantage]
   For $\game{\Game~\algo{Guess}}{}$ as defined in \autoref{fig:guessing-game} we define the advantage of algorithm $\adv$ as
  \[
-  \advantage{Guess}{\adv} \defeq \pr{\game{\algo{Guess}}{} = \pctrue}.
+  \advantage{Guess}{\adv} \defeq \pr{\game{\algo{Guess}}{} = 1}.
  \]
 \end{definition}
 
@@ -117,7 +117,7 @@ The probability that $x$ sampled independently and uniformly at random from $[1,
 \end{proof}
 
 While the guessing game above provides a clean security definition, formalizing the security of concrete hash functions like SHA256 requires a fundamentally different approach.
-To illustrate this, consider the $\game{\Game~\algo{SHAPreimgZ}}{}$ defined in \autoref{fig:sha-preimg-0}, which outputs $\pctrue$ if the algorithm $\adv$ outputs a preimage of 0 under the hash function $\algo{SHA256}: \{0, 1\}^* \rightarrow \{0, 1\}^{256}$.
+To illustrate this, consider the $\game{\Game~\algo{SHAPreimgZ}}{}$ defined in \autoref{fig:sha-preimg-0}, which outputs $1$ if the algorithm $\adv$ outputs a preimage of 0 under the hash function $\algo{SHA256}: \{0, 1\}^* \rightarrow \{0, 1\}^{256}$.
 Note that $\adv$ gets $1^{\secpar}$ (a string of 1s of length $\secpar$) as input in order to characterise the running time of $\adv$ as a function of the security parameter $\secpar$.
 
 \begin{figure}[tbhp]
@@ -138,7 +138,7 @@ Note that $\adv$ gets $1^{\secpar}$ (a string of 1s of length $\secpar$) as inpu
 \begin{proposition}\label{prop:sha-preimg-z}
  For $\game{\Game~\algo{SHAPreimgZ}}{}$ as defined in \autoref{fig:sha-preimg-0}, let the advantage of $\adv$ be defined as
  \[
-  \advantage{SHAPreIZ}{\adv} \defeq \pr{\game{\algo{SHAPreimgZ}}{} = \pctrue}.
+  \advantage{SHAPreIZ}{\adv} \defeq \pr{\game{\algo{SHAPreimgZ}}{} = 1}.
  \]
  If there exists $x$ such that $\algo{SHA256}(x) = 0$, there exists a \ppt algorithm $\adv$ such that
   \[
@@ -176,7 +176,7 @@ In $\game{\Game~\algo{SHAPreimg}}{}$ defined in \autoref{fig:sha-preimg} the val
 \begin{proposition}
  For $\game{\Game~\algo{SHAPreimg}}{}$ as defined in \autoref{fig:sha-preimg}, let the advantage of $\adv$ be defined as
  \[
-  \advantage{SHAPreI}{\adv} \defeq \pr{\game{\algo{SHAPreimg}}{} = \pctrue}.
+  \advantage{SHAPreI}{\adv} \defeq \pr{\game{\algo{SHAPreimg}}{} = 1}.
  \]
  There exists a \ppt algorithm $\adv$ such that
  \[
@@ -251,7 +251,7 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \begin{definition}[Preimage-resistance]\label{def:preimage-resistance}
   A hash function $\algo{H}$ is \emph{preimage-resistant} if for any \ppt algorithm $\adv$,
  \[
-  \advantage{PreI}{\adv, \algo{H}} \defeq \pr{\game{\algo{Preimage}}{\algo{H}} = \pctrue} = \negl.
+  \advantage{PreI}{\adv, \algo{H}} \defeq \pr{\game{\algo{Preimage}}{\algo{H}} = 1} = \negl.
  \]
 \end{definition}
 
@@ -299,7 +299,7 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 
 \begin{exercise}\label{ex:guessing-game-equivalence}
   Consider the $\game{\Game~\algo{Guess2}}{}$ which is identical to $\game{\Game~\algo{Guess}}{}$ except that $x$ is sampled \emph{after} $\adv$ is run.
-  That is, the game first runs $x' \gets \adv()$, then samples $x \sample \ZZ_n$, and returns $\pctrue$ if $x = x'$.
+  That is, the game first runs $x' \gets \adv()$, then samples $x \sample \ZZ_n$, and returns $1$ if $x = x'$.
   \begin{enumerate}
     \item Are these two games equivalent? That is, does $\advantage{Guess}{\adv} = \advantage{Guess2}{\adv}$ for all algorithms $\adv$?
     \item Does this change affect the proof of the proposition above?
@@ -411,7 +411,7 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \begin{exercise}[Optional]\label{ex:concrete-security}
   An alternative to the asymptotic approach is the \emph{concrete security} approach.
   In this approach, we define $(t,\epsilon)$-hardness as follows:
-  The $\game{\Game~\algo{Guess}}{}$ as defined in \autoref{fig:guessing-game} is $(t,\epsilon)$-hard if for any algorithm $\adv$ running in time $t$, we have $\pr{\game{\Game~\algo{Guess}}{} = \pctrue} \le \epsilon$.
+  The $\game{\Game~\algo{Guess}}{}$ as defined in \autoref{fig:guessing-game} is $(t,\epsilon)$-hard if for any algorithm $\adv$ running in time $t$, we have $\pr{\game{\Game~\algo{Guess}}{} = 1} \le \epsilon$.
   
   Give a proposition about the concrete hardness of the guessing game, analogous to Proposition~\ref{prop:guessing-game}.
 \end{exercise}

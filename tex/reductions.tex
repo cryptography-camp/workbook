@@ -24,7 +24,7 @@ We illustrate the concept of reductions through a series of examples.
 \begin{definition}
   For $\game{\Game~\algo{PreimageEither}}{\algo{H}}$ as defined in \autoref{fig:break-hash-either} we define the advantage of $\adv$ as
  \[
-  \advantage{PreIE}{\adv, \algo{H}} \defeq \pr{\game{\algo{PreimageEither}}{\algo{H}} = \pctrue}.
+  \advantage{PreIE}{\adv, \algo{H}} \defeq \pr{\game{\algo{PreimageEither}}{\algo{H}} = 1}.
  \]
 \end{definition}
 
@@ -95,7 +95,7 @@ The proof is left as an exercise (see \autoref{ex:preimage-either-reverse}).
 \begin{definition}[Collision-resistance]
   Hash function $\algo{H}$ is collision-resistant if for any \ppt algorithm $\adv$,
  \[
-  \advantage{Coll}{\adv, \algo{H}} \defeq \pr{\game{\algo{Collision}}{\algo{H}} = \pctrue} = \negl.
+  \advantage{Coll}{\adv, \algo{H}} \defeq \pr{\game{\algo{Collision}}{\algo{H}} = 1} = \negl.
  \]
 \end{definition}
 
@@ -198,8 +198,8 @@ The proof is left as an exercise (see \autoref{ex:collision-implies-preimage}).
   If $\adv$ succeeds and $\bdv$ does not abort in line 4, then $\bdv$ wins game $\game{Collision}{\algo{H}}$, or more precisely:
 
   \begin{align*}
-  \pr{\game{Collision}{\algo{H}} = \pcfalse} &= \pr{\game{Preimage}{\algo{H}} = \pcfalse \vee \bdv \text{ aborts at line 4} } \\
-  &\le \pr{\game{Preimage}{\algo{H}} = \pcfalse} + \pr{\bdv \text{ aborts at line 4} } \\
+  \pr{\game{Collision}{\algo{H}} = 0} &= \pr{\game{Preimage}{\algo{H}} = 0 \vee \bdv \text{ aborts at line 4} } \\
+  &\le \pr{\game{Preimage}{\algo{H}} = 0} + \pr{\bdv \text{ aborts at line 4} } \\
   \end{align*}
   using union bound.
   Then, by the definition of $\advantage{Coll}{\bdv, \algo{H}}$ and $\advantage{PreI}{\adv, \algo{H}}$ we have

@@ -93,7 +93,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
     An additive positive accumulator is \emph{collision-free} if it is hard to fabricate a membership proof for a value that is not in the set.
     More formally, an accumulator $\algo{Acc}$ is collision-free if for any \ppt algorithm $\adv$
     \[
-      \advantage{Collision}{\adv, \algo{Acc}} \defeq \pr{\game{\algo{AccColl}}{\algo{Acc}} = \pctrue} = \negl.
+      \advantage{Collision}{\adv, \algo{Acc}} \defeq \pr{\game{\algo{AccColl}}{\algo{Acc}} = 1} = \negl.
     \]
 \end{definition}
 
@@ -247,7 +247,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
   
   An accumulator $\algo{Acc}$ is collision-free if for any \ppt algorithm $\adv$:
   \[
-    \advantage{UnivColl}{\adv, \algo{Acc}} \defeq \pr{\game{\algo{UnivAccColl}}{\algo{Acc}} = \pctrue} = \negl.
+    \advantage{UnivColl}{\adv, \algo{Acc}} \defeq \pr{\game{\algo{UnivAccColl}}{\algo{Acc}} = 1} = \negl.
   \]
 \end{mysolution}
 \fi

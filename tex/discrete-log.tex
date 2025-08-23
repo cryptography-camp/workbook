@@ -32,7 +32,7 @@
   Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{DL}}{\grgen}$ be as defined in \autoref{fig:dl-game}.
   The discrete logarithm (DL) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
   \[
-  \advantage{DL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{DL}}{\grgen} = \pctrue} = \negl.
+  \advantage{DL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{DL}}{\grgen} = 1} = \negl.
   \]
 \end{definition}
 
@@ -102,7 +102,7 @@ The proof is left as an exercise (see \autoref{ex:pedersen-hiding}).
   Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{DDH}}{\grgen}$ be as defined in \autoref{fig:ddh-game}.
   The decisional Diffie-Hellman (DDH) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
   \[
-  \advantage{DDH}{\adv, \grgen} \defeq \left|\pr{\game{\Game~\algo{DDH}}{\grgen} = \pctrue} - \frac{1}{2}\right| = \negl.
+  \advantage{DDH}{\adv, \grgen} \defeq \left|\pr{\game{\Game~\algo{DDH}}{\grgen} = 1} - \frac{1}{2}\right| = \negl.
   \]
 \end{definition}
 
@@ -181,7 +181,7 @@ The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
   Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{OMDL}}{\grgen}$ be as defined in \autoref{fig:omdl-aomdl-games}.
   The one-more discrete logarithm (OMDL) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
   \[
-  \advantage{OMDL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{OMDL}}{\grgen} = \pctrue} = \negl.
+  \advantage{OMDL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{OMDL}}{\grgen} = 1} = \negl.
   \]
 \end{definition}
 
@@ -189,7 +189,7 @@ The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
   Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{AOMDL}}{\grgen}$ be as defined in \autoref{fig:omdl-aomdl-games}.
   The algebraic one-more discrete logarithm (AOMDL) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
   \[
-  \advantage{AOMDL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{AOMDL}}{\grgen} = \pctrue} = \negl.
+  \advantage{AOMDL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{AOMDL}}{\grgen} = 1} = \negl.
   \]
 \end{definition}
 
