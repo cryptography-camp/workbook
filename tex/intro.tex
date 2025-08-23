@@ -216,7 +216,7 @@ We observe that if the output space of the hash function is independent of the s
   A \emph{hash function} $\algo{H}$ is a pair of \ppt algorithms $(\algo{Gen}, \algo{Eval})$ where
   \begin{itemize}
   \item $\algo{Gen}(\secparam) \rightarrow \kappa$ is a probabilistic algorithm that takes the security parameter $\secparam$ and returns a hashing key $\kappa$ \footnote{We assume $\kappa$ includes $\secparam$ so that $\algo{Eval}$ can run in time polynomial in $\secpar$}.
-  \item $\algo{Eval}(\kappa, x) \rightarrow y$ takes the hashing key $\kappa$ and $x\in \{0,1\}^*$ as input and outputs a hash $y\in \{0,1\}^{c\lambda}$ for some integer $c > 0$.\footnote{For notational simplicity, $\algo{H.Eval}(\kappa, x)$ is often written as $\algo{H}(x)$, leaving the hashing key implicit.}
+  \item $\algo{Eval}(\kappa, x) \rightarrow y$ takes the hashing key $\kappa$ and $x\in \{0,1\}^*$ as input and outputs a hash $y\in S$ where $S$ is a set with $|S| \geq 2^{c\lambda}$ for some integer $c > 0$.\footnote{For notational simplicity, $\algo{H.Eval}(\kappa, x)$ is often written as $\algo{H}(x)$, leaving the hashing key implicit. When not specified otherwise, we assume $S = \{0,1\}^{c\lambda}$.}
   \end{itemize}
 \end{definition}
 

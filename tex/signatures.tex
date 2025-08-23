@@ -62,7 +62,7 @@ The standard security notion for digital signatures is existential unforgeabilit
 \subsection{Schnorr Signatures}
 
 \begin{definition}[Schnorr Signature Scheme]\label{def:schnorr}
-  Let $\grgen$ be a group generation algorithm and $\algo{H}$ be a hash function. The Schnorr signature scheme $\algo{SchnorrSig}[\grgen, \algo{H}]$ is defined as follows:
+  Let $\grgen$ be a group generation algorithm and $\algo{H}$ be a hash function with output space $\ZZ_p$. The Schnorr signature scheme $\algo{SchnorrSig}[\grgen, \algo{H}]$ is defined as follows:
   \begin{itemize}
     \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$ and $\kappa \gets \algo{H.Gen}(1^\secpar)$. The message space is $\mathcal{M} = \{0,1\}^*$ and the signature space is $\mathcal{S} = \GG \times \ZZ_p$. Output $\params = (\gparam, \kappa, \mathcal{M}, \mathcal{S})$.
     
