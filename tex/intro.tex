@@ -49,7 +49,7 @@ All adversaries considered in cryptography are algorithms.
 
 
 \begin{definition}
-A function $f: \ZZ \rightarrow \mathbb{R}$ is \emph{negligible} if for every polynomial $p$ there exists $N \in \NN$ such that for all integers $\secpar > N$, $f(\secpar) \le \frac{1}{p(\secpar)}$.
+A function $f: \ZZ \rightarrow \mathbb{R}$ is \emph{negligible} if for every constant $c > 0$ there exists $N \in \NN$ such that for all integers $\secpar > N$, $f(\secpar) < \secpar^{-c}$.
 % Or equivalently.
 % - We denote the set of \emph{polynomially-bounded} functions in the security parameter $\secpar$ by $\poly = \{ f : \exists a \in \NN,\ f(\secpar) \in O(\lambda^a) \}$,. functions in the security parameter $\secpar$ by $\negl = \{ f : f(\secpar)^{-1} \not\in \poly \}$
 % - for all $a \in \NN$, there exists $N \in \NN$ such that for all $\secpar \ge N$, $f(\secpar) \le \frac{1}{\lambda^a}$.
@@ -68,7 +68,7 @@ If a function $f$ is negligible, we write $f(\secpar) = \negl$.
   \begin{enumerate}
   \item Let $f$ be a negligible function and $p$ be a polynomial. Then $f(\secpar) \cdot p(\secpar)$ is negligible.
   \item Let $f_1, f_2$ be negligible functions. Then $f_1 + f_2$ is negligible.
-  \item Let $f$ be a negligible function $f(\secpar) \ge 0$ and $c > 0$ be a constant. Then $f + c$ is not negligible.
+  \item Let $f$ be a negligible function $f(\secpar) \ge 0$ and $k > 0$ be a constant. Then $f + k$ is not negligible.
   \item Let $f$ be a non-negligible function and $g$ be a negligible function. Then $f - g$ is not negligible.
   \end{enumerate}
 \end{lemma}
@@ -383,21 +383,28 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
   
   \textbf{Hints:}
   \begin{itemize}
-    \item Any polynomial $p(\lambda)$ can be bounded by $\lambda^{a}$ for some constant $a$.
-    \item Use the negligibility of $f$ with the polynomial $\lambda^{a + a'}$ where $a'$ bounds an arbitrary polynomial $q$.
+    \item Any polynomial $p(\lambda)$ can be bounded by $\lambda^{a}$ for some positive integer $a$ and sufficiently large $\lambda$.
+    \item To show $f(\lambda) \cdot p(\lambda)$ is negligible, for any $c > 0$, use the fact that $f$ is negligible with constant $c + a$.
   \end{itemize}
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  Let $a$ be an integer such that $p(\lambda) < \lambda^{a}$ for sufficiently large $\lambda$.
-  Let $q(\lambda)$ be an arbitrary polynomial and let $a'$ be a positive integer such that $q(\lambda) \le \lambda^{a'}$ for sufficiently large $\lambda$.
-  Since $f$ is negligible, for the polynomial $\lambda^{a + a'}$, there exists $N \in \NN$ such that for all $\secpar \ge N$, we have $f(\secpar) \le \frac{1}{\lambda^{a + a'}}$.
-  Therefore, for all $\secpar \ge N$:
+  We need to show that $f(\lambda) \cdot p(\lambda)$ is negligible, i.e., for any $c > 0$, we have $f(\lambda) \cdot p(\lambda) < \lambda^{-c}$ for sufficiently large $\lambda$.
+  
+  First, since $p$ is a polynomial, there exists a positive integer $a$ and $N_p \in \NN$ such that $p(\lambda) < \lambda^{a}$ for all $\lambda > N_p$.
+  
+  Let $c > 0$ be arbitrary. Since $f$ is negligible, for the constant $c + a > 0$, there exists $N_f \in \NN$ such that:
   \[
-  f(\secpar) \cdot p(\secpar) \le \frac{1}{\lambda^{a + a'}} \cdot \lambda^{a} = \frac{1}{\lambda^{a'}} \le \frac{1}{q(\secpar)}
+  f(\secpar) < \secpar^{-(c+a)} \quad \text{for all } \secpar > N_f
   \]
-  This shows that $f(\secpar) \cdot p(\secpar)$ is negligible.
+  
+  Let $N = \max(N_p, N_f)$. Then for all $\secpar > N$:
+  \[
+  f(\secpar) \cdot p(\secpar) < \secpar^{-(c+a)} \cdot \secpar^{a} = \secpar^{-c}
+  \]
+  
+  Since $c > 0$ was arbitrary, this proves that $f(\secpar) \cdot p(\secpar)$ is negligible.
 \end{mysolution}
 \fi
 

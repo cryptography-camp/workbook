@@ -407,23 +407,43 @@ This appendix contains the proofs of properties (2)-(4) from Lemma~\ref{lem:negl
 \begin{proof}[Proof of Lemma~\ref{lem:negl}(2)]
   Let $f_1, f_2$ be negligible functions.
   We need to show that $f_1 + f_2$ is negligible.
-  Let $q(\secpar)$ be an arbitrary polynomial, and let $a$ be a positive integer such that $q(\lambda) \le \lambda^a$ for sufficiently large $\lambda$.
-  Since $f_1$ and $f_2$ are negligible, for the polynomial $\lambda^{a+1}$, there exist $N_1, N_2 \in \NN$ such that
+  
+  Let $c > 0$ be arbitrary. We must find $N$ such that $(f_1 + f_2)(\secpar) < \secpar^{-c}$ for all $\secpar > N$.
+  
+  Since $f_1$ and $f_2$ are negligible, for the constant $c + 1 > 0$, there exist $N_1, N_2 \in \NN$ such that:
   \[
-  \forall \secpar \ge N_1, f_1(\secpar) \le \frac{1}{\lambda^{a+1}} \quad \text{and} \quad \forall \secpar \ge N_2, f_2(\secpar) \le \frac{1}{\lambda^{a+1}}
+  \forall \secpar > N_1: f_1(\secpar) < \secpar^{-(c+1)} \quad \text{and} \quad \forall \secpar > N_2: f_2(\secpar) < \secpar^{-(c+1)}
   \]
-  Let $N = \max(N_1, N_2, 2)$. Then for all $\secpar \ge N$:
+  
+  Let $N = \max(N_1, N_2, 2)$. Then for all $\secpar > N$:
   \[
-    f_1(\secpar) + f_2(\secpar) \le \frac{1}{\lambda^{a+1}} + \frac{1}{\lambda^{a+1}} = \frac{2}{\lambda^{a+1}} \le \frac{1}{\lambda^{a}} \le \frac{1}{q(\secpar)}
+    f_1(\secpar) + f_2(\secpar) < \secpar^{-(c+1)} + \secpar^{-(c+1)} = 2 \cdot \secpar^{-(c+1)} = \frac{2}{\secpar} \cdot \secpar^{-c} \leq \secpar^{-c}
   \]
+  where the last inequality holds because $\frac{2}{\secpar} \leq 1$ when $\secpar \geq 2$, which is guaranteed by our choice of $N$.
 \end{proof}
 
 \begin{proof}[Proof of Lemma~\ref{lem:negl}(3)]
-  Let $f$ be a negligible function with $f(\secpar) \ge 0$ and $c > 0$ be a constant.
-  We need to show that $f + c$ is not negligible.
-  Let $c'$ be a constant such that $c' > \frac{1}{c}$.
-  Then $c > c'^{-1}$, so $f(\secpar) + c > c'^{-1}$ for all $\secpar$.
-  For the polynomial $p(\secpar) = c'$, we have $f(\secpar) + c > \frac{1}{p(\secpar)}$ for all $\secpar$, which means $f + c$ is not negligible.
+  Let $f$ be a negligible function with $f(\secpar) \ge 0$ and let $k > 0$ be a constant.
+  We need to show that $f + k$ is not negligible.
+  
+  Assume for contradiction that $f + k$ is negligible. 
+  Then for the constant $c = 1$, there exists $N \in \NN$ such that for all $\secpar > N$:
+  \[
+    f(\secpar) + k < \secpar^{-1}
+  \]
+  
+  Since $f(\secpar) \ge 0$, we have $f(\secpar) + k \ge k$ for all $\secpar$.
+  
+  Choose $\secpar_0 = \max(N + 1, \lceil \frac{2}{k} \rceil)$. Then $\secpar_0 > N$ and $\secpar_0^{-1} \le \frac{k}{2}$.
+  
+  By our assumption, we must have:
+  \[
+    k \le f(\secpar_0) + k < \secpar_0^{-1} \le \frac{k}{2}
+  \]
+  
+  This gives us $k < \frac{k}{2}$, which is a contradiction.
+  
+  Therefore, $f + k$ is not negligible.
 \end{proof}
 
 \begin{proof}[Proof of Lemma~\ref{lem:negl}(4)]
