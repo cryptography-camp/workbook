@@ -39,7 +39,8 @@
 \subsection{Pedersen Commitments}
 
 \begin{definition}[Pedersen Commitment Scheme]
-  The Pedersen commitment scheme\\ $\algo{PedCom}[\grgen]$ is parameterized by a group generation algorithm $\grgen$ and defined as follows:
+  Let $\grgen$ be a group generation algorithm.
+  The Pedersen commitment scheme $\algo{PedCom}[\grgen]$ is defined as follows:
   \begin{itemize}
   \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, sample $h \sample \GG \setminus \{1_\GG\}$, and output $\params = (\gparam, h, \mathcal{M} \defeq \ZZ_p, \mathcal{R} \defeq \ZZ_p)$.
   \item $\algo{Commit}(\params, m, r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{M}, \mathcal{R})$. For message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$, output $C = g^m h^r$.
@@ -109,7 +110,8 @@ The proof is left as an exercise (see \autoref{ex:pedersen-hiding}).
 \subsection{ElGamal Commitments}
 
 \begin{definition}[ElGamal Commitment Scheme]
-  The ElGamal commitment scheme\\ $\algo{ElGamalCom}[\grgen]$ is parameterized by a group generation algorithm $\grgen$ and defined as follows:
+  Let $\grgen$ be a group generation algorithm.
+  The ElGamal commitment scheme $\algo{ElGamalCom}[\grgen]$ is defined as follows:
   \begin{itemize}
   \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, sample $h \sample \GG \setminus \{1_\GG\}$, and output $\params = (\gparam, h, \mathcal{M} \defeq \ZZ_p, \mathcal{R} \defeq \ZZ_p)$.
   \item $\algo{Commit}(\params, m, r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{M}, \mathcal{R})$. For message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$, output $C = (g^r, h^{m+r})$.
