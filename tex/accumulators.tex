@@ -61,7 +61,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
     \begin{tcolorbox}[width=13cm]
       \begin{pcvstack}[center]
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{AccColl}}{\algo{Acc}}$}{%
-            \params \sample \algo{Acc}.\algo{Gen}(1^\secpar) \\
+            \params \sample \algo{Acc.Gen}(1^\secpar) \\
             \mathcal{Q} \gets \emptyset \\
             \state \gets \algo{Acc.Init}(\params) \\
             v \gets \algo{Acc.Value}(\params, \state) \\
@@ -228,7 +228,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
     \begin{tcolorbox}[width=13cm]
       \begin{pcvstack}[center]
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{UnivAccColl}}{\algo{Acc}}$}{%
-            \params \sample \algo{Acc}.\algo{Gen}(1^\secpar) \\
+            \params \sample \algo{Acc.Gen}(1^\secpar) \\
             \mathcal{Q} \gets \emptyset \\
             \state \gets \algo{Acc.Init}(\params) \\
             v \gets \algo{Acc.Value}(\params, \state) \\

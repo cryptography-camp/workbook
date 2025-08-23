@@ -49,11 +49,11 @@
     \begin{tcolorbox}[width=8cm]
       \begin{pchstack}[center]
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHide}}{\algo{Com}}$}{%
-            \params \sample \algo{Com}.\algo{Setup}(1^\lambda) \\
+            \params \sample \algo{Com.Setup}(1^\lambda) \\
             (m_0, m_1) \gets \adv(\params) \\
             r \sample \params.\mathcal{R} \\
             b \sample \{0, 1\} \\
-            C \gets \algo{Com}.\algo{Commit}(\params, m_b, r) \\
+            C \gets \algo{Com.Commit}(\params, m_b, r) \\
             b' \gets \adv(\params, C) \\
             \pcreturn (b = b')
         }
