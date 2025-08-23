@@ -129,7 +129,7 @@ Before examining the consequences of random oracles, we present a simple lemma t
   The hash commitment scheme $\algo{HashCom}[\algo{H}]$ is defined as follows:
   \begin{itemize}
     \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Output $\params = (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{0, 1\}^\secpar)$.
-    \item $\algo{Commit}(\params, m; r) \rightarrow C$: Output $C = \algo{H.Eval}(m \| r)$.
+    \item $\algo{Commit}(\params, m, r) \rightarrow C$: Output $C = \algo{H.Eval}(m \| r)$.
   \end{itemize}
 \end{definition}
 
@@ -150,7 +150,7 @@ The proof is left as an exercise (see \autoref{ex:hash-com-hiding}).
   The Taproot commitment scheme $\algo{TapCom}[\grgen, \algo{H}]$ is defined as follows:
   \begin{itemize}
     \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$ and $\kappa \gets \algo{H.Gen}(1^\secpar)$. Parse $\gparam = (\GG, p, g)$. Output $\params = (\gparam, \kappa, \mathcal{M} \defeq \{0,1\}^*, \mathcal{R} \defeq \GG)$.
-    \item $\algo{Commit}(\params, m; R) \rightarrow C$: Parse $\params$ to obtain $g$ and $\kappa$. Output $C = R \cdot g^{\algo{H.Eval}(\kappa, (R, m))}$.
+    \item $\algo{Commit}(\params, m, R) \rightarrow C$: Parse $\params$ to obtain $g$ and $\kappa$. Output $C = R \cdot g^{\algo{H.Eval}(\kappa, (R, m))}$.
   \end{itemize}
 \end{definition}
 
@@ -171,7 +171,7 @@ The proof is left as an exercise (see \autoref{ex:taproot-binding}).
   Consider a modified hash commitment scheme $\algo{HashCom}_y[\algo{H}]$ defined as follows:
   \begin{itemize}
     \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Same as $\algo{HashCom}[\algo{H}]$.
-    \item $\algo{Commit}(\params, m; r) \rightarrow C$: 
+    \item $\algo{Commit}(\params, m, r) \rightarrow C$: 
     \begin{align*}
       C = \begin{cases}
         \algo{H.Eval}(m) & \text{if } \algo{H.Eval}(0) = y \\

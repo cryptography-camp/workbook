@@ -42,14 +42,14 @@
   The Pedersen commitment scheme\\ $\algo{PedCom}[\grgen]$ is parameterized by a group generation algorithm $\grgen$ and defined as follows:
   \begin{itemize}
   \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, sample $h \sample \GG \setminus \{1_\GG\}$, and output $\params = (\gparam, h, \mathcal{M} \defeq \ZZ_p, \mathcal{R} \defeq \ZZ_p)$.
-  \item $\algo{Commit}(\params, m; r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{M}, \mathcal{R})$. For message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$, output $C = g^m h^r$.
+  \item $\algo{Commit}(\params, m, r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{M}, \mathcal{R})$. For message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$, output $C = g^m h^r$.
   \end{itemize}
 \end{definition}
 
 \begin{remark}
-  Pedersen commitments are \emph{homomorphic}: for commitments $C_1 = \algo{Commit}(\params, m_1; r_1)$ and $C_2 = \algo{Commit}(\params, m_2; r_2)$, we have
+  Pedersen commitments are \emph{homomorphic}: for commitments $C_1 = \algo{Commit}(\params, m_1, r_1)$ and $C_2 = \algo{Commit}(\params, m_2, r_2)$, we have
   \[
-  C_1 \cdot C_2 = g^{m_1 + m_2} h^{r_1 + r_2} = \algo{Commit}(\params, m_1 + m_2; r_1 + r_2).
+  C_1 \cdot C_2 = g^{m_1 + m_2} h^{r_1 + r_2} = \algo{Commit}(\params, m_1 + m_2, r_1 + r_2).
   \]
 \end{remark}
 
@@ -112,7 +112,7 @@ The proof is left as an exercise (see \autoref{ex:pedersen-hiding}).
   The ElGamal commitment scheme\\ $\algo{ElGamalCom}[\grgen]$ is parameterized by a group generation algorithm $\grgen$ and defined as follows:
   \begin{itemize}
   \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, sample $h \sample \GG \setminus \{1_\GG\}$, and output $\params = (\gparam, h, \mathcal{M} \defeq \ZZ_p, \mathcal{R} \defeq \ZZ_p)$.
-  \item $\algo{Commit}(\params, m; r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{M}, \mathcal{R})$. For message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$, output $C = (g^r, h^{m+r})$.
+  \item $\algo{Commit}(\params, m, r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{M}, \mathcal{R})$. For message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$, output $C = (g^r, h^{m+r})$.
   \end{itemize}
 \end{definition}
 
@@ -250,7 +250,7 @@ The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
   Since $h \in \GG \setminus \{1_\GG\}$ and $\GG$ has prime order $p$, $h$ generates $\GG$ (every non-identity element generates a prime-order group).
   Thus the map $r \mapsto h^r$ is a bijection from $\ZZ_p$ to $\GG$.
   For fixed $m$, the map $r \mapsto g^m h^r$ is also a bijection from $\ZZ_p$ to $\GG$.
-  Therefore, for any two messages $m_0, m_1$, the distributions of $\algo{Commit}(\params, m_0; r)$ and $\algo{Commit}(\params, m_1; r)$ for uniform $r$ are both uniform over $\GG$.
+  Therefore, for any two messages $m_0, m_1$, the distributions of $\algo{Commit}(\params, m_0, r)$ and $\algo{Commit}(\params, m_1, r)$ for uniform $r$ are both uniform over $\GG$.
 \end{mysolution}
 \fi
 

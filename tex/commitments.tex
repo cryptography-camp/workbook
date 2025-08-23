@@ -5,7 +5,7 @@
   A \emph{commitment scheme} $\algo{Com}$ is a pair of polynomial-time algorithms $(\algo{Setup}, \algo{Commit})$ where:
   \begin{itemize}
     \item $\algo{Setup}(1^\lambda) \rightarrow \params$\footnote{The security parameter $1^\lambda$ is often left implicit in algorithm inputs to simplify notation, e.g., writing $\algo{Setup}()$ instead of $\algo{Setup}(1^\lambda)$.} is a probabilistic algorithm that takes the security parameter as input and outputs public parameters $\params$ including the message space $\mathcal{M}$ and the randomness space $\mathcal{R}$.
-    \item $\algo{Commit}(\params, m; r) \rightarrow C$\footnote{Public parameters $\params$ are often left implicit in algorithm inputs to simplify notation, e.g., writing $\algo{Commit}(m; r)$ instead of $\algo{Commit}(\params, m; r)$.} is a deterministic algorithm that takes public parameters $\params$, a message $m \in \mathcal{M}$, and randomness $r \in \mathcal{R}$ as input and outputs a commitment $C$.
+    \item $\algo{Commit}(\params, m, r) \rightarrow C$\footnote{Public parameters $\params$ are often left implicit in algorithm inputs to simplify notation, e.g., writing $\algo{Commit}(m, r)$ instead of $\algo{Commit}(\params, m, r)$.} is a deterministic algorithm that takes public parameters $\params$, a message $m \in \mathcal{M}$, and randomness $r \in \mathcal{R}$ as input and outputs a commitment $C$.
   \end{itemize}
 \end{definition}
 
@@ -13,7 +13,7 @@
   An example is the trivial commitment scheme\label{sec:trivial-com}:
   \begin{itemize}
     \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{\})$
-    \item $\algo{Commit}(\params,m;r) \defeq m$
+    \item $\algo{Commit}(\params, m, r) \defeq m$
   \end{itemize}
 \end{example}
 
@@ -26,8 +26,8 @@
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComBind}}{\algo{Com}}$}{%
             \params \sample \algo{Com.Setup}(1^\lambda) \\
             (m_0, m_1, r_0, r_1) \gets \adv(\params) \\
-            C_0 \gets \algo{Com.Commit}(\params, m_0; r_0) \\
-            C_1 \gets \algo{Com.Commit}(\params, m_1; r_1) \\
+            C_0 \gets \algo{Com.Commit}(\params, m_0, r_0) \\
+            C_1 \gets \algo{Com.Commit}(\params, m_1, r_1) \\
             \pcreturn (C_0 = C_1) \wedge (m_0 \neq m_1)
         }
       \end{pchstack}
@@ -53,7 +53,7 @@
             (m_0, m_1) \gets \adv(\params) \\
             r \sample \params.\mathcal{R} \\
             b \sample \{0, 1\} \\
-            C \gets \algo{Com}.\algo{Commit}(\params, m_b; r) \\
+            C \gets \algo{Com}.\algo{Commit}(\params, m_b, r) \\
             b' \gets \adv(\params, C) \\
             \pcreturn (b = b')
         }
@@ -93,8 +93,8 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
   
   However, by the definition of the trivial commitment scheme:
   \begin{itemize}
-    \item $C_0 = \algo{Commit}(\params, m_0; r_0) = m_0$
-    \item $C_1 = \algo{Commit}(\params, m_1; r_1) = m_1$
+    \item $C_0 = \algo{Commit}(\params, m_0, r_0) = m_0$
+    \item $C_1 = \algo{Commit}(\params, m_1, r_1) = m_1$
   \end{itemize}
   
   Therefore, $C_0 = C_1$ implies $m_0 = m_1$, which contradicts $m_0 \neq m_1$.
@@ -119,8 +119,8 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComStrongBind}}{\algo{Com}}$}{%
             \params \sample \algo{Com.Setup}(1^\lambda) \\
             (m_0, m_1, r_0, r_1) \gets \adv(\params) \\
-            C_0 \gets \algo{Com.Commit}(\params, m_0; r_0) \\
-            C_1 \gets \algo{Com.Commit}(\params, m_1; r_1) \\
+            C_0 \gets \algo{Com.Commit}(\params, m_0, r_0) \\
+            C_1 \gets \algo{Com.Commit}(\params, m_1, r_1) \\
             \pcreturn (C_0 = C_1) \wedge ((m_0 \neq m_1) \vee (r_0 \neq r_1))
         }
       \end{pchstack}
@@ -148,7 +148,7 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
   Consider the Taproot commitment scheme where the randomness space $\mathcal{R}$ is a group $\GG$.
   For hash function $\algo{H}$ and group generator $g$, the commitment is computed as:
   \[
-    \algo{Commit}(m; R) = R \cdot g^{\algo{H.Eval}(\kappa, (R, m))}
+    \algo{Commit}(m, R) = R \cdot g^{\algo{H.Eval}(\kappa, (R, m))}
   \]
 
   In this scheme, $m$ represents the root of a Merkle tree containing Tapscripts, and $R$ serves as an internal key.
@@ -173,7 +173,7 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
   Define the hash commitment scheme $\algo{HashCom}[\algo{H}]$ as follows:
   \begin{itemize}
     \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{0, 1\}^\lambda, \kappa \gets \algo{H.Gen}(1^\lambda))$
-    \item $\algo{Commit}(\params, m; r) \defeq \algo{H.Eval}(\kappa, r \| m)$
+    \item $\algo{Commit}(\params, m, r) \defeq \algo{H.Eval}(\kappa, r \| m)$
   \end{itemize}
   
   \textbf{Theorem:} Let $\algo{H}$ be a collision-resistant hash function. Then $\algo{HashCom}[\algo{H}]$ is strongly binding.
@@ -216,7 +216,7 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
   \begin{enumerate}
     \item $\adv$ receives $\params$ from the setup.
     \item $\adv$ outputs two distinct messages: $m_0 = 0$ and $m_1 = 1$.
-    \item The game samples $b \sample \{0, 1\}$ and computes $C = \algo{Commit}(\params, m_b; r) = m_b$.
+    \item The game samples $b \sample \{0, 1\}$ and computes $C = \algo{Commit}(\params, m_b, r) = m_b$.
     \item $\adv$ receives $C$ and outputs $b' = C$.
     \item Since $C = m_b = b$ (because $m_0 = 0$ and $m_1 = 1$), we have $b' = b$.
   \end{enumerate}
@@ -235,7 +235,7 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
   Let $\algo{H}$ be a collision-resistant hash function and define the commitment scheme $\algo{HashCom'}[\algo{H}]$ as:
   \begin{itemize}
     \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}, \mathcal{R} \defeq \{\}, \kappa \gets \algo{H.Gen}(1^\lambda))$
-    \item $\algo{Commit}(\params,m;r) \defeq  \algo{H.Eval}(\kappa, m)$
+    \item $\algo{Commit}(\params, m, r) \defeq \algo{H.Eval}(\kappa, m)$
   \end{itemize}
   Note that $\algo{HashCom'}[\algo{H}]$ is binding.
   Is it hiding?
