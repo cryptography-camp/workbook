@@ -129,7 +129,7 @@ Before examining the consequences of random oracles, we present a simple lemma t
   The hash commitment scheme $\algo{HashCom}[\algo{H}]$ is defined as follows:
   \begin{itemize}
     \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Output $\params = (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{0, 1\}^\secpar)$.
-    \item $\algo{Commit}(\params, m; r) \rightarrow C$: Output $C = \algo{H.Eval}(m \|\| r)$.
+    \item $\algo{Commit}(\params, m; r) \rightarrow C$: Output $C = \algo{H.Eval}(m \| r)$.
   \end{itemize}
 \end{definition}
 
@@ -150,7 +150,7 @@ The proof is left as an exercise (see \autoref{ex:hash-com-hiding}).
   The Taproot commitment scheme $\algo{TapCom}[\grgen, \algo{H}]$ is defined as follows:
   \begin{itemize}
     \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$ and $\kappa \gets \algo{H.Gen}(1^\secpar)$. Parse $\gparam = (\GG, p, g)$. Output $\params = (\gparam, \kappa, \mathcal{M} \defeq \{0,1\}^*, \mathcal{R} \defeq \GG)$.
-    \item $\algo{Commit}(\params, m; R) \rightarrow C$: Parse $\params$ to obtain $g$ and $\kappa$. Output $C = R \cdot g^{\algo{H.Eval}(\kappa, R \| m)}$.
+    \item $\algo{Commit}(\params, m; R) \rightarrow C$: Parse $\params$ to obtain $g$ and $\kappa$. Output $C = R \cdot g^{\algo{H.Eval}(\kappa, (R, m))}$.
   \end{itemize}
 \end{definition}
 
@@ -301,18 +301,18 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
 \begin{mysolution}
   Let $\adv$ be an adversary against the binding property of $\algo{TapCom}[\grgen, \algo{H}]$. The adversary wins if it outputs $(m_0, m_1, R_0, R_1)$ with $m_0 \neq m_1$ such that:
   \[
-  R_0 \cdot g^{\algo{H}(R_0 \| m_0)} = R_1 \cdot g^{\algo{H}(R_1 \| m_1)}
+  R_0 \cdot g^{\algo{H}(R_0, m_0)} = R_1 \cdot g^{\algo{H}(R_1, m_1)}
   \]
 
   Rearranging, this equality holds if and only if:
   \[
-  R_0 \cdot g^{\algo{H}(R_0 \| m_0)} \cdot R_1^{-1} = g^{\algo{H}(R_1 \| m_1)}
+  R_0 \cdot g^{\algo{H}(R_0, m_0)} \cdot R_1^{-1} = g^{\algo{H}(R_1, m_1)}
   \]
 
   Our strategy is to check for binding collisions as queries are made to the random oracle.
-  Consider the distinct queries to the random oracle of the form $R_i \| m_i$ and define the collision predicate:
+  Consider the distinct queries to the random oracle of the form $(R_i, m_i)$ and define the collision predicate:
   \[
-  c(i, j) = \text{true} \iff R_i \cdot g^{\algo{H}(R_i \| m_i)} \cdot R_j^{-1} = g^{\algo{H}(R_j \| m_j)}
+  c(i, j) = \text{true} \iff R_i \cdot g^{\algo{H}(R_i, m_i)} \cdot R_j^{-1} = g^{\algo{H}(R_j, m_j)}
   \]
   
   The probability that the adversary breaks binding is:
@@ -321,7 +321,7 @@ Since $r$ is uniformly random from $\{0,1\}^\secpar$ and unknown to $\adv$, and 
   \]
   where $q'$ is the number of distinct queries.
   
-  For all $j > i$, we have $\Pr[c(i,j) = \text{true}] = \frac{1}{p}$, since $\algo{H}(R_j \| m_j)$ is a fresh uniformly random value in $\ZZ_p$, independent of $R_i$, $\algo{H}(R_i \| m_i)$, and $R_j$.
+  For all $j > i$, we have $\Pr[c(i,j) = \text{true}] = \frac{1}{p}$, since $\algo{H}(R_j, m_j)$ is a fresh uniformly random value in $\ZZ_p$, independent of $R_i$, $\algo{H}(R_i, m_i)$, and $R_j$.
   
   By the union bound:
   \begin{align*}

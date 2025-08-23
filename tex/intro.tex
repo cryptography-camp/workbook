@@ -222,6 +222,11 @@ We observe that if the output space of the hash function is independent of the s
 
 Note that the hashing key $\kappa$ is not secret because it is required to evaluate the hash function.
 
+\begin{remark}[Encoding of Arbitrary Inputs]
+  We extend the notation to arbitrary inputs $x$ (such as group elements, integers, or tuples) and simply write $\algo{H.Eval}(\kappa, x)$, implicitly assuming the existence of a fixed injective encoding function that maps the input $x$ into $\{0,1\}^*$.
+  We omit explicit reference to the encoding function in our notation.
+\end{remark}
+
 \begin{figure}[tbhp]
   \begin{center}
     \begin{tcolorbox}[width=5cm]

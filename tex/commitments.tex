@@ -148,7 +148,7 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
   Consider the Taproot commitment scheme where the randomness space $\mathcal{R}$ is a group $\GG$.
   For hash function $\algo{H}$ and group generator $g$, the commitment is computed as:
   \[
-    \algo{Commit}(m; R) = R \cdot g^{\algo{H.Eval}(\kappa, R \| m)}
+    \algo{Commit}(m; R) = R \cdot g^{\algo{H.Eval}(\kappa, (R, m))}
   \]
 
   In this scheme, $m$ represents the root of a Merkle tree containing Tapscripts, and $R$ serves as an internal key.
