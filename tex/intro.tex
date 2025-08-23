@@ -151,7 +151,7 @@ Note that $\adv$ gets $1^{\secpar}$ (a string of 1s of length $\secpar$) as inpu
   \[
    \pcreturn x
   \]
-  where $SHA256(x) = 0$.
+  where $\algo{SHA256}(x) = 0$.
 \end{proof}
 
 Next, we consider a variant of preimage resistance for SHA256 where the target value is chosen uniformly at random, preventing the existence of trivial algorithms like the one in Proposition~\ref{prop:sha-preimg-z}.
