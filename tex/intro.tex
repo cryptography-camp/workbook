@@ -20,6 +20,7 @@ This is why contemporary papers in cryptography include a preliminaries section 
 
 % REQUIREMENTS:
 % basic sets
+% modular arithmetic
 % proof by contraposition
 % basic probability and union bound
 % good to have seen before:
@@ -259,6 +260,13 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 % If there was no key, then, given the security parameter, there exists an algorithm where the state transitions encode a sorted map from all $2^\secpar$ possible hash function outputs y to a preimage x.
 % Then the algorithm could look up the challenge y in $O(\log(2^\secpar)) = O(\secpar)$ time.
 
+\begin{remark}[Asymptotic Security Framework]
+  Definition~\ref{def:preimage-resistance} is an example of a definition in the asymptotic security framework.
+  The hash function $\algo{H}$ consists of algorithms that are polynomial-time in $\secpar$, and preimage resistance requires that any \ppt adversary's success probability is negligible in $\secpar$.
+  Hence, by increasing $\lambda$ we can make the success probability of any \ppt adversary arbitrarily small.
+\end{remark}
+
+
 \subsection{Exercises}
 
 \begin{exercise}\label{ex:negligible-functions}
@@ -325,15 +333,6 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \end{mysolution}
 \fi
 
-\begin{exercise}\label{ex:asymptotic-security}
-  In one sentence, when do we consider a cryptographic scheme secure in the asymptotic security framework?
-\end{exercise}
-
-\ifsolutions
-\begin{mysolution}
-  A scheme is secure if any \ppt adversary succeeds in breaking the scheme with at most negligible probability in $\secpar$.
-\end{mysolution}
-\fi
 
 \begin{exercise}\label{ex:sha-preimage-problem}
   Why is the definition of $\advantage{SHAPreIZ}{\adv}$ in Proposition~\ref{prop:sha-preimg-z} problematic from a cryptographic perspective?
