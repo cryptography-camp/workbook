@@ -1,7 +1,9 @@
 \section{Reductions}
-We use \emph{reductions} to relate the hardness of various games.
-If we can reduce a game $X$ to a game $Y$, then the game $Y$ is at least as hard as $X$.
-A reduction is a \ppt algorithm that wins game $X$ using an algorithm that wins game $Y$.
+We use \emph{reductions} to relate the hardness of winning various games.
+To show that problem $Y$ is at least as hard as problem $X$, we construct a reduction: a \ppt algorithm that solves $X$ using any algorithm that solves $Y$ as a subroutine.
+This reduces problem $X$ to $Y$: if there were an efficient algorithm that solves $Y$, we would also have an efficient algorithm that solves $X$.
+By contrapositive, if $X$ is hard, then $Y$ must also be hard.
+
 We illustrate the concept of reductions through a series of examples.
 
 \begin{figure}[tbhp]
