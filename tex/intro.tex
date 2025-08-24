@@ -10,7 +10,7 @@ Throughout this workbook we will study algorithms, analyse their running time an
 In later sections we will sometimes study these algorithms within idealised computational models.
 
 This workbook primarily contains definitions, propositions, and lemmas, with limited intuitive explanations.
-Good cryptography papers should include intuition, but it's never complete---intuition is inherently subjective and what makes sense to one reader may not resonate with another.
+Good cryptography papers should include intuition, but it's never complete: intuition is inherently subjective and what makes sense to one reader may not resonate with another.
 What you need to do is develop your own explanations while reading the mathematics very precisely.
 The goal of this workbook is to build intuition step-by-step through the exercises, which provide hands-on experience with the theoretical concepts.
 
@@ -217,7 +217,7 @@ We observe that if the output space of the hash function is independent of the s
   A \emph{hash function} $\algo{H}$ is a pair of polynomial-time algorithms $(\algo{Gen}, \algo{Eval})$ where:
   \begin{itemize}
   \item $\algo{Gen}(\secparam) \rightarrow \kappa$ is a probabilistic algorithm that takes the security parameter as input and outputs a hashing key $\kappa$\footnote{We assume $\kappa$ includes $\secparam$ so that $\algo{Eval}$ can run in time polynomial in $\secpar$}.
-  \item $\algo{Eval}(\kappa, x) \rightarrow y$ is a deterministic algorithm that takes a hashing key $\kappa$ and an input $x \in \{0,1\}^*$ as input and outputs a hash value $y \in S$ where $S$ is a set with $|S| \geq 2^{c\lambda}$ for some integer $c > 0$.\footnote{For notational simplicity, $\algo{H.Eval}(\kappa, x)$ is often written as $\algo{H}(x)$, leaving the hashing key implicit. When not specified otherwise, we assume $S = \{0,1\}^{c\lambda}$.}
+  \item $\algo{Eval}(\kappa, x) \rightarrow y$ is a deterministic algorithm that takes a hashing key $\kappa$ and an input $x \in \{0,1\}^*$ as input and outputs a hash value $y \in S$. When not specified otherwise, we assume $S = \{0,1\}^{\lambda}$.\footnote{For notational simplicity, $\algo{H.Eval}(\kappa, x)$ is often written as $\algo{H}(x)$, leaving the hashing key implicit.}
   \end{itemize}
 \end{definition}
 
@@ -329,7 +329,7 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
     Whether $x$ is sampled before or after running $\adv$ doesn't affect this probability since $\adv$ has no information about $x$.
   \end{enumerate}
   
-  This illustrates that when operations are independent (here, $\adv$'s execution and the sampling of $x$), their order doesn't affect the outcome—a fundamental principle in game-based proofs.
+  This illustrates that when operations are independent (here, $\adv$'s execution and the sampling of $x$), their order doesn't affect the outcome, which is a fundamental principle in game-based proofs.
 \end{mysolution}
 \fi
 
@@ -343,7 +343,7 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \begin{mysolution}
   The definition is problematic because it doesn't depend on the security parameter $\secpar$ in a meaningful way.
   The adversary $\adv$ that returns a hardcoded preimage of 0 (if one exists) always succeeds with probability 1, regardless of $\secpar$.
-  This illustrates that we cannot achieve asymptotic security for concrete, fixed hash functions like SHA256—their output size doesn't grow with the security parameter.
+  This illustrates that we cannot achieve asymptotic security for concrete, fixed hash functions like SHA256: their output size doesn't grow with the security parameter.
   This is why we define abstract hash function families where the output length grows with $\secpar$.
 \end{mysolution}
 \fi
@@ -355,7 +355,7 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 
 \ifsolutions
 \begin{mysolution}
-  The adversary's running time is indeed polynomial in $\secpar$—it's a constant independent of $\secpar$, which is $O(1)$ and therefore polynomial.
+  The adversary's running time is indeed polynomial in $\secpar$: it's a constant independent of $\secpar$, which is $O(1)$ and therefore polynomial.
   However, this constant is potentially $2^{256}$, which is astronomically large.
   The problem is that the output size (256 bits) doesn't grow with $\secpar$, so even exhaustive search becomes ``polynomial time'' in $\secpar$.
   This shows that asymptotic security only makes sense when the problem size grows with the security parameter.

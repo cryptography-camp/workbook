@@ -2,8 +2,8 @@
 
 \subsection{Random Oracles}
 
-A \emph{random oracle} (RO) is an oracle that can be provided to an algorithm that takes inputs in $\{0, 1\}^*$ and returns elements from some set $S$ where $|S| \geq 2^\secpar$.
-The key property is that the oracle responds consistently: identical queries always yield identical responses, while distinct queries yield independent uniformly random values from $S$.
+A \emph{random oracle} (RO) is an oracle that can be provided to an algorithm that takes inputs in $\{0, 1\}^*$ and returns elements from some set $S$.
+The two key properties of a random oracle are: (1) it returns uniformly random and independent values from $S$ for distinct queries, and (2) it responds consistently, meaning identical queries always yield identical responses.
 
 Formally, a random oracle can be described as follows.
 Consider the random oracle $\pcoracle{H}$ in \autoref{fig:ro-example}.
@@ -155,7 +155,7 @@ The proof is left as an exercise (see \autoref{ex:hash-com-hiding}).
 \end{definition}
 
 \begin{lemma}\label{lem:taproot-binding}
-  Let $\grgen$ be a group generation algorithm and $\algo{H}$ be a hash function.
+  Let $\grgen$ be a group generation algorithm and $\algo{H}$ be a hash function with output in $\ZZ_p$ where $p$ is the group order.
   The Taproot commitment scheme $\algo{TapCom}[\grgen, \algo{H}]$ is binding in the random oracle model for $\algo{H}$.
   More precisely, for any algorithm $\adv$ making at most $q$ queries to $\algo{H}$,
   \[

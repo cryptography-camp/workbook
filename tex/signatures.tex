@@ -220,7 +220,7 @@ The standard security notion for digital signatures is existential unforgeabilit
 The proof is left as an exercise (see \autoref{ex:schnorr-to-single}).
 
 \begin{theorem}[Schnorr signatures are EUF-CMA secure]\label{thm:schnorr-euf-cma}
-  Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard and let $\algo{H}$ be a hash function.
+  Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard and let $\algo{H}$ be a hash function with output space $\ZZ_p$.
   Then the Schnorr signature scheme $\algo{SchnorrSig}[\grgen, \algo{H}]$ is EUF-CMA secure in the random oracle model for $\algo{H}$.
   More precisely, for any \ppt adversary $\adv$ against the EUF-CMA security of $\algo{SchnorrSig}[\grgen, \algo{H}]$ making at most $q_s$ queries to the signing oracle and at most $q_h$ queries to the random oracle $\algo{H}$,
   there exists a \ppt adversary $\ddv$ against the discrete logarithm problem such that

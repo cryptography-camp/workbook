@@ -50,7 +50,7 @@ The adversary wins by outputting $(m^*, t^*, \sigma^*)$ such that the signature 
 The formal definition of EUF-CMA-TK is left as an exercise (see \autoref{ex:euf-cma-tk-def}).
 
 \begin{theorem}[SchnorrSigKP with SchnorrTS is EUF-CMA-TK secure]\label{thm:schnorrkp-euf-cma-tk}
-  Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard and let $\algo{H}$ be a hash function.
+  Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard and let $\algo{H}$ be a hash function with output space $\ZZ_p$.
   Then the Schnorr signature scheme with key prefixing $\algo{SchnorrSigKP}[\grgen, \algo{H}]$ with tweaking scheme $\algo{SchnorrTS}$ is EUF-CMA-TK secure in the random oracle model for $\algo{H}$.
 \end{theorem}
 

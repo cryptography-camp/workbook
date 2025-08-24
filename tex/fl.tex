@@ -127,6 +127,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
 \begin{lemma}[Local Forking Lemma~\cite{AC:BelDaiLi19}]\label{lem:fork}
   Let $q \geq 1$ be an integer and $\algo{InpGen}$ be a randomized algorithm that outputs some input $\mathit{inp}$.
   Let $\adv$ be a randomized algorithm that takes input $\mathit{inp}$ and random coins $\rho \in \mathcal{R}$, has oracle access to $\pcoracle{H}: \{0,1\}^* \rightarrow S$ where $|S| \geq 2^\secpar$, makes at most $q$ queries to $\pcoracle{H}$, and returns either $\bot$ or a pair $(z, \mathit{aux})$ where $z \in \{0,1\}^*$ and $\mathit{aux}$ is auxiliary output.
+  % TODO: The requirement $|S| \geq 2^\secpar$ is too strict when $S = \ZZ_p$ with prime $p \geq 2^{\secpar-1}$. Need to fix this.
   
   For games $\game{\algo{Single}}{\algo{InpGen}}$ and $\game{\algo{Fork}}{\algo{InpGen}}$ defined in \autoref{fig:fork-games}, define:
   \begin{align*}
