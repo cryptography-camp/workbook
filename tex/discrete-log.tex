@@ -331,7 +331,11 @@ The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
 \ifsolutions
 \begin{mysolution}
   \begin{enumerate}
-    \item $\adv$ should call $\oracle{ADL}((\alpha, \beta_1, \beta_2))$. The oracle will return $\alpha + \beta_1 x_1 + \beta_2 x_2 = \log_g(g^\alpha X_1^{\beta_1} X_2^{\beta_2}) = \log_g(P)$.
+  \item $\adv$ should call $\oracle{ADL}((\alpha, \beta_1, \beta_2))$. The oracle will return
+    \begin{align*}
+      \alpha + \beta_1 x_1 + \beta_2 x_2 &= \log_g(g^\alpha X_1^{\beta_1} X_2^{\beta_2})\\
+      &= \log_g(P)
+    \end{align*}.
     \item Since $\ell = 2$ (two $\pcoracle{Chal}$ queries) and $q = 1$ (one $\oracle{ADL}$ query), and the winning condition requires $q < \ell$, the adversary can make at most 0 more queries (as $1 < 2$ but $2 \not< 2$).
     \item $\adv$ must return $(x_1, x_2)$, the discrete logarithms of $X_1$ and $X_2$.
   \end{enumerate}
