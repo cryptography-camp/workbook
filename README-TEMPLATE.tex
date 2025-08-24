@@ -27,8 +27,6 @@ A few toggles are provided at the top of \texttt{main.tex}:
           Enable hacks to save space
     \item [\texttt{\textbackslash{}camerareadytrue}:]
           Disable some tweaks that the publisher may not like
-    \item [\texttt{\textbackslash{}bibtextrue}:]
-          Use legacy BibTeX instead of Biber (see \cref{sec:biber}).
   \end{description}
 \end{quote}
 
@@ -72,20 +70,17 @@ This template adds \texttt{assumption}.
 
 
 \subsection{Citations and Bibliography (\texttt{biblatex})}
-\texttt{crypto.bib} is included. Use \verb|./update_cryptobib.sh| to update it.
+Use \texttt{get-cryptobib.sh} to add the latest \href{https://cryptobib.di.ens.fr/}{crypto.bib} as a git subtree.
+The same script is used to update \texttt{crypto.bib}.
+
+This template defaults to BibLaTeX's modern Biber backend, which can handle UTF-8 and which will enable all BibLaTeX features.
+But since Biber tends to be slow and will need over a minute to parse the huge \texttt{crypto.bib},\footnote{See \url{https://github.com/plk/biber/issues/371} for background.}
+we use a wrapper around Biber that automatically extracts only the cited entries from \texttt{crypto.bib} to a temporary BibTeX file that will then be processed by Biber.
+All of this should happen automatically and transparently if you use \texttt{latexmk}.
 
 You can use \verb|\textcite| to typeset author names automatically, \eg, \textcite{CCS:BelNev06,EPRINT:NicRufSeu20}.
 
 It's a good idea to define the \texttt{shorthand} field in the bib file for BIPs, RFCs and similar documents, \eg, \verb|shorthand = {BIP340}|. By the way, have you heard about xonly keys~\cite{add:bip-schnorr}?
-
-\paragraph{Biber vs. BibTeX}\label{sec:biber}
-This template defaults to BibLaTeX's modern Biber backend, which can handle UTF-8 and which will enable all BibLaTeX features.
-But since Biber tends to be slow and will need over a minute to parse the huge \texttt{crypto.bib},\footnote{See \url{https://github.com/plk/biber/issues/371} for background.}
-the \verb|./update_cryptobib.sh| script will automatically convert \texttt{crypto.bib} to BibLaTeX's experimental XML format,
-which biber can process much faster (just a few seconds).
-A disadvantage is that caveat the conversion process takes a while, and that modifying \texttt{crypto.bib} has no effect (but since this file is from upstream, this is a bad practice anyway.)
-
-If you want to disable Biber and use the good old BibTeX, set the \verb|\bibtextrue| toggle.
 
 
 \subsection{References (\texttt{cleveref})}

@@ -1,0 +1,391 @@
+\section{Discrete Logarithm}\label{sec:discrete-log}
+
+\subsection{The Discrete Logarithm Problem}
+
+\begin{definition}[Group Generation Algorithm]
+  A \emph{group generation algorithm} $\grgen$ is a \ppt algorithm that takes the security parameter $1^\secpar$ as input and outputs a group description $(\GG, p, g)$, where $\GG$ is a cyclic group of prime order $p$ with $p \geq 2^{\secpar-1}$, and $g$ is a generator of $\GG$.
+\end{definition}
+
+\begin{remark}
+  The group operation is denoted multiplicatively ($g\cdot g = g^2$).
+\end{remark}
+
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=5cm]
+      \begin{pchstack}[center]
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{DL}}{\grgen}$}{%
+          \gparam \gets \grgen(1^\secpar) \\
+          x \sample \ZZ_p \\
+          X \defeq g^x \\
+          x' \gets \adv(\gparam, X) \\
+          \pcreturn x' = x
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{The discrete logarithm game\label{fig:dl-game}}
+\end{figure}
+
+\begin{definition}[Discrete Logarithm Assumption]
+  Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{DL}}{\grgen}$ be as defined in \autoref{fig:dl-game}.
+  The discrete logarithm (DL) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
+  \[
+  \advantage{DL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{DL}}{\grgen} = 1} = \negl.
+  \]
+\end{definition}
+
+\subsection{Pedersen Commitments}
+
+\begin{definition}[Pedersen Commitment Scheme]
+  Let $\grgen$ be a group generation algorithm.
+  The Pedersen commitment scheme $\algo{PedCom}[\grgen]$ is defined as follows:
+  \begin{itemize}
+  \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, sample $h \sample \GG \setminus \{1_\GG\}$, and output $\params = (\gparam, h, \mathcal{M} \defeq \ZZ_p, \mathcal{R} \defeq \ZZ_p)$.
+  \item $\algo{Commit}(\params, m, r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{M}, \mathcal{R})$. For message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$, output $C = g^m h^r$.
+  \end{itemize}
+\end{definition}
+
+\begin{remark}
+  Pedersen commitments are \emph{homomorphic}: for commitments $C_1 = \algo{Commit}(\params, m_1, r_1)$ and $C_2 = \algo{Commit}(\params, m_2, r_2)$, we have
+  \[
+  C_1 \cdot C_2 = g^{m_1 + m_2} h^{r_1 + r_2} = \algo{Commit}(\params, m_1 + m_2, r_1 + r_2).
+  \]
+\end{remark}
+
+\begin{theorem}[Pedersen Commitments are Binding]\label{thm:pedersen-binding}
+  Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard, then the Pedersen commitment scheme $\algo{PedCom}[\grgen]$ is binding.
+  More precisely, for any \ppt adversary $\adv$ against the binding property of $\algo{PedCom}[\grgen]$, there exists a \ppt adversary $\bdv$ against the discrete logarithm problem such that
+  \[
+  \advantage{Bind}{\adv, \algo{PedCom}} = \advantage{DL}{\bdv, \grgen}.
+  \]
+\end{theorem}
+
+The proof is left as an exercise (see \autoref{ex:pedersen-binding}).
+
+\begin{theorem}[Pedersen Commitments are Hiding]\label{thm:pedersen-hiding}
+  The Pedersen commitment scheme $\algo{PedCom}[\grgen]$ is perfectly hiding.
+  More precisely, for any (possibly unbounded) adversary $\adv$,
+  \[
+  \advantage{Hid}{\adv, \algo{PedCom}} = 0.
+  \]
+\end{theorem}
+
+The proof is left as an exercise (see \autoref{ex:pedersen-hiding}).
+
+\subsection{The DDH Assumption}
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=6cm]
+      \begin{pchstack}[center]
+        \procedure[headlinesep=1pt]{$\game{\Game~\algo{DDH}}{\grgen}$}{%
+          \gparam \gets \grgen(1^\secpar) \\
+          a, b \sample \ZZ_p \\
+          A \defeq g^a, B \defeq g^b \\
+          d \sample \{0, 1\} \\
+          \pcif d = 0 \pcthen \\
+          \t c \sample \ZZ_p \\
+          \t C \defeq g^c \\
+          \pcelse \\
+          \t C \defeq g^{ab} \\
+          d' \gets \adv(\gparam, A, B, C) \\
+          \pcreturn d' = d
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{The decisional Diffie-Hellman game\label{fig:ddh-game}}
+\end{figure}
+
+\begin{definition}[Decisional Diffie-Hellman Assumption]
+  Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{DDH}}{\grgen}$ be as defined in \autoref{fig:ddh-game}.
+  The decisional Diffie-Hellman (DDH) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
+  \[
+  \advantage{DDH}{\adv, \grgen} \defeq \left|\pr{\game{\Game~\algo{DDH}}{\grgen} = 1} - \frac{1}{2}\right| = \negl.
+  \]
+\end{definition}
+
+\subsection{ElGamal Commitments}
+
+\begin{definition}[ElGamal Commitment Scheme]
+  Let $\grgen$ be a group generation algorithm.
+  The ElGamal commitment scheme $\algo{ElGamalCom}[\grgen]$ is defined as follows:
+  \begin{itemize}
+  \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, sample $h \sample \GG \setminus \{1_\GG\}$, and output $\params = (\gparam, h, \mathcal{M} \defeq \ZZ_p, \mathcal{R} \defeq \ZZ_p)$.
+  \item $\algo{Commit}(\params, m, r) \rightarrow C$: Parse $\params = ((\GG, p, g), h, \mathcal{M}, \mathcal{R})$. For message $m \in \mathcal{M}$ and randomness $r \in \mathcal{R}$, output $C = (g^r, h^{m+r})$.
+  \end{itemize}
+\end{definition}
+
+\begin{theorem}[ElGamal Commitments are Hiding]\label{thm:elgamal-hiding}
+  Let $\grgen$ be a group generation algorithm for which the DDH problem is hard, then the ElGamal commitment scheme $\algo{ElGamalCom}[\grgen]$ is hiding.
+  More precisely, for any \ppt adversary $\adv$ against the hiding property of $\algo{ElGamalCom}[\grgen]$, there exists a \ppt adversary $\bdv$ against DDH such that
+  \[
+  \advantage{Hide}{\adv, \algo{ElGamalCom}} = 2 \cdot \advantage{DDH}{\bdv, \grgen}.
+  \]
+\end{theorem}
+
+The proof is left as an exercise (see \autoref{ex:elgamal-hiding}).
+
+\subsection{The OMDL and AOMDL Problems}
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=\textwidth]
+      \begin{pchstack}[center]
+        \begin{pcvstack}
+          \procedure[headlinesep=1pt]{$\game{\Game~\algo{OMDL}}{\grgen}$}{%
+            \gparam \gets \grgen(1^\secpar) \\
+            \ell \defeq 0 \pcsc q \defeq 0 \\
+            \vect{y} \gets \adv^{\pcoracle{Chal}, \pcoracle{DL}}(\gparam) \\
+            \vect{x} \defeq (x_1, \ldots, x_\ell) \\
+            \pcreturn (\vect{y} = \vect{x} \wedge q < \ell)
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{DL}(X)$}{%
+            q \defeq q+1 \\
+            \pcreturn \log_g(X)
+          }
+        \end{pcvstack}
+        \pchspace
+        \begin{pcvstack}
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{Chal}()$}{%
+            \ell \defeq \ell + 1 \\
+            x_\ell \sample \ZZ_p \\
+            X_\ell \defeq g^{x_\ell} \\
+            \pcreturn X_\ell
+          }
+        \end{pcvstack}
+        \pchspace
+        \begin{pcvstack}
+          \procedure[headlinesep=1pt]{$\game{\Game~\algo{AOMDL}}{\grgen}$}{%
+            \gparam \gets \grgen(1^\secpar) \\
+            \ell \defeq 0 \pcsc q \defeq 0 \\
+            \vect{y} \gets \adv^{\pcoracle{Chal}, \gamechange{$\oracle{ADL}$}}(\gparam) \\
+            \vect{x} \defeq (x_1, \ldots, x_\ell) \\
+            \pcreturn (\vect{y} = \vect{x} \wedge q < \ell)
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{Oracle $\oracle{ADL}((\alpha, \beta_1, \dots, \beta_{\ell}))$}{%
+            q \defeq q+1 \\
+            \pcreturn \alpha + \tsum_{i=1}^{\ell} {\beta_i x_i} \\
+            \pclinecomment{${} = \log_g\left(g^\alpha \tprod_{i=1}^{\ell} {X_i^{\beta_i}}\right)$}
+          }
+        \end{pcvstack}
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{The one-more discrete logarithm (OMDL) and algebraic one-more discrete logarithm (AOMDL) games. The difference is \gamechange{highlighted}.\label{fig:omdl-aomdl-games}}
+\end{figure}
+
+\begin{definition}[One-More Discrete Logarithm Assumption]
+  Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{OMDL}}{\grgen}$ be as defined in \autoref{fig:omdl-aomdl-games}.
+  The one-more discrete logarithm (OMDL) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
+  \[
+  \advantage{OMDL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{OMDL}}{\grgen} = 1} = \negl.
+  \]
+\end{definition}
+
+\begin{definition}[Algebraic One-More Discrete Logarithm Assumption]
+  Let $\grgen$ be a group generation algorithm, and let $\game{\Game~\algo{AOMDL}}{\grgen}$ be as defined in \autoref{fig:omdl-aomdl-games}.
+  The algebraic one-more discrete logarithm (AOMDL) problem is hard for $\grgen$ if for any \ppt algorithm $\adv$,
+  \[
+  \advantage{AOMDL}{\adv, \grgen} \defeq \pr{\game{\Game~\algo{AOMDL}}{\grgen} = 1} = \negl.
+  \]
+\end{definition}
+
+\begin{remark}
+  When proving the security of a scheme using the AOMDL assumption, the $\pcoracle{ADL}$ oracle is (typically) used by the reduction and not by the adversary against the scheme.
+  Therefore, the security proof is not restricted to adversaries that know the algebraic representations of all group elements that they output.
+\end{remark}
+
+\begin{remark}[Falsifiable Assumptions]
+  In order to be able to evaluate whether an assumption is true or not, it must be falsifiable, i.e., there must be a (constructive) way to demonstrate that it is false, if this is the case.
+  More precisely, a cryptographic assumption is \emph{falsifiable} if there exists a \ppt challenger algorithm that interacts with an adversary and decides whether the adversary breaks the assumption.
+\end{remark}
+
+\subsection{Exercises}
+
+\begin{exercise}
+  In the framework of asymptotic security, why is the DL problem on secp256k1 not hard? What does $\grgen$ do?
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  The DL problem on secp256k1 is not hard in the asymptotic security framework because secp256k1 has a fixed 256-bit group order, independent of the security parameter $\secpar$.
+  For asymptotic hardness, the group size must grow with $\secpar$.
+  The group generation algorithm $\grgen$ generates groups where $p \geq 2^{\secpar-1}$, ensuring that the problem scales appropriately with the security parameter.
+\end{mysolution}
+\fi
+
+\begin{exercise}\label{ex:pedersen-binding}
+  Argue that Pedersen commitments are binding under the DL assumption (\autoref{thm:pedersen-binding}).
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  Let $\adv$ be an adversary that breaks the binding property of Pedersen commitments.
+  That is, $\adv$ outputs $(m_0, r_0, m_1, r_1)$ such that $m_0 \neq m_1$ and $g^{m_0}h^{r_0} = g^{m_1}h^{r_1}$.
+  We construct a \ppt reduction $\bdv$ that breaks DL as follows:
+  \begin{itemize}
+    \item $\bdv$ receives $(\gparam, h)$ where $h = g^z$ for unknown $z$.
+    \item $\bdv$ runs $\adv$ with parameters $\params = (\gparam, h)$.
+    \item When $\adv$ outputs $(m_0, r_0, m_1, r_1)$, we have $g^{m_0}h^{r_0} = g^{m_1}h^{r_1}$.
+    \item This implies $g^{m_0 - m_1} = h^{r_1 - r_0}$, so $g^{m_0 - m_1} = g^{z(r_1 - r_0)}$.
+    \item If $r_0 = r_1$, then $g^{m_0 - m_1} = 1$, which contradicts $m_0 \neq m_1$ (since $g$ generates $\GG$).
+    \item Therefore $r_0 \neq r_1$, and we can compute $z = \frac{m_0 - m_1}{r_1 - r_0} \bmod p$.
+    \item $\bdv$ outputs $z$.
+  \end{itemize}
+  The reduction is perfect: whenever $\adv$ succeeds in breaking binding, $\bdv$ succeeds in computing the discrete log.
+  Therefore, $\advantage{DL}{\bdv, \grgen} = \advantage{Bind}{\adv, \algo{PedCom}}$.
+\end{mysolution}
+\fi
+
+\begin{exercise}\label{ex:pedersen-hiding}
+  Prove that Pedersen commitments are perfectly hiding (\autoref{thm:pedersen-hiding}).
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  For any message $m \in \ZZ_p$, the commitment $C = g^m h^r$ is uniformly distributed over $\GG$ when $r$ is chosen uniformly from $\ZZ_p$.
+  Since $h \in \GG \setminus \{1_\GG\}$ and $\GG$ has prime order $p$, $h$ generates $\GG$ (every non-identity element generates a prime-order group).
+  Thus the map $r \mapsto h^r$ is a bijection from $\ZZ_p$ to $\GG$.
+  For fixed $m$, the map $r \mapsto g^m h^r$ is also a bijection from $\ZZ_p$ to $\GG$.
+  Therefore, for any two messages $m_0, m_1$, the distributions of $\algo{Commit}(\params, m_0, r)$ and $\algo{Commit}(\params, m_1, r)$ for uniform $r$ are both uniform over $\GG$.
+\end{mysolution}
+\fi
+
+\begin{exercise}\label{ex:elgamal-hiding}
+  Prove that ElGamal commitments are hiding under the DDH assumption (\autoref{thm:elgamal-hiding}).
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+   Let $\adv$ be an adversary against the hiding property of ElGamal.
+  We construct a \ppt reduction $\bdv$ against DDH:
+  \begin{itemize}
+    \item $\bdv$ receives $(\gparam, A, B, C)$ where $A = g^a$, $B = g^b$, and either $C = g^{ab}$ or $C = g^c$ for random $c$.
+    \item $\bdv$ sets $h = B$ and gives $\params = (\gparam, h)$ to $\adv$.
+    \item When $\adv$ outputs $(m_0, m_1)$, $\bdv$ chooses $e \sample \{0, 1\}$ and computes:
+          If $C = g^{ab}$, set implicitly $r = a$, so $(g^r, h^{m_e + r}) = (g^a, g^{b(m_e + a)}) = (A, g^{bm_e + ab}) = (A, B^{m_e} \cdot C)$.
+          If $C = g^c$ for random $c$, then $(A, B^{m_e} \cdot C) = (g^a, g^{bm_e + c})$.
+    \item $\bdv$ gives $(A, B^{m_e} \cdot C)$ to $\adv$.
+    \item When $\adv$ outputs $e'$, $\bdv$ outputs $1$ if $e' = e$ and $0$ otherwise.
+  \end{itemize}
+
+  Analysis: We have:
+  \begin{itemize}
+      \item When $C = g^{ab}$ (real tuple): $\bdv$ perfectly simulates the hiding game, so $|\Pr[e = e' | C = g^{ab}] - \frac{1}{2}| = \advantage{Hide}{\adv, \algo{ElGamalCom}}$.
+      \item When $C = g^c$ (random tuple): The commitment reveals no information about $e$, so $\Pr[e = e' | C = g^c] = \frac{1}{2}$.
+  \end{itemize}
+  For the DDH advantage:
+  \begin{align*}
+  \advantage{DDH}{\bdv, \grgen} &= |\Pr[d = d'] - \frac{1}{2}|\\
+  \Pr[d = d'] &= \Pr[d' = 1 \wedge d = 1] + \Pr[d' = 0 \wedge d = 0]\\
+  &= \Pr[d' = 1 \wedge C = g^{ab}] + \Pr[d' = 0 \wedge C = g^c]\\
+  &= \Pr[d' = 1 | C = g^{ab}] \cdot \Pr[C = g^{ab}] + \Pr[d' = 0 | C = g^c] \cdot \Pr[C = g^c]\\
+  &= \frac{1}{2} \Pr[d' = 1 | C = g^{ab}] + \frac{1}{2} \Pr[d' = 0 | C = g^c]\\
+  &= \frac{1}{2} \Pr[d' = 1 | C = g^{ab}] + \frac{1}{2}(1 - \Pr[d' = 1 | C = g^c])\\
+  &= \frac{1}{2} \Pr[d' = 1 | C = g^{ab}] + \frac{1}{2} - \frac{1}{2}\Pr[d' = 1 | C = g^c]
+  \end{align*}
+  Therefore:
+  \begin{align*}
+  \advantage{DDH}{\bdv, \grgen} &= \left|\frac{1}{2} \Pr[d' = 1 | C = g^{ab}] - \frac{1}{2}\Pr[d' = 1 | C = g^c]\right|\\
+  &= \frac{1}{2} |\Pr[d' = 1 | C = g^{ab}] - \Pr[d' = 1 | C = g^c]|\\
+  &= \frac{1}{2} |\Pr[e = e' | C = g^{ab}] - \Pr[e = e' | C = g^c]|\\
+  &= \frac{1}{2} \left|\Pr[e = e' | C = g^{ab}] - \frac{1}{2}\right|\\
+  &= \frac{1}{2} \cdot \advantage{Hide}{\adv, \algo{ElGamalCom}}
+  \end{align*}
+
+  This gives us: $\advantage{Hide}{\adv, \algo{ElGamalCom}} = 2 \cdot \advantage{DDH}{\bdv, \grgen}$. $\bdv$ is \ppt\ if $\adv$ is.
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Argue that if OMDL is hard for a group generation algorithm then DL is hard.
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  If OMDL is hard, then DL must be hard.
+  Given a \ppt DL adversary $\adv$, we construct a \ppt OMDL adversary $\bdv$:
+  \begin{itemize}
+    \item $\bdv$ calls $\pcoracle{Chal}()$ once to get $X_1$.
+    \item $\bdv$ runs $\adv(\gparam, X_1)$ to get $x_1'$.
+    \item $\bdv$ outputs $(x_1')$.
+  \end{itemize}
+  If $\adv$ succeeds, then $X_1 = g^{x_1'}$, so $\bdv$ solves one discrete log with zero challenge queries, winning the OMDL game.
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Consider an algorithm $\adv$ playing the AOMDL game. It queries $\pcoracle{Chal}$ twice to obtain $X_1$ and $X_2$, then samples $\alpha, \beta_1, \beta_2 \sample \ZZ_p$. 
+  \begin{enumerate}
+    \item How should $\adv$ call the $\oracle{ADL}$ oracle to obtain $\log_g(P)$ where $P = g^\alpha X_1^{\beta_1} X_2^{\beta_2}$?
+    \item Assuming $\adv$ makes no more $\pcoracle{Chal}$ queries, how many more $\oracle{ADL}$ queries can it make?
+    \item What must $\adv$ return to win the game?
+  \end{enumerate}
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  \begin{enumerate}
+  \item $\adv$ should call $\oracle{ADL}((\alpha, \beta_1, \beta_2))$. The oracle will return
+    \begin{align*}
+      \alpha + \beta_1 x_1 + \beta_2 x_2 &= \log_g(g^\alpha X_1^{\beta_1} X_2^{\beta_2})\\
+      &= \log_g(P)
+    \end{align*}.
+    \item Since $\ell = 2$ (two $\pcoracle{Chal}$ queries) and $q = 1$ (one $\oracle{ADL}$ query), and the winning condition requires $q < \ell$, the adversary can make at most 0 more queries (as $1 < 2$ but $2 \not< 2$).
+    \item $\adv$ must return $(x_1, x_2)$, the discrete logarithms of $X_1$ and $X_2$.
+  \end{enumerate}
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Is the OMDL assumption falsifiable? Is the AOMDL assumption falsifiable? Do we prefer the security of a scheme to be based on OMDL or AOMDL?
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  The OMDL assumption is \emph{non-falsifiable} because verifying the adversary's output requires computing discrete logarithms to check that $g^{x_i} = X_i$, which cannot be done in polynomial time classically.
+
+  The AOMDL assumption is \emph{falsifiable} because:
+  \begin{itemize}
+    \item The ADL oracle can be implemented efficiently: given $(\alpha, \beta_1, \ldots, \beta_\ell)$, it simply returns $\alpha + \sum_{i=1}^\ell \beta_i x_i$
+    \item The winning condition can be verified by checking that the returned values equal the stored $x_i$ values
+    \item All operations (additions, multiplications) are polynomial time
+  \end{itemize}
+
+  We prefer basing security on falsifiable assumptions like AOMDL. Note that AOMDL is a weaker assumption than OMDL---if AOMDL doesn't hold, then OMDL doesn't hold either (since any OMDL adversary is also an AOMDL adversary).
+\end{mysolution}
+\fi
+
+\begin{exercise}[Optional]
+  Why is the DL problem not hard in general?
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  The DL problem is not hard in general because quantum computers can solve DL in polynomial time using Shor's algorithm.
+\end{mysolution}
+\fi
+
+\begin{exercise}[Optional]
+  Read about the Generic Group Model (GGM) in the introduction of~\cite{EC:Shoup97} and~\cite{IMA:Maurer05}, and argue why the DLP is hard for classical computational models.
+\end{exercise}
+
+\begin{exercise}[Optional]
+  How does Silent Payments~\cite{add:bip-silentpayments} rely on the DDH assumption?
+\end{exercise}
+
+\begin{exercise}[Optional]
+  Study the concept of falsifiability of cryptographic assumptions by reading Naor~\cite{C:Naor03}.
+  Analyze the following assumptions and explain the extent to which each one is falsifiable:
+  \begin{itemize}
+    \item Factoring
+    \item The RSA assumption
+    \item The Decisional Diffie-Hellman assumption
+    \item The Knowledge-of-Exponent assumption
+  \end{itemize}
+\end{exercise}

@@ -1,0 +1,53 @@
+name: Build and release LaTeX documents
+on: [push]
+permissions:
+  contents: write
+
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4
+      
+      - name: Compile workbook (without solutions)
+        uses: xu-cheng/latex-action@v3
+        with:
+          pre_compile: |
+            # Create a copy for workbook
+            cp main.tex main_workbook.tex
+            # Disable solutions
+            sed -i 's/\\solutionstrue/\\solutionsfalse/' main_workbook.tex
+          root_file: main_workbook.tex
+      
+      - name: Move workbook PDF
+        run: mv main_workbook.pdf workbook.pdf
+      
+      - name: Compile solutionbook (with solutions)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+      
+      - name: Move solutionbook PDF
+        run: mv main.pdf solutionbook.pdf
+      
+      - name: Upload PDF files
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDFs
+          path: |
+            workbook.pdf
+            solutionbook.pdf
+      
+      - name: Generate release tag
+        id: tag
+        run: |
+            echo "release_tag=release_$(date +"%Y.%m.%d_%H-%M")" >> $GITHUB_OUTPUT
+      
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+            files: |
+              workbook.pdf
+              solutionbook.pdf
+            tag_name: ${{ steps.tag.outputs.release_tag }}

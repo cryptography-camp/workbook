@@ -1,0 +1,91 @@
+%%% We typically use \NewDocumentCommand instead of \newcommand(*) in
+%%% order to obtain robust commands, which is usual in modern LaTeX.
+%%% In many cases below, it would be okay to use \newcommand, e.g., as
+%%% the underlying commands are robust but we mostly stick to
+%%% \NewDocumentCommand for consistency.
+%%%
+%%% See https://latex3.github.io/help/documentation/usrguide.pdf for
+%%% background.
+
+%%% We use := as assignment operator
+\NewDocumentCommand\defeq{}{\coloneq}
+\NewCommandCopy\origgets\gets
+\RenewCommandCopy\gets\defeq
+
+%%% cryptocode tweaks
+% Multi-letter variables, e.g., "ctr"
+\NewDocumentCommand\var{m}{\ensuremath{\mathit{#1}}}
+% Make keys and polynomials look like other identifiers.
+% (No idea why cryptocode treats them specially.)
+\RenewDocumentCommand\pckeystyle{m}{\ensuremath{\var{#1}}}
+\RenewDocumentCommand\pcpolynomialstyle{m}{\ensuremath{\var{#1}}}
+% Add 1pt padding to \gamechange (based on original definition).
+\renewcommand{\gamechange}[2][gamechangecolor]{%
+  {\setlength{\fboxsep}{1pt}%
+    \colorbox{#1}{#2}}}
+% Shorthand for \pcalgostyle
+\NewDocumentCommand\algo{}{\pcalgostyle}
+% Oracles
+\NewDocumentCommand{\mathsc}{m}{{\normalfont\textsc{#1}}}
+\RenewDocumentCommand\pcoraclestyle{m}{\ensuremath{\mathsc{#1}}}
+\NewDocumentCommand\oracle{m}{\pcoraclestyle{#1}}
+% Games
+\newcommandx{\game}[4][3=\adv,4=(\secpar)]{{\operatorname{#1}_{#2}^{#3}#4}}
+\newcommand{\Game}{\algo{Game}}
+% Misc
+\newcommand{\pcsc}{\,;~}
+
+%%% Algorithms and named schemes
+%%%
+%%% Uncomment these manually as needed.
+\NewDocumentCommand\grgen{}{\algo{GrGen}}
+\NewDocumentCommand\gparam{}{(\GG,p,g)}
+
+% \NewDocumentCommand{\inpgen}{\algo{InpGen}}
+% \NewDocumentCommand{\param}{\var{par}} % public parameters of the multisig scheme
+
+% \NewDocumentCommand\setup{\algo{Setup}}
+% \NewDocumentCommand\keygen{\algo{KeyGen}}
+% \NewDocumentCommand\sign{\algo{Sign}}
+% \NewDocumentCommand\verify{\algo{Verify}}
+
+% \NewDocumentCommand\musigtwo{\algo{MuSig2}}
+% \NewDocumentCommand\musigtwoias{\algo{MuSig2\textnormal{-}IAS}}
+
+%% Game Oracles
+% \NewDocumentCommand{\dlo}{}{\oracle{DL}}
+
+%% Random oracles
+% \NewDocumentCommand{\hash}{\algo{H}}
+% \NewDocumentCommand{\Hsig}{\algo{H}_{\mathrm{sig}}}
+
+%%% For easier typing
+\NewDocumentCommand{\eg}{}{e.g\xperiod}
+\NewDocumentCommand{\ie}{}{i.e\xperiod}
+% Caution: \wlog is a TeX builtin that writes to the log.
+\NewDocumentCommand{\wlg}{}{w.l.o.g\xperiod}
+\NewDocumentCommand{\ppt}{}{p.p.t\xperiod}
+
+%%% Dingbats for checkmark and cross, e.g., for feature columns in tables
+\NewDocumentCommand\cmark{}{\ding{51}}
+\NewDocumentCommand\xmark{}{\ding{55}}
+
+%%% Bitcoin symbol
+% https://tex.stackexchange.com/a/112165, slightly improved
+\NewDocumentCommand\btcsym{}{%
+  \leavevmode
+  \vtop{\offinterlineskip\upshape%\bfseries
+    \setbox0=\hbox{B}%
+    \setbox2=\hbox to\wd0{\hfil\hskip-.03em
+    \vrule height .3ex width .15ex\hskip .08em
+    \vrule height .3ex width .15ex\hfil}
+    \vbox{\copy2\vskip-.01ex\box0}\vskip-.01ex\box2}}
+
+% Misc
+\newcommand{\pr}[1]{\Pr\left[ #1 \right]}
+\DeclareMathOperator{\Ima}{Im}
+\newcommand{\params}{\var{pp}}
+\newcommand{\pcoracle}{\mathsc}
+\newcommand{\vect}[1]{\vec{#1}}
+\newcommand{\tsum}{\textstyle \sum}
+\newcommand{\tprod}{\textstyle \prod}

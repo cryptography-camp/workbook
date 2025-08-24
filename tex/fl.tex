@@ -1,0 +1,383 @@
+\section{Programmable ROM and Forking Lemma}\label{sec:prog-rom}
+
+\subsection{Programmable Random Oracles}
+
+In the random oracle model, we can program the oracle to return specific values for certain inputs, as long as we maintain consistency and the correct distribution.
+This technique is particularly useful in security reductions.
+
+For example, consider the hash commitment scheme $\algo{HashCom}[\algo{H}]$ where commitments are of the form $\algo{H}(m \| r)$.
+A reduction can program the oracle such that certain algebraic relations hold between committed messages, while maintaining the adversary's view.
+
+The following proposition demonstrates that careful programming preserves the adversary's advantage. Notably, $\Game_1$ determines the XOR of committed messages $m^*$ before running the adversary.
+A similar technique is used in MuSig multi-signature scheme~\cite{DCC:MPSW19} to simulate signing queries (i.e., to answer signing queries without knowledge of the secret key, as explained in the next section).
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=\textwidth]
+      \begin{pchstack}
+        \procedure[headlinesep=1pt]{$\game{\Game_0}{}$}{%
+          \params \gets \algo{HashCom.Setup}(1^\secpar) \\
+          T \defeq \emptyset \\
+          m \sample \{0,1\} \\
+          r \sample \{0,1\}^\secpar \\
+          h \defeq \pcoracle{H}(m \| r) \\
+          (\state, h') \gets \adv^{\pcoracle{H}}(\params, h) \\
+          \pcreturn \adv^{\pcoracle{H}}(\state, m, r) \\
+        }
+        \pchspace
+        \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}(x)$}{%
+          \pcif T[x] = \bot \pcthen \\
+          \t T[x] \sample \{0,1\}^\secpar \\
+          \pcreturn T[x]
+        }
+        \pchspace
+        \procedure[headlinesep=1pt]{$\game{\Game_1}{}$}{%
+          \params \gets \algo{HashCom.Setup}(1^\secpar) \\
+          T \defeq \emptyset \\
+          m^* \sample \{0,1\} \\
+          h \sample \{0,1\}^\secpar \\
+          (\state, h') \gets \adv^{\pcoracle{H}}(\params, h) \\
+          \pcif \exists (m', r') : T[m' \| r'] = h' \pcthen \\
+          \t \text{Choose any such } (m', r') \\
+          \t m \defeq m^* \oplus m' \\
+          \pcelse \\
+          \t m \sample \{0, 1\} \\
+          r \sample \{0,1\}^\secpar \\
+          \pcassert T[m \| r] = \bot \\
+          T[m \| r] \defeq h \\
+          \pcreturn \adv^{\pcoracle{H}}(\state, m, r) \\
+        }
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{Games $\Game_0$ and $\Game_1$ \label{fig:prog-rom-games}}
+\end{figure}
+
+\begin{proposition}\label{prop:prog-rom}
+  Let $\game{\Game_0}{}$ and $\game{\Game_1}{}$ be as defined in \autoref{fig:prog-rom-games}.
+  For any adversary $\adv$ making at most $q$ queries to the oracle $\pcoracle{H}$, we have
+  \[
+  \left|\Pr[\game{\Game_0}{} = 1] - \Pr[\game{\Game_1}{} = 1]\right| \leq \frac{q}{2^\secpar}
+  \]
+\end{proposition}
+
+The proof is left as an exercise (see \autoref{ex:prog-rom}).
+
+\subsection{The Forking Lemma}
+
+The forking lemma is a fundamental tool for analyzing algorithms that interact with random oracles. It considers an adversary $\adv$ with oracle access to $\pcoracle{H}$, which is executed twice on different but related instances of the oracle:
+
+\begin{itemize}
+  \item In the first execution, all random oracle responses are sampled uniformly as usual.
+  \item In the second execution, the responses are identical to those from the first execution up to a specific query called the \emph{forking point}, after which all subsequent oracle responses are \emph{refreshed} (resampled with fresh randomness).
+\end{itemize}
+
+As a result, the two executions of $\adv$ proceed identically up to the forking point but diverge afterwards. The forking lemma quantifies how often an adversary that succeeds in the first execution also succeeds in the second execution with a different oracle response at the forking point.
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=\textwidth]
+      \begin{pchstack}[center]
+        \begin{pcvstack}
+          \procedure[headlinesep=1pt]{$\game{\Game~\algo{Single}}{\algo{InpGen}}$}{%
+            \mathit{inp} \gets \algo{InpGen}(1^\secpar) \\
+            \rho \sample \mathcal{R} \\
+            T \defeq \emptyset \\
+            \alpha \gets \adv^{\pcoracle{H}}(\mathit{inp}; \rho) \\
+            \pcassert \alpha \neq \bot \\
+            \pcreturn 1
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}(x)$}{%
+            \pcif T[x] = \bot \pcthen \\
+            \t T[x] \sample S \\
+            \pcreturn T[x]
+          }
+        \end{pcvstack}
+        \pchspace
+        \begin{pcvstack}
+          \procedure[headlinesep=1pt]{$\game{\Game~\algo{Fork}}{\algo{InpGen}}$}{%
+            \mathit{inp} \gets \algo{InpGen}(1^\secpar) \\
+            \rho \sample \mathcal{R} \\
+            T \defeq \emptyset \\
+            \alpha \gets \adv^{\pcoracle{H}}(\mathit{inp}; \rho) \\
+            \pcassert \alpha \neq \bot \\
+            (z, \mathit{aux}) \defeq \alpha \\
+            T' \defeq T \\
+            T'[z] \sample S \\
+            \alpha' \gets \adv^{\pcoracle{H'}}(\mathit{inp}; \rho) \\
+            \pcassert \alpha' \neq \bot \\
+            (z', \mathit{aux}') \defeq \alpha' \\
+            \pcassert z = z' \wedge T[z] \neq T'[z] \\
+            \pcreturn (z, \mathit{aux}, z', \mathit{aux}')
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H'}(x)$}{%
+            \pcif T'[x] = \bot \pcthen \\
+            \t T'[x] \sample S \\
+            \pcreturn T'[x]
+          }
+        \end{pcvstack}
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{The Single and Fork games\label{fig:fork-games}}
+\end{figure}
+
+\begin{lemma}[Local Forking Lemma~\cite{AC:BelDaiLi19}]\label{lem:fork}
+  Let $q \geq 1$ be an integer and $\algo{InpGen}$ be a randomized algorithm that outputs some input $\mathit{inp}$.
+  Let $\adv$ be a randomized algorithm that takes input $\mathit{inp}$ and random coins $\rho \in \mathcal{R}$, has oracle access to $\pcoracle{H}: \{0,1\}^* \rightarrow S$ where $|S| \geq 2^\secpar$, makes at most $q$ queries to $\pcoracle{H}$, and returns either $\bot$ or a pair $(z, \mathit{aux})$ where $z \in \{0,1\}^*$ and $\mathit{aux}$ is auxiliary output.
+  % TODO: The requirement $|S| \geq 2^\secpar$ is too strict when $S = \ZZ_p$ with prime $p \geq 2^{\secpar-1}$. Need to fix this.
+  
+  For games $\game{\algo{Single}}{\algo{InpGen}}$ and $\game{\algo{Fork}}{\algo{InpGen}}$ defined in \autoref{fig:fork-games}, define:
+  \begin{align*}
+    \advantage{Single}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Single}}{\algo{InpGen}} = 1] \\
+    \advantage{Fork}{\adv, \algo{InpGen}} &\defeq \Pr[\game{\algo{Fork}}{\algo{InpGen}} \neq \bot]
+  \end{align*}
+  
+  Then:
+  \[
+  \advantage{Fork}{\adv, \algo{InpGen}} \geq \advantage{Single}{\adv, \algo{InpGen}} \left( \frac{\advantage{Single}{\adv, \algo{InpGen}}}{q} - \frac{1}{2^\secpar} \right)
+  \]
+\end{lemma}
+
+\subsection{Exercises}
+
+\begin{exercise}
+  Describe the similarities and differences between games $\Game_0$ and $\Game_1$ in \autoref{fig:prog-rom-games}.
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  In both games:
+  \begin{itemize}
+    \item The oracle $\pcoracle{H}$ behaves identically as a random oracle
+    \item The adversary receives a commitment $h$ and later the opening $(m, r)$
+    \item The games return the same bit $b$ output by the adversary
+  \end{itemize}
+  
+  The key differences are:
+  \begin{itemize}
+    \item In $\Game_0$: $m$ and $r$ are chosen first, then $h = \pcoracle{H}(m \| r)$
+    \item In $\Game_1$: $h$ is chosen uniformly at random, then we program the oracle so that $\pcoracle{H}(m \| r) = h$
+    \item In $\Game_1$: If $h'$ is a valid hash commitment (i.e., $\exists (m', r')$ such that $\pcoracle{H}(m' \| r') = h'$), then $m \oplus m' = m^*$, where $m^*$ was determined before running $\adv$.
+  \end{itemize}
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Consider $\Game_F$ which is exactly like $\Game_1$ except that $m^* \defeq 0$ (instead of sampling uniformly). Give a \ppt adversary $\adv$ that makes one random oracle query and achieves
+  \[
+    \left|\Pr[\game{\Game_0}{} = 1] - \Pr[\game{\Game_F}{} = 1]\right| = \frac{1}{2}.
+  \]
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  Consider the following adversary $\adv$:
+  
+  \textbf{First invocation:}
+  \begin{itemize}
+    \item Query $h' \gets \pcoracle{H}(0 \| 0^\secpar)$
+    \item Output $(\bot, h')$
+  \end{itemize}
+  
+  \textbf{Second invocation:}
+  \begin{itemize}
+    \item Output $m$
+  \end{itemize}
+  
+  Analysis:
+  \begin{itemize}
+    \item In $\Game_0$: $m$ is uniform, so $\Pr[\game{\Game_0}{} = 1] = \frac{1}{2}$.
+    \item In $\Game_F$: Since $m' = 0$, we have $m = m^* \oplus m' = 0 \oplus 0 = 0$. Thus $\Pr[\game{\Game_F}{} = 1] = 0$.
+  \end{itemize}
+  
+  Therefore: $\left|\Pr[\game{\Game_0}{} = 1] - \Pr[\game{\Game_F}{} = 1]\right| = \left|\frac{1}{2} - 0\right| = \frac{1}{2}$.
+\end{mysolution}
+\fi
+
+\begin{exercise}\label{ex:prog-rom}
+  Prove Proposition~\ref{prop:prog-rom}.
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+    Let $E$ be the event that the adversary queries $m \| r$ to the oracle during its first invocation (when it outputs $(\state, h')$).
+  
+  When $\neg E$ occurs, we claim that $\Pr[\game{\Game_0}{} = 1 \wedge \neg E] = \Pr[\game{\Game_1}{} = 1 \wedge \neg E]$. To see this, we analyze the distribution of all values conditioned on $\neg E$:
+  
+  \begin{itemize}
+    \item \textbf{The value $h$:} In $\Game_0$, $h = \pcoracle{H}(m \| r)$ where the oracle uses lazy sampling. Since $\neg E$ occurs, the adversary never queried $m \| r$ during the first invocation, so $h$ is a fresh uniform sample. In $\Game_1$, $h$ is explicitly drawn uniformly at random. Thus $h$ is uniform in $\{0,1\}^\secpar$ in both games.
+    
+    \item \textbf{The value $r$:} In both games, $r$ is drawn uniformly from $\{0,1\}^\secpar$.
+    
+    \item \textbf{The value $m$:} In $\Game_0$, $m$ is drawn uniformly from $\{0,1\}$. In $\Game_1$:
+      \begin{itemize}
+        \item If $h'$ is a valid commitment: $m = m^* \oplus m'$ where $m^*$ is uniform in $\{0,1\}$ and independent of the adversary's view
+        \item If $h'$ is not a valid commitment: $m$ is drawn uniformly from $\{0,1\}$
+      \end{itemize}
+      In both cases, $m$ is uniform in $\{0,1\}$.
+    
+    \item \textbf{The oracle programming:} In $\Game_1$, we set $T[m \| r] = h$. Since $\neg E$ occurs, the input $m \| r$ is fresh (never queried before), so this programming is invisible to the adversary and maintains consistency with $h = \pcoracle{H}(m \| r)$.
+  \end{itemize}
+  
+  Since all values have identical distributions and the oracle behaves identically in both games (returning the same values for the same queries), the adversary's view is bit-by-bit identical conditioned on $\neg E$. Therefore $\Pr[\game{\Game_0}{} = 1 \wedge \neg E] = \Pr[\game{\Game_1}{} = 1 \wedge \neg E]$.
+  
+  By Lemma~\ref{lem:difference}, we have:
+  \[
+  \left|\Pr[\game{\Game_0}{} = 1] - \Pr[\game{\Game_1}{} = 1]\right| \leq \Pr[E]
+  \]
+  
+  To bound $\Pr[E]$, note that $E$ occurs if the adversary queries $m \| r$ during the first invocation. The key observation is that $r \in \{0,1\}^\secpar$ is chosen uniformly at random and independently of the adversary's first invocation:
+  \begin{itemize}
+    \item In $\Game_0$: $r$ is chosen at the beginning but is unknown to the adversary
+    \item In $\Game_1$: $r$ is chosen after the first invocation
+  \end{itemize}
+  
+  In both cases, for any specific query $x_i$ made by the adversary during the first invocation, the probability that $x_i = m \| r$ is at most $\frac{1}{2^\secpar}$ (the adversary must guess the $\secpar$-bit value $r$ correctly).
+  
+  Since the adversary makes at most $q$ queries during the first invocation, by the union bound:
+  \[
+  \Pr[E] \leq \sum_{i=1}^q \Pr[x_i = m \| r] \leq \sum_{i=1}^q \frac{1}{2^\secpar} = \frac{q}{2^\secpar}
+  \]
+  
+  Therefore:
+  \[
+  \left|\Pr[\game{\Game_0}{} = 1] - \Pr[\game{\Game_1}{} = 1]\right| \leq \frac{q}{2^\secpar}
+  \]
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Consider an algorithm $\adv$ that never queries $\pcoracle{H}$. What is $\advantage{Fork}{\adv, \algo{InpGen}}$?
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  If $\adv$ never queries $\pcoracle{H}$, then the table $T$ remains empty throughout the first execution. In the Fork game:
+  
+  \begin{itemize}
+    \item First execution: $\adv$ outputs $\alpha = (z, \mathit{aux})$ with probability $\advantage{Single}{\adv, \algo{InpGen}}$
+    \item Since $z$ was never queried, $T[z] = \bot$ (undefined)
+    \item We copy $T$ to $T'$, so $T'[z] = \bot$ as well
+    \item We then set $T'[z] \sample S$ (a fresh random value)
+    \item Second execution: Since $\adv$ receives the same $\mathit{inp}$ and $\rho$, and never queries the oracle, it outputs the same $(z, \mathit{aux})$ with probability $\advantage{Single}{\adv, \algo{InpGen}}$
+    \item The condition $z = z'$ is satisfied
+    \item The condition $T[z] \neq T'[z]$ is satisfied since $T[z] = \bot$ while $T'[z] \in S$
+  \end{itemize}
+  
+  Therefore:
+  \[
+  \advantage{Fork}{\adv, \algo{InpGen}} = \advantage{Single}{\adv, \algo{InpGen}}^2
+  \]
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Consider an algorithm $\adv$ that makes exactly one query $z \gets \pcoracle{H}(\rho)$ and outputs $(z, \bot)$. What is $\advantage{Fork}{\adv, \algo{InpGen}}$?
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  In this case, $\adv$ always succeeds in outputting a non-$\bot$ value, so $\advantage{Single}{\adv, \algo{InpGen}} = 1$. In the Fork game:
+  
+  \begin{itemize}
+    \item First execution: $\adv$ queries $z \gets \pcoracle{H}(\rho)$ and outputs $(z, \bot)$. Since $\rho$ is fixed, $z$ is determined by the oracle's response.
+    \item We copy $T$ to $T'$, so $T'[\rho] = T[\rho] = z$
+    \item We then set $T'[z] \sample S$ (refreshing the value at the forking point)
+    \item Second execution: $\adv$ queries $z' \gets \pcoracle{H'}(\rho) = T'[\rho] = z$ (unchanged) and outputs $(z', \bot) = (z, \bot)$
+    \item The condition $z = z'$ is satisfied
+    \item The condition $T[z] \neq T'[z]$ is satisfied with probability $1 - \frac{1}{|S|} \geq 1 - \frac{1}{2^\secpar}$ (since $T'[z]$ was refreshed to a random value)
+  \end{itemize}
+  
+  Therefore:
+  \[
+  \advantage{Fork}{\adv, \algo{InpGen}} = 1 \cdot \left(1 - \frac{1}{2^\secpar}\right) = 1 - \frac{1}{2^\secpar}
+  \]
+  
+  This matches the forking lemma bound when $q = 1$ and $\advantage{Single}{\adv, \algo{InpGen}} = 1$:
+  \[
+  1 \cdot \left(\frac{1}{1} - \frac{1}{2^\secpar}\right) = 1 - \frac{1}{2^\secpar}
+  \]
+\end{mysolution}
+\fi
+
+
+\begin{exercise}
+  Let $\algo{InpGen}$ output $\mathit{inp} = (\GG,p,g)$ where $g$ is a generator of a cyclic group $\GG$ of prime order $p \geq 2^{\secpar-1}$.
+  Let $\adv$ be an algorithm that makes at most $q$ queries to a random oracle $\pcoracle{H}: \{0,1\}^* \rightarrow \ZZ_p$ and always succeeds in outputting $(z, s)$ such that $s = z + \pcoracle{H}(z) \cdot x \bmod p$ for some fixed $x \in \ZZ_p$.
+  Using the forking lemma, give a \ppt algorithm $\bdv$ that outputs $x$ and bound its success probability.
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  We construct a \ppt algorithm $\bdv$ that runs the forking game and extracts $x$ from the outputs.
+  If $\game{\algo{Fork}}{\algo{InpGen}}$ returns $(z, s, z', s') \neq \bot$, then we have:
+  \begin{itemize}
+    \item From the first execution: $(z, s) = \alpha$ where $s = z + T[z] \cdot x \bmod p$
+    \item From the second execution: $(z', s') = \alpha'$ where $s' = z' + T'[z'] \cdot x \bmod p$
+    \item The conditions $z = z'$ and $T[z] \neq T'[z]$ hold
+  \end{itemize}
+  
+  Therefore: $s = z + T[z] \cdot x$ and $s' = z + T'[z] \cdot x \pmod{p}$.
+  
+  Subtracting yields $s - s' = (T[z] - T'[z]) \cdot x \pmod{p}$. Since $T[z] \neq T'[z]$ and $p$ is prime, we can compute:
+  \[
+  x = (s - s') \cdot (T[z] - T'[z])^{-1} \bmod p
+  \]
+  
+  Since $\adv$ always succeeds, $\advantage{Single}{\adv, \algo{InpGen}} = 1$. By the forking lemma:
+  \[
+  \Pr[\bdv \text{ outputs } x] = \advantage{Fork}{\adv, \algo{InpGen}} \geq 1 \cdot \left(\frac{1}{q} - \frac{1}{2^\secpar}\right) = \frac{1}{q} - \frac{1}{2^\secpar}
+  \]
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Consider an algorithm $\adv$ that queries $h_0 \gets \pcoracle{H}(0)$ and outputs $(0, \bot)$ if $h_0 \bmod 2 = 0$, otherwise outputs $(h_0, \bot)$. What is $\advantage{Fork}{\adv, \algo{InpGen}}$?
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  First, note that $\advantage{Single}{\adv, \algo{InpGen}} = 1$ since $\adv$ always outputs a non-$\bot$ value. 
+  
+  The adversary only queries $\pcoracle{H}(0)$, so after the first execution, $T[0] = h_0$ and all other entries remain $\bot$.
+  
+  Case 1: $h_0 \bmod 2 = 0$ (happens with probability $\frac{1}{2}$)
+  \begin{itemize}
+    \item First execution: $\adv$ outputs $(0, \bot)$
+    \item We set $T'[0] \sample S$ (refreshing the value at key 0)
+    \item Second execution: $\adv$ queries $h_0' = T'[0]$ (the refreshed value)
+    \item If $h_0' \bmod 2 = 0$: outputs $(0, \bot)$, so $z = z' = 0$ and $T[0] = h_0 \neq h_0' = T'[0]$ with probability $1 - \frac{1}{2^\secpar}$
+    \item If $h_0' \bmod 2 = 1$: outputs $(h_0', \bot)$, so $z = 0 \neq h_0' = z'$ (fork fails)
+    \item Fork succeeds with probability $\frac{1}{2} \cdot (1 - \frac{1}{2^\secpar})$
+  \end{itemize}
+  
+  Case 2: $h_0 \bmod 2 = 1$ (happens with probability $\frac{1}{2}$)
+  \begin{itemize}
+    \item First execution: $\adv$ outputs $(h_0, \bot)$
+    \item Since $h_0$ was never queried, $T[h_0] = \bot$
+    \item We set $T'[h_0] \sample S$
+    \item Second execution: $\adv$ queries $h_0' = T'[0] = T[0] = h_0$ (unchanged)
+    \item Since $h_0 \bmod 2 = 1$, outputs $(h_0, \bot)$
+    \item So $z = z' = h_0$ and $T[h_0] = \bot \neq T'[h_0]$
+    \item Fork succeeds with probability 1
+  \end{itemize}
+  
+  Therefore:
+  \[
+  \advantage{Fork}{\adv, \algo{InpGen}} = \frac{1}{2} \cdot \frac{1}{2} \cdot \left(1 - \frac{1}{2^\secpar}\right) + \frac{1}{2} \cdot 1 = \frac{1}{4} - \frac{1}{2^{\secpar+2}} + \frac{1}{2} \approx \frac{3}{4}
+  \]
+\end{mysolution}
+\fi
+
+\begin{exercise}[Optional]
+  Find an algorithm $\adv$ making exactly $q$ queries for which $\advantage{Fork}{\adv, \algo{InpGen}}$ is as close to $\advantage{Single}{\adv, \algo{InpGen}} \left( \frac{\advantage{Single}{\adv, \algo{InpGen}}}{q} - \frac{1}{2^\secpar} \right)$ as possible.
+\end{exercise}
+
+\begin{exercise}[Optional]
+  Compare the Generalized Forking Lemma of Bellare and Neven~\cite{CCS:BelNev06} with the Local Forking Lemma.
+  What are the key differences in their formulations and applications?
+\end{exercise}
+
