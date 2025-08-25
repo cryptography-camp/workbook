@@ -12,7 +12,9 @@ We illustrate the concept of reductions through a series of examples.
       \begin{pchstack}[center]
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{PreimageEither}}{\algo{H}}$}{%
           \kappa \gets \algo{H.Gen}(\secpar) \\
-          y_1, y_2 \sample \{0, 1\}^\lambda\\
+          x_1, x_2 \sample \{0, 1\}^\lambda\\
+          y_1 \gets \algo{H.Eval}(\kappa, x_1) \\
+          y_2 \gets \algo{H.Eval}(\kappa, x_2) \\
           x \gets \adv(\kappa, y_1, y_2) \\
           \pcreturn \algo{H.Eval}(\kappa, x) = y_1 \vee \algo{H.Eval}(\kappa, x) = y_2
         }
@@ -130,12 +132,13 @@ The proof is left as an exercise (see \autoref{ex:collision-implies-preimage}).
     \begin{tcolorbox}[width=6cm]
       \begin{pchstack}[center]
           \procedure[headlinesep=1pt]{$\bdv^\adv_\algo{H}(\kappa, y)$}{%
-            y' \sample \{0, 1\}^{\lambda} \\
+            x_2 \sample \{0, 1\}^{\lambda} \\
+            y_2 \gets \algo{H.Eval}(\kappa, x_2) \\
             b \sample \{0, 1\} \\
             \pcif b = 0 \pcthen \\
-            \t x \gets \adv(\kappa, y, y') \\
+            \t x \gets \adv(\kappa, y, y_2) \\
             \pcelse \\
-            \t x \gets \adv(\kappa, y', y) \\
+            \t x \gets \adv(\kappa, y_2, y) \\
             \pcreturn x
           }
       \end{pchstack}
@@ -145,12 +148,12 @@ The proof is left as an exercise (see \autoref{ex:collision-implies-preimage}).
   Let $E_i$ denote the event that $\adv$ outputs a preimage of its $i$-th input ($i \in \{1, 2\}$).
   By definition, $\advantage{PreIE}{\adv, \algo{H}} = \Pr[E_1 \vee E_2] \leq \Pr[E_1] + \Pr[E_2]$ (union bound; equality holds when $y_1 \neq y_2$).
   
-  Since $y_1$ and $y_2$ are chosen uniformly and independently in the PreimageEither game, by symmetry: $\Pr[E_1] = \Pr[E_2]$.
+  Since $x_1$ and $x_2$ are chosen uniformly and independently in the PreimageEither game (and thus $y_1$ and $y_2$ are independent samples from the image of $\algo{H}$), by symmetry: $\Pr[E_1] = \Pr[E_2]$.
   
   Therefore: $\advantage{PreIE}{\adv, \algo{H}} \leq 2 \cdot \Pr[E_1]$.
   
-  Now consider $\bdv$'s success probability. With probability $\frac{1}{2}$, it places the challenge $y$ in position 1 (calling $\adv(\kappa, y, y')$), and with probability $\frac{1}{2}$, it places $y$ in position 2 (calling $\adv(\kappa, y', y)$).
-  Since $y$ and $y'$ are independent and uniform (like $y_1$ and $y_2$), $\bdv$ succeeds with probability:
+  Now consider $\bdv$'s success probability. With probability $\frac{1}{2}$, it places the challenge $y$ in position 1 (calling $\adv(\kappa, y, y_2)$), and with probability $\frac{1}{2}$, it places $y$ in position 2 (calling $\adv(\kappa, y_2, y)$).
+  Since in both games $y$ comes from $\algo{H.Eval}(\kappa, x)$ for uniform $x$, and $y_2$ comes from $\algo{H.Eval}(\kappa, x_2)$ for uniform $x_2$, $\bdv$ perfectly simulates the PreimageEither game distribution. Thus $\bdv$ succeeds with probability:
   
   $\advantage{PreI}{\bdv^\adv_\algo{H}, \algo{H}} = \frac{1}{2} \cdot \Pr[E_1] + \frac{1}{2} \cdot \Pr[E_2] = \Pr[E_1] \geq \frac{1}{2} \cdot \advantage{PreIE}{\adv, \algo{H}}$.
   
