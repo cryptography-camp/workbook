@@ -12,7 +12,7 @@
 \begin{example}
   An example is the toy commitment scheme\label{sec:toy-com}:
   \begin{itemize}
-    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{\})$
+    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{0\})$
     \item $\algo{Commit}(\params, m, r) \defeq m$
   \end{itemize}
 \end{example}
@@ -234,7 +234,7 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
 \begin{exercise}
   Let $\algo{H}$ be a collision-resistant hash function and define the commitment scheme $\algo{HashCom'}[\algo{H}]$ as:
   \begin{itemize}
-    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}, \mathcal{R} \defeq \{\}, \kappa \gets \algo{H.Gen}(1^\lambda))$
+    \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}, \mathcal{R} \defeq \{0\}, \kappa \gets \algo{H.Gen}(1^\lambda))$
     \item $\algo{Commit}(\params, m, r) \defeq \algo{H.Eval}(\kappa, m)$
   \end{itemize}
   Note that $\algo{HashCom'}[\algo{H}]$ is binding.
