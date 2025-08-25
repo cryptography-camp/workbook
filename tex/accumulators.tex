@@ -10,10 +10,10 @@ It is a tuple of polynomial-time algorithms $(\algo{Gen}, \algo{Init}, \algo{Val
 
 \begin{itemize}
     \item $\algo{Gen}(1^\secpar) \rightarrow \params$ is a probabilistic algorithm that takes the security parameter as input and outputs public parameters $\params$ including the domain $\mathcal{X}_\mathsf{Acc}$ of elements that can be accumulated.
-    \item $\algo{Init}(\params) \rightarrow \state$ is a deterministic algorithm that takes public parameters $\params$ as input and outputs the initial state $\state$ of the accumulator.
-    \item $\algo{Value}(\params, \state) \rightarrow v$ is a deterministic algorithm that takes public parameters $\params$ and an accumulator state $\state$ as input and outputs the accumulator value $v$.
-    \item $\algo{Insert}(\params, \state, x) \rightarrow \state'$ is a deterministic algorithm that takes public parameters $\params$, an accumulator state $\state$, and an element $x \in \mathcal{X}_\mathsf{Acc}$ as input and outputs a new state $\state'$ after inserting $x$.
-    \item $\algo{ProveMembership}(\params, \state, x) \rightarrow \pi$ is a probabilistic algorithm that takes public parameters $\params$, an accumulator state $\state$, and an element $x$ as input and outputs a membership proof $\pi$.
+    \item $\algo{Init}(\params) \rightarrow \state$ is a deterministic algorithm that takes public parameters $\params$ as input and outputs the initial state, $\state$, of the accumulator.
+    \item $\algo{Value}(\params, \state) \rightarrow v$ is a deterministic algorithm that takes public parameters $\params$ and an accumulator state, $\state$, as input and outputs the accumulator value $v$.
+    \item $\algo{Insert}(\params, \state, x) \rightarrow \state'$ is a deterministic algorithm that takes public parameters $\params$, an accumulator state, $\state$, and an element $x \in \mathcal{X}_\mathsf{Acc}$ as input and outputs a new state, $\state'$, after inserting $x$.
+    \item $\algo{ProveMembership}(\params, \state, x) \rightarrow \pi$ is a probabilistic algorithm that takes public parameters $\params$, an accumulator state, $\state$, and an element $x$ as input and outputs a membership proof $\pi$.
     \item $\algo{VerifyMembership}(\params, v, x, \pi) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, an accumulator value $v$, an element $x \in \mathcal{X}_\mathsf{Acc}$, and a proof $\pi$ as input and outputs $1$ (accept) if the proof validates that $x$ is a member of the set represented by $v$, and outputs $0$ (reject) otherwise.
 \end{itemize}
 \end{definition}
@@ -23,7 +23,7 @@ Typically, an accumulator involves two parties: the manager, who uses $\algo{Ini
 \begin{example}
   An example is the trivial accumulator\label{sec:trivial-acc}, where the accumulator value is just the accumulator state and therefore of size linear in the size of the set. In contrast, the accumulator value is usually a constant size value:
   \begin{itemize}
-    \item $\algo{Gen}(1^\secpar)\rightarrow \bot$.
+    \item $\algo{Gen}(1^\secpar)\rightarrow \bot$
     \item $\algo{Init}(\params)\rightarrow ()$
     \item $\algo{Value}(\params, \state)\rightarrow \state$
     \item $\algo{Insert}(\params, \state, x) \rightarrow \state \| x$
@@ -188,7 +188,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
   \end{align*}
   where the first six algorithms are as in the additive positive accumulator, and:
   \begin{itemize}
-    \item $\algo{ProveNonMembership}(\params, \state, x) \rightarrow \pi$ is a probabilistic algorithm that takes public parameters $\params$, an accumulator state $\state$, and an element $x$ as input and outputs a non-membership proof $\pi$.
+    \item $\algo{ProveNonMembership}(\params, \state, x) \rightarrow \pi$ is a probabilistic algorithm that takes public parameters $\params$, an accumulator state, $\state$, and an element $x$ as input and outputs a non-membership proof $\pi$.
     \item $\algo{VerifyNonMembership}(\params, v, x, \pi) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, an accumulator value $v$, an element $x \in \mathcal{X}_\mathsf{Acc}$, and a proof $\pi$ as input and outputs $1$ (accept) if the proof validates that $x$ is not a member of the set represented by $v$, and outputs $0$ (reject) otherwise.
   \end{itemize}
   
