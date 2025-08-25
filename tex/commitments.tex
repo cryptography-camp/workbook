@@ -10,7 +10,7 @@
 \end{definition}
 
 \begin{example}
-  An example is the trivial commitment scheme\label{sec:trivial-com}:
+  An example is the toy commitment scheme\label{sec:toy-com}:
   \begin{itemize}
     \item $\algo{Setup}(1^\lambda) \defeq (\mathcal{M} \defeq \{0, 1\}^*, \mathcal{R} \defeq \{\})$
     \item $\algo{Commit}(\params, m, r) \defeq m$
@@ -76,13 +76,13 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
 \subsection{Exercises}
 
 \begin{exercise}
-  Is the trivial commitment scheme in \cref{sec:trivial-com} binding?
+  Is the toy commitment scheme in \cref{sec:toy-com} binding?
   Prove it.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  Yes, the trivial commitment scheme is perfectly binding.
+  Yes, the toy commitment scheme is perfectly binding.
   
   Proof by contradiction: Assume the binding game succeeds, i.e., $\game{\algo{ComBind}}{\algo{Com}} = 1$.
   This means:
@@ -91,7 +91,7 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
     \item $m_0 \neq m_1$ (the messages are different)
   \end{itemize}
   
-  However, by the definition of the trivial commitment scheme:
+  However, by the definition of the toy commitment scheme:
   \begin{itemize}
     \item $C_0 = \algo{Commit}(\params, m_0, r_0) = m_0$
     \item $C_1 = \algo{Commit}(\params, m_1, r_1) = m_1$
@@ -100,7 +100,7 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
   Therefore, $C_0 = C_1$ implies $m_0 = m_1$, which contradicts $m_0 \neq m_1$.
   
   Since no adversary can win the binding game, we have $\advantage{Bind}{\adv, \algo{Com}} = 0$ for all adversaries $\adv$.
-  The trivial commitment scheme is therefore perfectly binding.
+  The toy commitment scheme is therefore perfectly binding.
 \end{mysolution}
 \fi
 
@@ -203,13 +203,13 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
 \fi
 
 \begin{exercise}
-  Is the trivial commitment scheme in \cref{sec:trivial-com} hiding?
+  Is the toy commitment scheme in \cref{sec:toy-com} hiding?
   Prove it.
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  No, the trivial commitment scheme is not hiding.
+  No, the toy commitment scheme is not hiding.
 
   We construct a \ppt adversary $\adv$ that wins the hiding game with probability 1:
 
@@ -227,7 +227,7 @@ Note that in $\game{\algo{ComHide}}{\algo{Com}}$ the adversary $\adv$ is run twi
   \]
   which is not negligible.
 
-  Intuitively, the trivial commitment scheme completely reveals the message, providing no hiding at all.
+  Intuitively, the toy commitment scheme completely reveals the message, providing no hiding at all.
 \end{mysolution}
 \fi
 
