@@ -285,22 +285,28 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
   We analyze each function using the definition of negligible functions and Lemma~\ref{lem:negl}:
   \begin{enumerate}
     \item $f(\secpar) = 0$ is \textbf{negligible}.
-    For any polynomial $p(\secpar)$, we have $0 \le \frac{1}{p(\secpar)}$ for all $\secpar > 0$.
+    For any constant $c > 0$, we have $0 < \secpar^{-c}$ for all $\secpar > 0$.
     
     \item $f(\secpar) = \frac{1}{2}$ is \textbf{not negligible}.
     By Lemma~\ref{lem:negl}(3), since $0$ is negligible and $\frac{1}{2}$ is a positive constant, $0 + \frac{1}{2} = \frac{1}{2}$ is not negligible.
     
     \item $f(\secpar) = \frac{1}{\secpar^2}$ is \textbf{not negligible}.
-    If it were negligible, then by Lemma~\ref{lem:negl}(1), $\frac{1}{\secpar^2} \cdot \secpar^2 = 1$ would be negligible.
-    But $1$ is not negligible by Lemma~\ref{lem:negl}(3), giving us a contradiction.
+    For $c = 3$, we have $\frac{1}{\secpar^2} > \secpar^{-3}$ for all $\secpar > 1$, so the definition is not satisfied.
     
     \item $f(\secpar) = \secpar^{4096} \cdot 2^{-\secpar}$ is \textbf{negligible}.
-    By Lemma~\ref{lem:negl}(1), since $2^{-\secpar}$ is negligible and $\secpar^{4096}$ is a polynomial, their product is negligible.
+    First, $2^{-\secpar}$ is negligible: for any $c > 0$, we need $2^{-\secpar} < \secpar^{-c}$, which is equivalent to $\secpar^c < 2^{\secpar}$.
+    Taking logarithms: $c \ln(\secpar) < \secpar \ln(2)$.
+    We have $\lim_{\secpar \to \infty} \frac{c \ln(\secpar)}{\secpar \ln(2)} = \frac{c}{\ln(2)} \cdot \lim_{\secpar \to \infty} \frac{\ln(\secpar)}{\secpar}$ (constant multiple rule).
+    Since $\lim_{\secpar \to \infty} \frac{\ln(\secpar)}{\secpar} = 0$ (by L'Hôpital's rule: $\lim_{\secpar \to \infty} \frac{1/\secpar}{1} = 0$), we get $\frac{c}{\ln(2)} \cdot 0 = 0$.
+    Therefore, there exists $N$ such that the inequality holds for all $\secpar > N$.
+    By Lemma~\ref{lem:negl}(1), the product of a negligible function with a polynomial is negligible.
     
     \item $f(\secpar) = \sqrt{2^{-\secpar}}$ is \textbf{negligible}.
-    For any polynomial $p(\secpar)$, we need to show that $\sqrt{2^{-\secpar}} \le \frac{1}{p(\secpar)}$ for sufficiently large $\secpar$.
-    Squaring both sides (valid since both are positive), we need $2^{-\secpar} \le \frac{1}{p(\secpar)^2}$.
-    Since $p(\secpar)^2$ is also a polynomial and $2^{-\secpar}$ is negligible, this inequality holds for sufficiently large $\secpar$.
+    Since $2^{-\secpar}$ is negligible, for any $c > 0$ there exists $N$ such that for all $\secpar > N$,
+    $2^{-\secpar} < \secpar^{-2c}$.
+    Taking square roots preserves the inequality, so for all $\secpar > N$,
+    $\sqrt{2^{-\secpar}} < \sqrt{\secpar^{-2c}} = \secpar^{-c}$.
+    Hence $f(\secpar)$ is negligible.
   \end{enumerate}
 \end{mysolution}
 \fi
