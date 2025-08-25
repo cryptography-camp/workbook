@@ -369,17 +369,18 @@ Hence, the definition of preimage-resistance only considers \ppt adversaries.
 \fi
 
 \begin{exercise}\label{ex:hash-function-definition}
-  Why does the definition of preimage resistance for hash functions (Definition~\ref{def:preimage-resistance}) resolve the issues with the SHA256 examples?
+  How does the definition of preimage resistance for hash functions (Definition~\ref{def:preimage-resistance}) avoid the issues encountered with the SHA256 examples?
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  The hash function definition resolves the issues in two key ways:
+  The definition avoids the issues by considering hash function families rather than fixed functions like SHA256:
   \begin{enumerate}
-    \item The output size grows with $\secpar$ (specifically, $c\lambda$ bits for some constant $c$), so exhaustive search takes time exponential in $\secpar$, not constant time.
-    \item The hash function is actually a family of functions indexed by $\kappa$, selected by $\algo{Gen}(\secparam)$, preventing hardcoding of specific preimages.
+    \item The definition uses a hash function family where the output size can grow with $\secpar$, ensuring that exhaustive search takes time exponential in $\secpar$ rather than constant time.
+    \item The hash function is indexed by a key $\kappa$ selected by $\algo{Gen}(\secparam)$, preventing hardcoding of specific preimages since the adversary doesn't know which function from the family will be used.
   \end{enumerate}
-  Together, these ensure that the adversary's success probability can meaningfully depend on $\secpar$ and can be made negligible by increasing it.
+  These changes allow the adversary's success probability to meaningfully depend on $\secpar$ and be made negligible by increasing it.
+  Note that this doesn't make SHA256 itself secure in the asymptotic sense - it remains a fixed function with constant output size.
 \end{mysolution}
 \fi
 
