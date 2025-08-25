@@ -24,11 +24,11 @@ Typically, an accumulator involves two parties: the manager, who uses $\algo{Ini
   An example is the trivial accumulator\label{sec:trivial-acc}, where the accumulator value is just the accumulator state and therefore of size linear in the size of the set. In contrast, the accumulator value is usually a constant size value:
   \begin{itemize}
     \item $\algo{Gen}(1^\secpar)\rightarrow \bot$
-    \item $\algo{Init}(\params)\rightarrow ()$
+    \item $\algo{Init}(\params)\rightarrow \{\}$
     \item $\algo{Value}(\params, \state)\rightarrow \state$
-    \item $\algo{Insert}(\params, \state, x) \rightarrow \state \| x$
+    \item $\algo{Insert}(\params, \state, x) \rightarrow \state \cup \{x\}$
     \item $\algo{ProveMembership}(\params, \state, x) \rightarrow \bot$
-    \item $\algo{VerifyMembership}(\params, v, x, \pi) \rightarrow b$ outputs $b = 1$ if $v$ contains $x$. Otherwise, it outputs $b = 0$.
+    \item $\algo{VerifyMembership}(\params, v, x, \pi) \rightarrow b$ outputs $b = 1$ if $x \in v$. Otherwise, it outputs $b = 0$.
   \end{itemize}
 \end{example}
 
@@ -111,12 +111,12 @@ In other words, the adversary can insert elements into the accumulator and obtai
   \textbf{Is the trivial accumulator correct?} Yes, the trivial accumulator is correct.
   In the trivial accumulator:
   \begin{itemize}
-    \item The accumulator value $v$ is just the state itself, which is the list of all inserted elements
+    \item The accumulator value $v$ is just the state itself, which is the set of all inserted elements
     \item $\algo{ProveMembership}$ returns $\bot$ (no proof needed)
-    \item $\algo{VerifyMembership}$ simply checks if $x$ is in the list $v$
+    \item $\algo{VerifyMembership}$ simply checks if $x \in v$
   \end{itemize}
   
-  Since the accumulator value contains all inserted elements directly, any element that was inserted will be found in the list, so verification always succeeds for inserted elements.
+  Since the accumulator value is the set of all inserted elements, any element that was inserted will be in the set, so verification always succeeds for inserted elements.
   This satisfies correctness.
 \end{mysolution}
 \fi
@@ -132,8 +132,8 @@ In other words, the adversary can insert elements into the accumulator and obtai
   
   \textbf{Is the trivial accumulator collision-free?} Yes, the trivial accumulator is collision-free.
   
-  In the trivial accumulator, the accumulator value $v$ is exactly the list of all inserted elements.
-  For $\algo{VerifyMembership}$ to accept, the element $x$ must be in this list.
+  In the trivial accumulator, the accumulator value $v$ is exactly the set of all inserted elements.
+  For $\algo{VerifyMembership}$ to accept, the element $x$ must be in this set.
   Since the adversary cannot modify the accumulator value (it's computed honestly by the game), and the value contains exactly the elements that were inserted, it's impossible to create a proof for an element that wasn't inserted.
   
   Therefore, $\advantage{Collision}{\adv, \algo{TrivialAcc}} = 0$ for all adversaries, making it perfectly collision-free.
