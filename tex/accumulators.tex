@@ -33,16 +33,13 @@ Typically, an accumulator involves two parties: the manager, who uses $\algo{Ini
 \end{example}
 
 \begin{definition}[Correctness]
-An additive positive accumulator is considered \emph{correct} if, for any element $x$ that was inserted into the accumulator, the membership proof $\pi$ generated honestly for $x$ is successfully verified.
-More formally, for all security parameters $\secpar$, all public parameters $\params \gets \algo{Gen}(1^\secpar)$, all values $x \in \mathcal{X}_\mathsf{Acc}$, all positive integers $t$ polynomial in $\secpar$, all integers $t_x \in [1, t]$, all tuples $\vec{y} \in \mathcal{X}_\mathsf{Acc}^{t- 1}$, the following holds:
-
+An additive positive accumulator is considered \emph{correct} if, for any element that was inserted into the accumulator, the membership proof generated honestly for it is successfully verified.
+More formally, for all security parameters $\secpar$, all public parameters $\params \gets \algo{Gen}(1^\secpar)$, all positive integers $t$ polynomial in $\secpar$, all tuples $\vec{y} \in \mathcal{X}_\mathsf{Acc}^{t}$: for all $x \in \vec{y}$,
 \[
     \Pr\left[
     \begin{array}{l}
         \state_0 \gets \algo{Init}(\params); \\
-        \state_i \gets \algo{Insert}(\params, \state_{i - 1}, y_i) \text{ for } i \in [1, t_x - 1]; \\
-        \state_{t_x} \gets \algo{Insert}(\params, \state_{i - 1}, x); \\
-        \state_i \gets \algo{Insert}(\params, \state_{i - 1}, y_{i - 1}) \text{ for } i \in [t_x + 1, t]; \\
+        \state_i \gets \algo{Insert}(\params, \state_{i - 1}, y_i) \text{ for } i \in [1, t]; \\
         \pi \gets \algo{ProveMembership}(\params, \state_t, x); \\
         v \defeq \algo{Value}(\params, \state_t); \\
         \algo{VerifyMembership}(\params, v, x, \pi) = 1
@@ -106,7 +103,7 @@ In other words, the adversary can insert elements into the accumulator and obtai
 
 \ifsolutions
 \begin{mysolution}
-  \textbf{Correctness (informal):} An accumulator is correct if whenever we insert an element and generate a membership proof for it, that proof will always verify successfully against the accumulator value.
+  \textbf{Correctness (informal):} An accumulator is correct if for any element that has been inserted, we can generate a membership proof (using the current state) that will verify successfully against the current accumulator value.
   
   \textbf{Is the trivial accumulator correct?} Yes, the trivial accumulator is correct.
   In the trivial accumulator:
