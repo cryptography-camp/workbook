@@ -70,7 +70,7 @@ We illustrate the concept of reductions through a series of examples.
   Then $\advantage{PreIE}{\adv, \algo{H}}$ is negligible for all \ppt adversaries $\adv$.
   More precisely, for any \ppt adversary $\adv$ against $\Game~\algo{PreimageEither}$ of $\algo{H}$, there exists a \ppt adversary $\bdv$ against the preimage-resistance of $\algo{H}$ such that
     \[
-    \advantage{PreIE}{\adv, \algo{H}} = 2\advantage{PreI}{\bdv^\adv_\algo{H}, \algo{H}}.
+    \advantage{PreIE}{\adv, \algo{H}} \leq 2\advantage{PreI}{\bdv^\adv_\algo{H}, \algo{H}}.
     \]
 \end{proposition}
 
@@ -142,30 +142,17 @@ The proof is left as an exercise (see \autoref{ex:collision-implies-preimage}).
     \end{tcolorbox}
   \end{center}
   
-  Let us analyze the success probability of $\bdv$.
-  Define the following events:
-  \begin{itemize}
-    \item Let $E_1$ be the event that $\algo{H.Eval}(\kappa, x) = y_1$ where $x$ is the output of $\adv(\kappa, y_1, y_2)$
-    \item Let $E_2$ be the event that $\algo{H.Eval}(\kappa, x) = y_2$ where $x$ is the output of $\adv(\kappa, y_1, y_2)$
-    \item Let $E$ be the event that $\algo{H.Eval}(\kappa, x) \in \{y_1, y_2\}$, i.e., $E = E_1 \vee E_2$
-  \end{itemize}
+  Let $E_i$ denote the event that $\adv$ outputs a preimage of its $i$-th input ($i \in \{1, 2\}$).
+  By definition, $\advantage{PreIE}{\adv, \algo{H}} = \Pr[E_1 \vee E_2] \leq \Pr[E_1] + \Pr[E_2]$ (union bound; equality holds when $y_1 \neq y_2$).
   
-  By definition, $\pr{E} = \advantage{PreIE}{\adv, \algo{H}}$ since this is exactly the success probability of $\adv$ in the PreimageEither game.
+  Since $y_1$ and $y_2$ are chosen uniformly and independently in the PreimageEither game, by symmetry: $\Pr[E_1] = \Pr[E_2]$.
   
-  Note that $E_1$ and $E_2$ are disjoint events (since $x$ cannot simultaneously be a preimage of two different values).
-  Therefore, $\pr{E} = \pr{E_1 \vee E_2} = \pr{E_1} + \pr{E_2}$.
+  Therefore: $\advantage{PreIE}{\adv, \algo{H}} \leq 2 \cdot \Pr[E_1]$.
   
-  In the PreimageEither game, both $y_1$ and $y_2$ are chosen uniformly at random from $\{0,1\}^{\lambda}$ and independently, so by symmetry we have $\pr{E_1} = \pr{E_2}$.
+  Now consider $\bdv$'s success probability. With probability $\frac{1}{2}$, it places the challenge $y$ in position 1 (calling $\adv(\kappa, y, y')$), and with probability $\frac{1}{2}$, it places $y$ in position 2 (calling $\adv(\kappa, y', y)$).
+  Since $y$ and $y'$ are independent and uniform (like $y_1$ and $y_2$), $\bdv$ succeeds with probability:
   
-  Thus: $\advantage{PreIE}{\adv, \algo{H}} = \pr{E} = \pr{E_1} + \pr{E_2} = 2 \cdot \pr{E_1}$
-  
-  Therefore: $\pr{E_1} = \frac{1}{2} \cdot \advantage{PreIE}{\adv, \algo{H}}$
-  
-  In $\bdv$'s execution, when $b = 0$, it calls $\adv(\kappa, y, y')$ and succeeds if the output is a preimage of $y$ (the first argument).
-  When $b = 1$, it calls $\adv(\kappa, y', y)$ and succeeds if the output is a preimage of $y$ (now the second argument).
-  
-  Since $\bdv$ succeeds when either ($b = 0$ and $x$ is a preimage of the first argument) or ($b = 1$ and $x$ is a preimage of the second argument), we have:
-  $\advantage{PreI}{\bdv^\adv_\algo{H}, \algo{H}} = \frac{1}{2} \cdot \pr{E_1} + \frac{1}{2} \cdot \pr{E_2} = \frac{1}{2} \cdot \advantage{PreIE}{\adv, \algo{H}}$
+  $\advantage{PreI}{\bdv^\adv_\algo{H}, \algo{H}} = \frac{1}{2} \cdot \Pr[E_1] + \frac{1}{2} \cdot \Pr[E_2] = \Pr[E_1] \geq \frac{1}{2} \cdot \advantage{PreIE}{\adv, \algo{H}}$.
   
   Since $\advantage{PreIE}{\adv, \algo{H}}$ is non-negligible and $\bdv^\adv_\algo{H}$ is \ppt, $\algo{H}$ is not preimage-resistant.
 \end{mysolution}
