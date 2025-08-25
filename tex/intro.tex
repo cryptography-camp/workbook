@@ -204,7 +204,7 @@ In $\game{\Game~\algo{SHAPreimg}}{}$ defined in \autoref{fig:sha-preimg} the val
   \caption{Algorithm for finding the SHA256 preimage of a given value \label{fig:sha-preimg-adv}}
   \end{figure}
   $\adv$ will return the correct solution with probability $1$.
-  The running time of $\adv$ is a constant independent of the security parameter $\secpar$ and, therefore, $\adv$ is \ppt
+  The running time of $\adv$ is bounded by a constant independent of the security parameter $\secpar$ and, therefore, $\adv$ is \ppt
 \end{proof}
 
 % There is also an algorithm which just has all preimages of SHA256 hardcoded and stored in order. Then use binary search.
