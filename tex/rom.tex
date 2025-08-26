@@ -69,7 +69,7 @@ Before examining the consequences of random oracles, we present a simple lemma t
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{ROExample}_1}{}$}{%
           T \defeq \emptyset \\
           r \sample \{0,1\}^\secpar \\
-          h \defeq \pcoracle{H}(r) \\
+          \gamechange{$\phantom{h \defeq \pcoracle{H}(r)}$} \\
           \gamechange{$h' \sample S$} \\
           \pcreturn \adv^{\pcoracle{H}}(\gamechange{$h'$})
         }
@@ -149,7 +149,7 @@ The proof is left as an exercise (see \autoref{ex:hash-com-hiding}).
   Let $\grgen$ be a group generation algorithm and $\algo{H}$ be a hash function with output in $\ZZ_p$ where $p$ is the group order. 
   The Taproot commitment scheme $\algo{TapCom}[\grgen, \algo{H}]$ is defined as follows:
   \begin{itemize}
-    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$ and $\kappa \gets \algo{H.Gen}(1^\secpar)$. Parse $\gparam = (\GG, p, g)$. Output $\params = (\gparam, \kappa, \mathcal{M} \defeq \{0,1\}^*, \mathcal{R} \defeq \GG)$.
+    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$ and $\kappa \gets \algo{H.Gen}(1^\secpar)$. Output $\params = (\gparam, \kappa, \mathcal{M} \defeq \{0,1\}^*, \mathcal{R} \defeq \GG)$.
     \item $\algo{Commit}(\params, m, R) \rightarrow C$: Parse $\params$ to obtain $g$ and $\kappa$. Output $C = R \cdot g^{\algo{H.Eval}(\kappa, (R, m))}$.
   \end{itemize}
 \end{definition}
@@ -215,7 +215,7 @@ The proof is left as an exercise (see \autoref{ex:taproot-binding}).
       \begin{pchstack}
         \procedure[headlinesep=1pt]{$\game{\Game~\algo{ComHide}}{\algo{HashCom}}$}{%
           \params \gets \algo{Setup}(1^\secpar) \\
-          (m_0, m_1) \gets \adv(\params) \\
+          (m_0, m_1) \gets \adv^{\pcoracle{H}}(\params) \\
           T \defeq \emptyset \\
           b \sample \{0,1\} \\
           r \sample \{0,1\}^\secpar \\
@@ -248,7 +248,7 @@ Now consider the modified game shown in \autoref{fig:hashcom-hiding-rom-modified
           T \defeq \emptyset \\
           b \sample \{0,1\} \\
           r \sample \{0,1\}^\secpar \\
-          c \defeq \pcoracle{H}(m_b \| r) \\
+          \gamechange{$\phantom{c \defeq \pcoracle{H}(m_b \| r)}$} \\
           \gamechange{$c' \sample \{0,1\}^\secpar$} \\
           b' \gets \adv^{\pcoracle{H}}(\gamechange{$c'$}) \\
           \pcreturn b = b'
