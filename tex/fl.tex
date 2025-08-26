@@ -8,7 +8,16 @@ This technique is particularly useful in security reductions.
 For example, consider the hash commitment scheme $\algo{HashCom}[\algo{H}]$ where commitments are of the form $\algo{H}(m \| r)$.
 A reduction can program the oracle such that certain algebraic relations hold between committed messages, while maintaining the adversary's view.
 
-The following proposition demonstrates that careful programming preserves the adversary's advantage. Notably, $\Game_1$ determines the XOR of committed messages $m^*$ before running the adversary.
+The following proposition demonstrates that careful programming preserves the adversary's advantage. Notably, $\Game_1$ forces the XOR of committed messages to be equal to a message $m^*$ that is determined before even running the adversary.
+The game first draws $m^*$, runs the adversary with a random hash $h$ and obtains a hash  $h'$ from the adversary.
+If the adversary created $h'$ as $\algo{Commit}(m', r')$, then when the adversary is invoked a second time we have
+\begin{align*}
+  \algo{Commit}(m, r) &= h\\
+  \algo{Commit}(m', r') &= h'\\
+  m \oplus m' &= m^*.
+\end{align*}
+Note that the challenger's commitment $h$ was given to the adversary before the adversary returned commitment $h'$ and the adversary has never revealed the opening $(m', r')$ to the challenger.
+
 A similar technique is used in MuSig multi-signature scheme~\cite{DCC:MPSW19} to simulate signing queries (i.e., to answer signing queries without knowledge of the secret key, as explained in the next section).
 
 \begin{figure}[tbhp]
@@ -190,7 +199,7 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
   Analysis:
   \begin{itemize}
     \item In $\Game_0$: $m$ is uniform, so $\Pr[\game{\Game_0}{} = 1] = \frac{1}{2}$.
-    \item In $\Game_F$: Since $m' = 0$, we have $m = m^* \oplus m' = 0 \oplus 0 = 0$. Thus $\Pr[\game{\Game_F}{} = 1] = 0$.
+    \item In $\Game_F$: Since $m^* = 0$ (fixed in $\Game_F$) and $m' = 0$, we have $m = m^* \oplus m' = 0 \oplus 0 = 0$. Thus $\Pr[\game{\Game_F}{} = 1] = 0$.
   \end{itemize}
   
   Therefore: $\left|\Pr[\game{\Game_0}{} = 1] - \Pr[\game{\Game_F}{} = 1]\right| = \left|\frac{1}{2} - 0\right| = \frac{1}{2}$.
@@ -198,14 +207,20 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
 \fi
 
 \begin{exercise}\label{ex:prog-rom}
-  Prove Proposition~\ref{prop:prog-rom}.
+  Sketch a proof of Proposition~\ref{prop:prog-rom}.
+  \textbf{Hints:}
+  \begin{enumerate}
+    \item Let $E$ be the event that the adversary queries $m \| r$ to the oracle during its first invocation (i.e., the event that triggers the assertion).
+    Argue that $\Pr[\game{\Game_0}{} = 1 \wedge \neg E] = \Pr[\game{\Game_1}{} = 1 \wedge \neg E]$.
+    \item Bound the probability of $E$.
+  \end{enumerate}
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
     Let $E$ be the event that the adversary queries $m \| r$ to the oracle during its first invocation (when it outputs $(\state, h')$).
   
-  When $\neg E$ occurs, we claim that $\Pr[\game{\Game_0}{} = 1 \wedge \neg E] = \Pr[\game{\Game_1}{} = 1 \wedge \neg E]$. To see this, we analyze the distribution of all values conditioned on $\neg E$:
+  We claim that $\Pr[\game{\Game_0}{} = 1 \wedge \neg E] = \Pr[\game{\Game_1}{} = 1 \wedge \neg E]$. To see this, we analyze the distribution of all values conditioned on $\neg E$:
   
   \begin{itemize}
     \item \textbf{The value $h$:} In $\Game_0$, $h = \pcoracle{H}(m \| r)$ where the oracle uses lazy sampling. Since $\neg E$ occurs, the adversary never queried $m \| r$ during the first invocation, so $h$ is a fresh uniform sample. In $\Game_1$, $h$ is explicitly drawn uniformly at random. Thus $h$ is uniform in $\{0,1\}^\secpar$ in both games.
