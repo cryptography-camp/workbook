@@ -1,0 +1,172 @@
+\section{Recap Quiz}\label{sec:recap-quiz}
+
+\begin{exercise}
+  Let's say you have a game $\Game~G$ that you want to prove is hard, and you have the option to upper bound $\Pr[\game{G}{\adv} = 1]$ by $\advantage{AOMDL}{\bdv, \grgen}$, $\advantage{OMDL}{\cdv, \grgen}$, $\advantage{OMDL}{\ddv, \grgen}$ in the ROM, or $\advantage{DL}{\edv, \grgen}$.
+  What is your order of preference?
+  \begin{enumerate}
+    \item $\advantage{DL}{\edv, \grgen}$, $\advantage{AOMDL}{\bdv, \grgen}$, $\advantage{OMDL}{\cdv, \grgen}$, $\advantage{OMDL}{\ddv, \grgen}$ in the ROM
+    \item $\advantage{DL}{\edv, \grgen}$, $\advantage{OMDL}{\cdv, \grgen}$, $\advantage{AOMDL}{\bdv, \grgen}$, $\advantage{OMDL}{\ddv, \grgen}$ in the ROM
+    \item $\advantage{OMDL}{\ddv, \grgen}$ in the ROM, $\advantage{DL}{\edv, \grgen}$, $\advantage{AOMDL}{\bdv, \grgen}$, $\advantage{OMDL}{\cdv, \grgen}$
+    \item $\advantage{AOMDL}{\bdv, \grgen}$, $\advantage{DL}{\edv, \grgen}$, $\advantage{OMDL}{\cdv, \grgen}$, $\advantage{OMDL}{\ddv, \grgen}$ in the ROM
+  \end{enumerate}
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  The answer is (1).
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Consider the following game hop from $\game{\Game~\algo{Guess}}{}$ to $\game{\Game~\algo{Guess}_2}{}$:
+  
+  \begin{figure}[h!]
+    \begin{center}
+      \begin{tcolorbox}[width=3cm]
+        \begin{pchstack}[center]
+            \procedure[headlinesep=1pt]{$\game{\Game~\algo{Guess}_2}{}$}{%
+              n \defeq 2^\lambda\\
+              x \sample \ZZ_n \\
+              \gamechange{$\pcassert x \neq 0$} \\
+              x' \gets \adv() \\
+              \pcreturn x = x'
+            }
+        \end{pchstack}
+      \end{tcolorbox}
+    \end{center}
+    \caption{Without the \gamechange{highlighted} change, this is the guessing game from \autoref{fig:guessing-game}. With the change, this is $\game{\Game~\algo{Guess}_2}{}$.}
+  \end{figure}
+  
+  Which of the following is correct?
+  \begin{enumerate}
+    \item $|\advantage{Guess}{\adv} - \Pr[\game{\algo{Guess}_2}{} = 1]| \leq \Pr[x = 0]$
+    \item $|\advantage{Guess}{\adv} - \Pr[\game{\algo{Guess}_2}{} = 1]| = \Pr[x = 0]$
+    \item $|\advantage{Guess}{\adv} - \Pr[\game{\algo{Guess}_2}{} = 1]| \geq \Pr[x = 0]$
+  \end{enumerate}
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  The answer is (1).
+  By the Difference Lemma (Lemma~\ref{lem:difference}), when the games are identical except when event $E$ occurs (here $E$ is ``$x = 0$''), the difference in success probabilities is bounded by $\Pr[E]$.
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Using the result from the previous exercise, what can we conclude about $\Pr[\game{\algo{Guess}_2}{} = 1]$?
+  \begin{enumerate}
+    \item $\Pr[\game{\algo{Guess}_2}{} = 1] \geq \advantage{Guess}{\adv} + 2^{-\lambda}$
+    \item $\Pr[\game{\algo{Guess}_2}{} = 1] \leq \advantage{Guess}{\adv} - 2^{-\lambda}$
+    \item $\Pr[\game{\algo{Guess}_2}{} = 1] \leq \advantage{Guess}{\adv} + 2^{-\lambda}$
+    \item $\Pr[\game{\algo{Guess}_2}{} = 1] = \advantage{Guess}{\adv} + 2^{-\lambda}$
+  \end{enumerate}
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  The answer is (3).
+  
+  From the previous exercise, we have $|\advantage{Guess}{\adv} - \Pr[\game{\algo{Guess}_2}{} = 1]| \leq 2^{-\lambda}$.
+  
+  This means:
+  $-2^{-\lambda} \leq \advantage{Guess}{\adv} - \Pr[\game{\algo{Guess}_2}{} = 1] \leq 2^{-\lambda}$
+  
+  From the left inequality:
+  $-2^{-\lambda} \leq \advantage{Guess}{\adv} - \Pr[\game{\algo{Guess}_2}{} = 1]$
+  
+  Rearranging:
+  $\Pr[\game{\algo{Guess}_2}{} = 1] \leq \advantage{Guess}{\adv} + 2^{-\lambda}$
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Let $\adv$ be an algorithm with access to a random oracle $\pcoracle{H}: \{0,1\}^* \to \{0,1\}^\secpar$.
+  The algorithm queries the random oracle with $x \in \{0,1\}^\secpar$.
+  What is $\Pr[\pcoracle{H}(x) = x]$?
+  \begin{enumerate}
+    \item $0$
+    \item $2^{-\secpar}$
+    \item $1$
+    \item $2^{-2\secpar}$
+  \end{enumerate}
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  The answer is (2).
+  The random oracle returns a uniformly random value from $\{0,1\}^\secpar$ on the first query to any input.
+  Since there are $2^\secpar$ possible outputs and exactly one of them equals $x$, we have $\Pr[\pcoracle{H}(x) = x] = 2^{-\secpar}$.
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Let $p$ be a prime and let $\adv$ be an algorithm with access to a random oracle $\pcoracle{H}: \{0,1\}^* \to \ZZ_p$.
+  Before returning, the adversary queries the random oracle with distinct $x_1, x_2 \in \ZZ_p$ (in that order) and receives $y_1 = \pcoracle{H}(x_1)$, $y_2 = \pcoracle{H}(x_2)$.
+  What is $\Pr[y_2 = x_1 y_1 x_2^{-1}]$?
+  \begin{enumerate}
+    \item $0$
+    \item $1/p$
+    \item $1/(p-1)$
+    \item $1$
+  \end{enumerate}
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  The answer is (2).
+  
+  Since $x_1 \neq x_2$, the queries are to different inputs, so $y_1$ and $y_2$ are independent uniform random values from $\ZZ_p$. 
+  Given any fixed $x_1, x_2, y_1$, the value $x_1 y_1 x_2^{-1}$ is a fixed element of $\ZZ_p$.
+  Since $y_2$ is uniformly random and independent of $y_1$, we have $\Pr[y_2 = x_1 y_1 x_2^{-1}] = 1/p$.
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Let $\gparam$ be a group description.
+  Let $\adv$ be an algorithm with access to a random oracle $\pcoracle{H}: \{0,1\}^* \to \ZZ_p$ where $p$ is prime.
+  The adversary makes two distinct queries $(R_0, m_0)$ and $(R_1, m_1)$ where $R_i \in \GG$ and $m_i \in \{0,1\}^*$, receiving $y_0 = \pcoracle{H}(R_0, m_0)$ and $y_1 = \pcoracle{H}(R_1, m_1)$.
+  What is $\Pr[R_0 \cdot g^{y_0} \cdot R_1^{-1} = g^{y_1}]$?
+  \begin{enumerate}
+    \item $0$
+    \item $1/p$
+    \item $1/(p-1)$
+    \item $1$
+  \end{enumerate}
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  The answer is (2).
+  
+  Since the queries $(R_0, m_0)$ and $(R_1, m_1)$ are distinct, $y_0$ and $y_1$ are independent uniform random values from $\ZZ_p$.
+  
+  For any fixed $R_0, R_1 \in \GG$ and $y_0 \in \ZZ_p$, the value $R_0 \cdot g^{y_0} \cdot R_1^{-1}$ is a fixed element of $\GG$.
+  Since $y_1$ is uniformly random in $\ZZ_p$, $g^{y_1}$ is uniformly random in $\GG$.
+  Therefore, $\Pr[R_0 \cdot g^{y_0} \cdot R_1^{-1} = g^{y_1}] = 1/p$.
+  
+  Note: If this event occurred, we would have $R_0 \cdot g^{\pcoracle{H}(R_0, m_0)} = R_1 \cdot g^{\pcoracle{H}(R_1, m_1)}$, meaning
+  \[
+    \algo{TapCom.Commit}(R_0, m_0) = \algo{TapCom.Commit}(R_1, m_1)
+  \] and the adversary would have won $\game{\Game~\algo{ComBind}}{\algo{TapCom}}$ in the random oracle model.
+  In \autoref{lem:taproot-binding}, we generalize this to $q$ random oracle queries.
+\end{mysolution}
+\fi
+
+\begin{exercise}
+  Which of the following represents a gap between security proofs and real-world security?
+  \begin{enumerate}
+    \item In practice, $\lambda$ is a fixed value (e.g., 128 or 256)
+    \item Concrete hash functions like SHA256 are not hash functions
+    \item Unfalsifiable assumptions cannot be validated experimentally
+    \item Security models may not capture all attack vectors
+    \item Random oracles do not exist
+    \item Security proofs don't model users writing keys on post-it notes
+    \item All of the above
+  \end{enumerate}
+\end{exercise}
+
+\ifsolutions
+\begin{mysolution}
+  The answer is (7).
+\end{mysolution}
+\fi
