@@ -111,22 +111,22 @@ Unlike one-time signatures, the adversary can request signatures on multiple mes
             \params \defeq (\gparam, \{0,1\}^*, \GG \times \ZZ_p) \\
             T \defeq \emptyset \\
             \mathcal{Q} \defeq \emptyset \\
-            (m^*, \sigma^*) \gets \adv^{\pcoracle{Sign}, \pcoracle{H}}(\params, X) \\
+            (m^*, \sigma^*) \gets \adv^{\pcoracle{Sign}, \pcoracle{H}_{\mathsf{UF}}}(\params, X) \\
             (R^*, s^*) \defeq \sigma^* \\
-            c^* \defeq \pcoracle{H}(R^*, m^*) \\
+            c^* \defeq \pcoracle{H}_{\mathsf{UF}}(R^*, m^*) \\
             \pcreturn m^* \notin \mathcal{Q} \wedge g^{s^*} = R^* \cdot X^{c^*}
           }
           \pcvspace
           \procedure[headlinesep=1pt]{Oracle $\pcoracle{Sign}(m)$}{%
             r \sample \ZZ_p \\
             R \defeq g^r \\
-            c \defeq \pcoracle{H}(R, m) \\
+            c \defeq \pcoracle{H}_{\mathsf{UF}}(R, m) \\
             s \defeq r + c \cdot x \bmod p \\
             \mathcal{Q} \defeq \mathcal{Q} \cup \{m\} \\
             \pcreturn (R, s)
           }
           \pcvspace
-          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}(y)$}{%
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}_{\mathsf{UF}}(y)$}{%
             \pcif T[y] = \bot \pcthen \\
             \t T[y] \sample \ZZ_p \\
             \pcreturn T[y]
@@ -233,7 +233,7 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
 \subsection{Exercises}
 
 \begin{exercise}
-  The EUF-CMA security definition in \autoref{def:euf-cma} only requires the forged message to be new. An alternative notion called \emph{strong EUF-CMA} would prevent the adversary from winning even if they produce a different signature for a message they previously queried. Define a strong EUF-CMA security game that captures this intuition.
+  The EUF-CMA security definition in \autoref{def:euf-cma} only requires the forged message to be new. An alternative notion called \emph{strong EUF-CMA} would allow the adversary to win if they produce a different signature for a message even if it was previously queried. Define a strong EUF-CMA security game that captures this intuition.
 \end{exercise}
 
 \ifsolutions
@@ -253,7 +253,7 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
 \begin{exercise}
   In the Generic Group Model (GGM)~\cite{EC:Shoup97}, the advantage of solving the discrete logarithm problem with $q$ group operations is bounded by $\advantage{DLog}{\adv, \grgen} \leq \frac{q^2}{2p}$ where $p$ is the prime group order.
   
-  Consider Schnorr signatures over a 256-bit elliptic curve group (e.g., secp256k1 where $p \approx 2^{256}$). Suppose an adversary can make:
+  Consider Schnorr signatures over a 256-bit elliptic curve group (e.g., secp256k1 where $p > 2^{255}$). Suppose an adversary can make:
   \begin{itemize}
     \item $q_s = 2^{10}$ signing queries
     \item $q_h = 2^{85}$ hash queries
