@@ -55,27 +55,26 @@
 \begin{exercise}
   Using the result from the previous exercise, what can we conclude about $\Pr[\game{\algo{Guess}_2}{} = 1]$?
   \begin{enumerate}
+    \item $\Pr[\game{\algo{Guess}_2}{} = 1] \geq \advantage{Guess}{\adv} - 2^{-\lambda}$
     \item $\Pr[\game{\algo{Guess}_2}{} = 1] \geq \advantage{Guess}{\adv} + 2^{-\lambda}$
-    \item $\Pr[\game{\algo{Guess}_2}{} = 1] \leq \advantage{Guess}{\adv} - 2^{-\lambda}$
-    \item $\Pr[\game{\algo{Guess}_2}{} = 1] \leq \advantage{Guess}{\adv} + 2^{-\lambda}$
-    \item $\Pr[\game{\algo{Guess}_2}{} = 1] = \advantage{Guess}{\adv} + 2^{-\lambda}$
+    \item $\Pr[\game{\algo{Guess}_2}{} = 1] < \advantage{Guess}{\adv} - 2^{-\lambda}$
   \end{enumerate}
 \end{exercise}
 
 \ifsolutions
 \begin{mysolution}
-  The answer is (3).
+  The answer is (1).
   
   From the previous exercise, we have $|\advantage{Guess}{\adv} - \Pr[\game{\algo{Guess}_2}{} = 1]| \leq 2^{-\lambda}$.
   
   This means:
   $-2^{-\lambda} \leq \advantage{Guess}{\adv} - \Pr[\game{\algo{Guess}_2}{} = 1] \leq 2^{-\lambda}$
   
-  From the left inequality:
-  $-2^{-\lambda} \leq \advantage{Guess}{\adv} - \Pr[\game{\algo{Guess}_2}{} = 1]$
+  From the right inequality:
+  $\advantage{Guess}{\adv} - \Pr[\game{\algo{Guess}_2}{} = 1] \leq 2^{-\lambda}$
   
   Rearranging:
-  $\Pr[\game{\algo{Guess}_2}{} = 1] \leq \advantage{Guess}{\adv} + 2^{-\lambda}$
+  $\Pr[\game{\algo{Guess}_2}{} = 1] \geq \advantage{Guess}{\adv} - 2^{-\lambda}$
 \end{mysolution}
 \fi
 
