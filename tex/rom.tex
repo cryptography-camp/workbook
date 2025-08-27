@@ -7,8 +7,8 @@ The two key properties of a random oracle are: (1) it returns uniformly random a
 
 Formally, a random oracle can be described as follows.
 Consider the random oracle $\pcoracle{H}$ in \autoref{fig:ro-example}.
-The oracle maintains a table $T$ (initially empty) to ensure consistency.
-When queried with input $x$, it checks whether $T[x]$ exists. If not, it samples a uniformly random element from $S$ and stores it as $T[x]$.
+The oracle maintains a table $T$ to ensure consistency, where all entries are initially $\bot$ (undefined).
+When queried with input $x$, it checks whether $T[x] = \bot$. If so, it samples a uniformly random element from $S$ and stores it as $T[x]$.
 The oracle returns $T[x]$.
 
 
