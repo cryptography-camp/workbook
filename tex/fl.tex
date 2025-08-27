@@ -78,7 +78,7 @@ The forking lemma is a fundamental tool for analyzing algorithms that interact w
 
 \begin{itemize}
   \item In the first execution, all random oracle responses are sampled uniformly as usual.
-  \item In the second execution, the responses are identical to those from the first execution up to a specific query called the \emph{forking point}, after which all subsequent oracle responses are \emph{refreshed} (resampled with fresh randomness).
+  \item In the second execution, the responses are identical to those from the first execution up to a specific query called the \emph{forking point}, whose response is \emph{refreshed} (resampled with fresh randomness).
 \end{itemize}
 
 As a result, the two executions of $\adv$ proceed identically up to the forking point but diverge afterwards. The forking lemma quantifies how often an adversary that succeeds in the first execution also succeeds in the second execution, where the oracle gives a different response at the forking point.
