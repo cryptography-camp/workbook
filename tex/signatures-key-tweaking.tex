@@ -1,6 +1,6 @@
 \section{Signatures with Key Tweaking}\label{sec:signatures-key-tweaking}
 
-Key tweaking is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\cite{add:bip-hdwallets} and Taproot commitments~\cite{add:bip-taproot}, enabling the derivation of multiple keys from a single master key and the commitment of additional data to public keys.
+Key tweaking is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\cite{add:bip-hdwallets} and Taproot commitments~\cite{add:bip-taproot}, enabling the derivation of multiple keys from a single master key and committing to additional data in public keys.
 
 \subsection{Syntax}
 
@@ -42,7 +42,7 @@ Key tweaking is fundamental in hierarchical deterministic (HD) Bitcoin wallets~\
 
 \subsection{Security with Tweaked Keys}
 
-The security notion of \emph{existential unforgeability under chosen message attack with tweaked keys (EUF-CMA-TK)} extends the standard EUF-CMA notion to capture security when an adversary can obtain signatures under tweaked keys.
+The security notion of \emph{existential unforgeability under chosen message attack with tweaked keys (EUF-CMA-TK)}\label{def:euf-cma-tk-informal} extends the standard EUF-CMA notion to capture security when an adversary can obtain signatures under tweaked keys.
 Informally, the adversary is given a public key and can request signatures on messages of their choice, but now with an additional capability: for each signing query, they can specify a tweak in addition to the message.
 The signing oracle will return a signature that verifies under the tweaked public key (i.e., a signature created with the correspondingly tweaked secret key).
 The adversary wins by outputting $(m^*, t^*, \sigma^*)$ such that the signature verifies under the tweaked public key for $t^*$, and the pair $(m^*, t^*)$ was never queried to the signing oracle.
@@ -60,7 +60,7 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 
 \begin{exercise}
   Define correctness for a signature scheme with tweaking.
-  Specifically, modify the standard signature scheme correctness definition (Definition~\ref{def:sig-correctness}) to ensure that signatures created with a tweaked secret key verify correctly under the corresponding tweaked public key.
+  Specifically, modify standard signature scheme correctness (\autoref{def:sig-correctness}) to ensure that signatures created with a tweaked secret key verify correctly under the corresponding tweaked public key.
 \end{exercise}
 
 \ifsolutions
@@ -80,7 +80,7 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 \fi
 
 \begin{exercise}[Optional]
-  Argue that the tweaking scheme $\algo{SchnorrTS}$ (Definition~\ref{def:schnorrts}) is correct with the Schnorr signature scheme (Definition~\ref{def:schnorr}).
+  Argue that the tweaking scheme $\algo{SchnorrTS}$ (\autoref{def:schnorrts}) is correct with the Schnorr signature scheme (\autoref{def:schnorr}).
   That is, show that signatures created with a tweaked secret key verify correctly under the corresponding tweaked public key.
 \end{exercise}
 
@@ -99,8 +99,8 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 \fi
 
 \begin{exercise}\label{ex:euf-cma-tk-def}
-  Formalize the EUF-CMA-TK security notion by adapting the EUF-CMA security definition (Definition~\ref{def:euf-cma}).
-  Your definition should capture the informal description given above.
+  Formalize the EUF-CMA-TK security notion by adapting EUF-CMA security (\autoref{def:euf-cma}).
+  Your definition should capture the informal description given in \autoref{def:euf-cma-tk-informal}.
 \end{exercise}
 
 \ifsolutions
@@ -140,8 +140,9 @@ The proof is left as an exercise (see \autoref{ex:schnorrkp-to-single}).
 \fi
 
 \begin{exercise}
-  Give a \ppt adversary that breaks the EUF-CMA-TK security of Schnorr signatures with the SchnorrTS tweaking scheme. Hints:
+  Give a \ppt adversary that breaks the EUF-CMA-TK security of $\algo{SchnorrSig}$ with the $\algo{SchnorrTS}$ tweaking scheme. Hints:
   \begin{itemize}
+    \item $\algo{SchnorrSig}$ does not use key prefixing.
     \item You only need to use the signing oracle once.
     \item Pick a tweak $t$ and look at the Schnorr verification equation for a signature $(R, s)$ under public key $X$. Compute $s'$ by adding a value to $s$ such that $(R, s')$ is a valid signature for $\algo{TwPK}(X, t)$.
   \end{itemize}
