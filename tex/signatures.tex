@@ -1,7 +1,5 @@
 \section{Signatures}\label{sec:signatures}
 
- Unlike one-time signatures, a digital signature scheme allows signing multiple messages with the same key pair.
-
 \subsection{Syntax \& Correctness}
 
 \begin{definition}[Signature Scheme]
@@ -26,7 +24,8 @@ In other words, a signature scheme is correct if honestly generated signatures a
 
 \subsection{Security}
 
-The standard security notion for digital signatures is existential unforgeability under chosen message attack (EUF-CMA). Unlike one-time signatures, the adversary can request signatures on multiple messages before attempting to forge.
+The standard security notion for digital signatures is existential unforgeability under chosen message attack (EUF-CMA).
+Unlike one-time signatures, the adversary can request signatures on multiple messages.
 
 \begin{definition}[EUF-CMA Security]\label{def:euf-cma}
   A signature scheme $\algo{Sig}$ is \emph{existentially unforgeable under chosen message attack (EUF-CMA)} if for all \ppt adversaries $\adv$:
@@ -291,7 +290,7 @@ The proof is left as an exercise (see \autoref{ex:schnorr-euf-cma}).
     \advantage{EUF-CMA}{\adv, \algo{SchnorrSig}} \leq 2^{-161} + 0.5 \approx 0.5
   \]
   
-  \textbf{Comparison:} The discrete logarithm advantage is $2^{-87}$ (87 bits of security), while the EUF-CMA advantage for Schnorr signatures is approximately $0.5$ (less than 1 bit of security). 
+  \textbf{Comparison:} The discrete logarithm advantage is $2^{-87}$, while the EUF-CMA advantage for Schnorr signatures is approximately $2^{-1}$.
   
   This dramatic difference—losing over 86 bits of security—is due to the square root loss in the forking lemma. 
   
