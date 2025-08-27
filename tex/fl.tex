@@ -277,14 +277,14 @@ As a result, the two executions of $\adv$ proceed identically up to the forking 
     \item Since $z$ was never queried, $T[z] = \bot$ (undefined)
     \item We copy $T$ to $T'$, so $T'[z] = \bot$ as well
     \item We then set $T'[z] \sample S$ (a fresh random value)
-    \item Second execution: Since $\adv$ receives the same $\mathit{inp}$ and $\rho$, and never queries the oracle, it outputs the same $(z, \mathit{aux})$ with probability $\advantage{Single}{\adv, \algo{InpGen}}$
+    \item Second execution: Since $\adv$ receives the same $\mathit{inp}$ and $\rho$, and never queries the oracle, it outputs the same $(z, \mathit{aux})$ deterministically
     \item The condition $z = z'$ is satisfied
     \item The condition $T[z] \neq T'[z]$ is satisfied since $T[z] = \bot$ while $T'[z] \in S$
   \end{itemize}
   
   Therefore:
   \[
-  \advantage{Fork}{\adv, \algo{InpGen}} = \advantage{Single}{\adv, \algo{InpGen}}^2
+  \advantage{Fork}{\adv, \algo{InpGen}} = \advantage{Single}{\adv, \algo{InpGen}}
   \]
 \end{mysolution}
 \fi
