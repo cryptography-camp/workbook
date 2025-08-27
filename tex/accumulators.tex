@@ -21,9 +21,10 @@ It is a tuple of polynomial-time algorithms $(\algo{Gen}, \algo{Init}, \algo{Val
 Typically, an accumulator involves two parties: the manager, who uses $\algo{Init}$, $\algo{Value}$, $\algo{Insert}$, $\algo{ProveMembership}$ and the verifier, who uses $\algo{VerifyMembership}$.
 
 \begin{example}
-  An example is the trivial accumulator\label{sec:trivial-acc}, where the accumulator value is just the accumulator state and therefore of size linear in the size of the set. In contrast, the accumulator value is usually a constant size value:
+  An example is the trivial accumulator\label{sec:trivial-acc}, where the accumulator value is simply the set itself and therefore grows linearly with the number of inserted elements.
+  (In contrast, non-trivial accumulators typically have constant-size accumulator values.)
   \begin{itemize}
-    \item $\algo{Gen}(1^\secpar)\rightarrow \bot$
+    \item $\algo{Gen}(1^\secpar)\rightarrow \params$ where $\params = (\mathcal{X}_\mathsf{Acc} = \{0,1\}^*)$
     \item $\algo{Init}(\params)\rightarrow \{\}$
     \item $\algo{Value}(\params, \state)\rightarrow \state$
     \item $\algo{Insert}(\params, \state, x) \rightarrow \state \cup \{x\}$
