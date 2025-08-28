@@ -1,0 +1,168 @@
+\section{Sign-to-Contract}
+
+\subsection{Syntax \& Correctness}
+
+\begin{definition}[Sign-to-Contract Signature Scheme]
+  A sign-to-contract-compatible signature scheme $\algo{SigS2C}$ is a tuple of polynomial-time algorithms $(\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify}, \algo{VerifyCom})$ where:
+  \begin{itemize}
+    \item $\algo{Setup}(1^\secpar) \rightarrow \params$ is a probabilistic algorithm that takes the security parameter as input and outputs public parameters $\params$ including the message space $\mathcal{M}$, the signature space $\mathcal{S}$, and randomness space $\mathcal{R}$.
+    \item $\algo{KeyGen}(\params) \rightarrow (\sk, \pk)$ is a probabilistic algorithm that takes public parameters $\params$ as input and outputs a secret key $\sk$ and a public key $\pk$.
+    \item $\algo{Sign}(\params, \sk, m, m_C) \rightarrow (\sigma, r_C)$ is a probabilistic algorithm that takes public parameters $\params$, a secret key $\sk$, message $m \in \mathcal{M}$, and a message $m_C \in \{0, 1\}^*$ as input and outputs a signature $\sigma \in \mathcal{S}$ that commits to $m_C$ and randomness $r_C$.
+    \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, a public key $\pk$, a message $m \in \mathcal{M}$, and a signature $\sigma \in \mathcal{S}$ as input and outputs $1$ (accept) if the signature is valid, and outputs $0$ (reject) otherwise.
+    \item $\algo{VerifyCom}(\params, \sigma, m_C, r_C) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, a signature $\sigma \in \mathcal{S}$, a message $m_C$ and randomness $r_C$ as input and outputs $1$ (accept) if the commitment commits to $m_C$ with randomness $r_C$, and outputs $0$ (reject) otherwise.
+  \end{itemize}
+\end{definition}
+
+\begin{definition}[Correctness]\label{def:s2c-correctness}
+  A sign-to-contract-compatible signature scheme $\algo{SigS2C} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify}, \algo{VerifyCom})$ is \emph{correct} if for all $\secpar \in \NN$, all $\params \in \algo{Setup}(1^\secpar)$, all $(\sk, \pk) \in \algo{KeyGen}(\params)$, all messages $m \in \mathcal{M}$ and $m_C \in \{0, 1\}^*$:
+  \[
+    \Pr\left[
+    \begin{array}{c}
+      \algo{Verify}(\params, \pk, m, \sigma) = 1 \\
+      \wedge \\
+      \algo{VerifyCom}(\params, \sigma, m_C, r_C) = 1
+    \end{array}
+    \middle|
+    \begin{array}{c}
+      (\sigma, r_C) \gets \\
+      \algo{Sign}(\params, \sk, m, m_C)
+    \end{array}
+    \right] = 1
+  \]
+  where the probability is taken over the randomness of $\algo{Sign}$.
+\end{definition}
+
+\subsection{Security}
+
+\begin{definition}[EUF-CMA Security for Sign-to-Contract]\label{def:euf-cma-s2c}
+  A sign-to-contract signature scheme $\algo{SigS2C}$ is \emph{existentially unforgeable under chosen message attack (EUF-CMA)} if for all \ppt adversaries $\adv$:
+  \[
+    \advantage{EUF-CMA}{\adv, \algo{SigS2C}} \defeq \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SigS2C}} = 1} = \negl
+  \]
+  where $\game{\Game~\algo{EUF-CMA}}{\algo{SigS2C}}$ is defined in \autoref{fig:euf-cma-s2c}.
+\end{definition}
+
+\begin{figure}[tbh]
+  \begin{tcolorbox}
+    \begin{pchstack}[center]
+      \procedure{$\game{\Game~\algo{EUF-CMA}}{\algo{SigS2C}}$}{%
+        \params \gets \algo{Setup}(1^\secpar) \\
+        (\sk,\pk) \gets \algo{KeyGen}(\params) \\
+        \mathcal{Q} \defeq \emptyset\\
+        (m^*, \sigma^*) \gets \adv^{\pcoracle{S2CSign}}(\params, \pk) \\
+        \pcreturn m^* \notin \mathcal{Q} \wedge \\
+        \t \algo{Verify}(\params, \pk, m^*, \sigma^*) = 1
+      }
+      \pchspace
+      \procedure{Oracle $\pcoracle{S2CSign}(m, m_C)$}{%
+        (\sigma, r_C) \gets \algo{Sign}(\params, \sk, m, m_C) \\
+        \mathcal{Q} \defeq \mathcal{Q} \cup \{m\} \\
+        \pcreturn (\sigma, r_C)
+      }
+    \end{pchstack}
+  \end{tcolorbox}
+  \caption{The EUF-CMA security game for sign-to-contract signatures}
+  \label{fig:euf-cma-s2c}
+\end{figure}
+
+\begin{definition}[Commitment Binding for Sign-to-Contract]\label{def:euf-cma-s2c}
+\end{definition}
+
+% TODO: commitment binding and hiding !
+
+\subsection{Schnorr Signature Sign-to-Contract}
+
+\begin{definition}[Schnorr Signature Scheme with Sign-to-Contract]\label{def:schnorr-s2c}
+  Let $\grgen$ be a group generation algorithm, $\algo{H}_{\mathsf{sig}}$ be a hash function with output space $\ZZ_p$ for signatures, and $\algo{H}_{\mathsf{com}}$ be a hash function with output space $\ZZ_p$ for commitments. The Schnorr sign-to-contract signature scheme $\algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]$ is defined as follows:
+  \begin{itemize}
+    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, $\kappa_{\mathsf{sig}} \gets \algo{H}_{\mathsf{sig}}.\algo{Gen}(1^\secpar)$, and $\kappa_{\mathsf{com}} \gets \algo{H}_{\mathsf{com}}.\algo{Gen}(1^\secpar)$. The message space is $\mathcal{M} = \{0,1\}^*$ and the signature space is $\mathcal{S} = \GG \times \ZZ_p$. Output $\params = (\gparam, \kappa_{\mathsf{sig}}, \kappa_{\mathsf{com}}, \mathcal{M}, \mathcal{S})$.
+    
+    \item $\algo{KeyGen}(\params) \rightarrow (\sk, \pk)$: Sample $x \sample \ZZ_p$. Compute $X = g^x$. Output $\sk = x$ and $\pk = X$.
+    
+    \item $\algo{Sign}(\params, \sk, m, m_C) \rightarrow (\sigma, r_C)$: Parse $\params = (\gparam, \kappa_{\mathsf{sig}}, \kappa_{\mathsf{com}}, \mathcal{M}, \mathcal{S})$ and $\sk = x$. Compute:
+    \begin{align*}
+      r_C &\sample \ZZ_p\\
+      R_C &= g^{r_C} \\
+      r &= r_C + \algo{H}_{\mathsf{com}}.\algo{Eval}(\kappa_{\mathsf{com}}, (R_C, m_C))\\
+      R &= g^r \\
+      c &= \algo{H}_{\mathsf{sig}}.\algo{Eval}(\kappa_{\mathsf{sig}}, (R, m)) \\
+      s &= r + c \cdot x \bmod p
+    \end{align*}
+    Output $\sigma = (R, s)$ and $R_C$.
+    
+    \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow \{0, 1\}$: Parse $\params = (\gparam, \kappa_{\mathsf{sig}}, \kappa_{\mathsf{com}}, \mathcal{M}, \mathcal{S})$, $\pk = X$ and $\sigma = (R, s)$. Compute $c = \algo{H}_{\mathsf{sig}}.\algo{Eval}(\kappa_{\mathsf{sig}}, (R, m))$. Accept if and only if:
+    \[
+      g^s = R \cdot X^c
+    \]
+  \end{itemize}
+\end{definition}
+
+\begin{figure}[tbhp]
+  \begin{center}
+    \begin{tcolorbox}[width=\textwidth]
+      \begin{pchstack}[center]
+        \begin{pcvstack}
+          \procedure[headlinesep=1pt]{$\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrS2C}}$}{%
+            \gparam \gets \grgen(1^\secpar) \\
+            x \sample \ZZ_p \\
+            X \defeq g^x \\
+            \params \defeq (\gparam, \{0,1\}^*, \GG \times \ZZ_p) \\
+            T \defeq \emptyset \\
+            \mathcal{Q} \defeq \emptyset \\
+            (m^*, \sigma^*) \gets \adv^{\pcoracle{S2CSign}, \pcoracle{H}_{\mathsf{UF}}}(\params, X) \\
+            (R^*, s^*) \defeq \sigma^* \\
+            c^* \defeq \pcoracle{H}_{\mathsf{UF}}((R^*, m^*)) \\
+            \pcreturn m^* \notin \mathcal{Q} \wedge g^{s^*} = R^* \cdot X^{c^*}
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{S2CSign}(m, m_C)$}{%
+            r_C \sample \ZZ_p \\
+            R_C \defeq g^{r_C} \\
+            r \defeq r_C + \pcoracle{H}_{\mathsf{UF}}((R_C, m_C)) \\
+            R \defeq g^r \\
+            c \defeq \pcoracle{H}_{\mathsf{UF}}((R, m)) \\
+            s \defeq r + c \cdot x \bmod p \\
+            \mathcal{Q} \defeq \mathcal{Q} \cup \{m\} \\
+            \pcreturn ((R, s), R_C)
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}_{\mathsf{UF}}(y)$}{%
+            \pcif T[y] = \bot \pcthen \\
+            \t T[y] \sample \ZZ_p \\
+            \pcreturn T[y]
+          }
+        \end{pcvstack}
+        \pchspace
+        \begin{pcvstack}
+          \procedure[headlinesep=1pt]{$\bdv(\gamechange{$\gparam, X;$} \rho)$}{%
+            \gamechange{$\params \defeq (\gparam, \{0,1\}^*, \GG \times \ZZ_p)$} \\
+            T \defeq \emptyset \\
+            \gamechange{$\pcreturn \adv^{\pcoracle{S2CSign}_{\bdv}, \pcoracle{H}_{\bdv}}(\params, X; \rho)$}
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{S2CSign}_{\bdv}(m, m_C)$}{%
+            \gamechange{$\sigma \gets \pcoracle{Sign}(m)$}\\
+            \gamechange{$c \sample \ZZ_p$}\\
+            \gamechange{$(R, s) \gets \sigma$}\\
+            \gamechange{$R_C := R g^{-c}$}\\
+            \gamechange{$\pcassert T[R_C, m_C] = \bot$} \\
+            \gamechange{$T[R_C, m_C] := c$}\\
+            \gamechange{$\pcreturn \sigma, R_C$}\\
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}_{\bdv}(y)$}{%
+            \pcif T[y] = \bot \pcthen \\
+            \t T[y] \sample \ZZ_p \\
+            \pcreturn T[y]
+          }
+        \end{pcvstack}
+      \end{pchstack}
+    \end{tcolorbox}
+  \end{center}
+  \caption{Security reduction for Schnorr sign-to-contract signatures: EUF-CMA game (left), algorithm $\bdv$ (middle), and algorithm $\cdv$ (right). Changes from the previous game are marked with $\gamechange{$\cdot$}$.}
+  \label{fig:schnorr-s2c-reduction}
+\end{figure}
+
+
+
+
