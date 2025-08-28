@@ -107,53 +107,60 @@
             x \sample \ZZ_p \\
             X \defeq g^x \\
             \params \defeq (\gparam, \{0,1\}^*, \GG \times \ZZ_p) \\
-            T \defeq \emptyset \\
+            T_{\mathsf{sig}} \defeq \emptyset \\
+            T_{\mathsf{com}} \defeq \emptyset \\
             \mathcal{Q} \defeq \emptyset \\
-            (m^*, \sigma^*) \gets \adv^{\pcoracle{S2CSign}, \pcoracle{H}_{\mathsf{UF}}}(\params, X) \\
+            (m^*, \sigma^*) \gets \adv^{\pcoracle{S2CSign}, \pcoracle{H}_{\mathsf{sig}}, \pcoracle{H}_{\mathsf{com}}}(\params, X) \\
             (R^*, s^*) \defeq \sigma^* \\
-            c^* \defeq \pcoracle{H}_{\mathsf{UF}}((R^*, m^*)) \\
+            c^* \defeq \pcoracle{H}_{\mathsf{sig}}((R^*, m^*)) \\
             \pcreturn m^* \notin \mathcal{Q} \wedge g^{s^*} = R^* \cdot X^{c^*}
           }
           \pcvspace
           \procedure[headlinesep=1pt]{Oracle $\pcoracle{S2CSign}(m, m_C)$}{%
             r_C \sample \ZZ_p \\
             R_C \defeq g^{r_C} \\
-            r \defeq r_C + \pcoracle{H}_{\mathsf{UF}}((R_C, m_C)) \\
+            r \defeq r_C + \pcoracle{H}_{\mathsf{com}}((R_C, m_C)) \\
             R \defeq g^r \\
-            c \defeq \pcoracle{H}_{\mathsf{UF}}((R, m)) \\
+            c \defeq \pcoracle{H}_{\mathsf{sig}}((R, m)) \\
             s \defeq r + c \cdot x \bmod p \\
             \mathcal{Q} \defeq \mathcal{Q} \cup \{m\} \\
             \pcreturn ((R, s), R_C)
           }
           \pcvspace
-          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}_{\mathsf{UF}}(y)$}{%
-            \pcif T[y] = \bot \pcthen \\
-            \t T[y] \sample \ZZ_p \\
-            \pcreturn T[y]
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}_{\mathsf{sig}}(y)$}{%
+            \pcif T_{\mathsf{sig}}[y] = \bot \pcthen \\
+            \t T_{\mathsf{sig}}[y] \sample \ZZ_p \\
+            \pcreturn T_{\mathsf{sig}}[y]
+          }
+          \pcvspace
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}_{\mathsf{com}}(y)$}{%
+            \pcif T_{\mathsf{com}}[y] = \bot \pcthen \\
+            \t T_{\mathsf{com}}[y] \sample \ZZ_p \\
+            \pcreturn T_{\mathsf{com}}[y]
           }
         \end{pcvstack}
         \pchspace
         \begin{pcvstack}
-          \procedure[headlinesep=1pt]{$\bdv(\gamechange{$\gparam, X;$} \rho)$}{%
+          \procedure[headlinesep=1pt]{$\bdv^{$\pcoracle{H}_{\mathsf{sig}}$}(\gamechange{$\gparam, X;$} \rho)$}{%
             \gamechange{$\params \defeq (\gparam, \{0,1\}^*, \GG \times \ZZ_p)$} \\
-            T \defeq \emptyset \\
-            \gamechange{$\pcreturn \adv^{\pcoracle{S2CSign}_{\bdv}, \pcoracle{H}_{\bdv}}(\params, X; \rho)$}
+            T_{\mathsf{com}} \defeq \emptyset \\
+            \gamechange{$\pcreturn \adv^{\pcoracle{S2CSign}_{\bdv}, \pcoracle{H}_{\mathsf{sig}}, \pcoracle{H}_{\mathsf{com},\bdv}}(\params, X; \rho)$}
           }
           \pcvspace
           \procedure[headlinesep=1pt]{Oracle $\pcoracle{S2CSign}_{\bdv}(m, m_C)$}{%
             \gamechange{$\sigma \gets \pcoracle{Sign}(m)$}\\
-            \gamechange{$c \sample \ZZ_p$}\\
+            \gamechange{$c_C \sample \ZZ_p$}\\
             \gamechange{$(R, s) \gets \sigma$}\\
-            \gamechange{$R_C := R g^{-c}$}\\
-            \gamechange{$\pcassert T[R_C, m_C] = \bot$} \\
-            \gamechange{$T[R_C, m_C] := c$}\\
-            \gamechange{$\pcreturn \sigma, R_C$}\\
+            \gamechange{$R_C := R \cdot g^{-c_C}$}\\
+            \gamechange{$\pcassert T_{\mathsf{com}}[R_C, m_C] = \bot$} \\
+            \gamechange{$T_{\mathsf{com}}[R_C, m_C] := c_C$}\\
+            \gamechange{$\pcreturn (\sigma, R_C)$}\\
           }
           \pcvspace
-          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}_{\bdv}(y)$}{%
-            \pcif T[y] = \bot \pcthen \\
-            \t T[y] \sample \ZZ_p \\
-            \pcreturn T[y]
+          \procedure[headlinesep=1pt]{Oracle $\pcoracle{H}_{\mathsf{com},\bdv}(y)$}{%
+            \pcif T_{\mathsf{com}}[y] = \bot \pcthen \\
+            \t T_{\mathsf{com}}[y] \sample \ZZ_p \\
+            \pcreturn T_{\mathsf{com}}[y]
           }
         \end{pcvstack}
       \end{pchstack}
