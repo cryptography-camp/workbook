@@ -90,6 +90,7 @@
     \end{align*}
     Output $\sigma = (R, s)$ and $R_C$.
     
+    % TODO: Is this missing a (mod p) on the result of H_sig like we do below for H_com, since it returns elements of \ZZ_p?
     \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow \{0, 1\}$: Parse $\params = (\gparam, \kappa_{\mathsf{sig}}, \kappa_{\mathsf{com}}, \mathcal{M}, \mathcal{MC}, \mathcal{S})$, $\pk = X$ and $\sigma = (R, s)$. Compute $c = \algo{H}_{\mathsf{sig}}.\algo{Eval}(\kappa_{\mathsf{sig}}, (R, m))$. Accept if and only if:
     \[
       g^s = R \cdot X^c
