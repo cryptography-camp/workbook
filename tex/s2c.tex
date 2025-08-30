@@ -121,6 +121,7 @@
     \item In both games, the inputs of $\adv$ have the same distribution. The only change is in oracle $\pcoracle{S2CSign}$.
   \item In both games $\sigma$ is a valid Schnorr signature.
     In particular, in $\bdv$ it is just the output of $\pcoracle{Sign}$.
+    % TODO: should it say "in S2CSign_B it is just the output of Sign" instead of "in B it is just the output of Sign"? It confused me for a second as i read it as talking about the output of B itself (which returns no the output of Sign but the output of A).
   \item In \bdv, we have $R_C = R g^{-c}$ where $c = \algo{H}_{\mathsf{com}}(R_C, m_C)$.
     Therefore, $R = R_C \cdot g^{c}$ for signature $(R, s) = \sigma$.
   \end{enumerate}
