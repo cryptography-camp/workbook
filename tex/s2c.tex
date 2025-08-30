@@ -5,16 +5,16 @@
 \begin{definition}[Sign-to-Contract Signature Scheme]
   A sign-to-contract-compatible signature scheme $\algo{SigS2C}$ is a tuple of polynomial-time algorithms $(\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify}, \algo{VerifyCom})$ where:
   \begin{itemize}
-    \item $\algo{Setup}(1^\secpar) \rightarrow \params$ is a probabilistic algorithm that takes the security parameter as input and outputs public parameters $\params$ including the message space $\mathcal{M}$, the signature space $\mathcal{S}$, and randomness space $\mathcal{R}$.
+    \item $\algo{Setup}(1^\secpar) \rightarrow \params$ is a probabilistic algorithm that takes the security parameter as input and outputs public parameters $\params$ including the message space $\mathcal{M}$, the committed message space $\mathcal{MC}$, the signature space $\mathcal{S}$, and randomness space $\mathcal{R}$.
     \item $\algo{KeyGen}(\params) \rightarrow (\sk, \pk)$ is a probabilistic algorithm that takes public parameters $\params$ as input and outputs a secret key $\sk$ and a public key $\pk$.
-    \item $\algo{Sign}(\params, \sk, m, m_C) \rightarrow (\sigma, R_C)$ is a probabilistic algorithm that takes public parameters $\params$, a secret key $\sk$, message $m \in \mathcal{M}$, and a message $m_C \in \{0, 1\}^*$ as input and outputs a signature $\sigma \in \mathcal{S}$ that commits to $m_C$ and randomness $R_C$.
+    \item $\algo{Sign}(\params, \sk, m, m_C) \rightarrow (\sigma, R_C)$ is a probabilistic algorithm that takes public parameters $\params$, a secret key $\sk$, message $m \in \mathcal{M}$, and a message $m_C \in \mathcal{MC}$ as input and outputs a signature $\sigma \in \mathcal{S}$ that commits to $m_C$ and randomness $R_C$.
     \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, a public key $\pk$, a message $m \in \mathcal{M}$, and a signature $\sigma \in \mathcal{S}$ as input and outputs $1$ (accept) if the signature is valid, and outputs $0$ (reject) otherwise.
-    \item $\algo{VerifyCom}(\params, \sigma, m_C, R_C) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, a signature $\sigma \in \mathcal{S}$, a message $m_C$ and randomness $R_C$ as input and outputs $1$ (accept) if the commitment commits to $m_C$ with randomness $R_C$, and outputs $0$ (reject) otherwise.
+    \item $\algo{VerifyCom}(\params, \sigma, m_C, R_C) \rightarrow \{0, 1\}$ is a deterministic algorithm that takes public parameters $\params$, a signature $\sigma \in \mathcal{S}$, a message $m_C \in \mathcal{MC}$ and randomness $R_C$ as input and outputs $1$ (accept) if the commitment commits to $m_C$ with randomness $R_C$, and outputs $0$ (reject) otherwise.
   \end{itemize}
 \end{definition}
 
 \begin{definition}[Correctness]\label{def:s2c-correctness}
-  A sign-to-contract-compatible signature scheme $\algo{SigS2C} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify}, \algo{VerifyCom})$ is \emph{correct} if for all $\secpar \in \NN$, all $\params \in \algo{Setup}(1^\secpar)$, all $(\sk, \pk) \in \algo{KeyGen}(\params)$, all messages $m \in \mathcal{M}$ and $m_C \in \{0, 1\}^*$:
+  A sign-to-contract-compatible signature scheme $\algo{SigS2C} = (\algo{Setup}, \algo{KeyGen}, \algo{Sign}, \algo{Verify}, \algo{VerifyCom})$ is \emph{correct} if for all $\secpar \in \NN$, all $\params \in \algo{Setup}(1^\secpar)$, all $(\sk, \pk) \in \algo{KeyGen}(\params)$, all messages $m \in \mathcal{M}$ and $m_C \in \mathcal{MC}$:
   \[
     \Pr\left[
     \begin{array}{c}
@@ -75,11 +75,11 @@
 \begin{definition}[Schnorr Signature Scheme with Sign-to-Contract]\label{def:schnorr-s2c}
   Let $\grgen$ be a group generation algorithm, $\algo{H}_{\mathsf{sig}}$ be a hash function with output space $\ZZ_p$ for signatures, and $\algo{H}_{\mathsf{com}}$ be a hash function with output space $\ZZ_p$ for commitments. The Schnorr sign-to-contract signature scheme $\algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]$ is defined as follows:
   \begin{itemize}
-    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, $\kappa_{\mathsf{sig}} \gets \algo{H}_{\mathsf{sig}}.\algo{Gen}(1^\secpar)$, and $\kappa_{\mathsf{com}} \gets \algo{H}_{\mathsf{com}}.\algo{Gen}(1^\secpar)$. The message space is $\mathcal{M} = \{0,1\}^*$ and the signature space is $\mathcal{S} = \GG \times \ZZ_p$. Output $\params = (\gparam, \kappa_{\mathsf{sig}}, \kappa_{\mathsf{com}}, \mathcal{M}, \mathcal{S})$.
+    \item $\algo{Setup}(1^\secpar) \rightarrow \params$: Run $\gparam \gets \grgen(1^\secpar)$, $\kappa_{\mathsf{sig}} \gets \algo{H}_{\mathsf{sig}}.\algo{Gen}(1^\secpar)$, and $\kappa_{\mathsf{com}} \gets \algo{H}_{\mathsf{com}}.\algo{Gen}(1^\secpar)$. The message and committed message spaces are $\mathcal{M} = \{0,1\}^*$ and $\mathcal{MC} = \{0,1\}^*$, and the signature space is $\mathcal{S} = \GG \times \ZZ_p$. Output $\params = (\gparam, \kappa_{\mathsf{sig}}, \kappa_{\mathsf{com}}, \mathcal{M}, \mathcal{MC}, \mathcal{S})$.
     
     \item $\algo{KeyGen}(\params) \rightarrow (\sk, \pk)$: Sample $x \sample \ZZ_p$. Compute $X = g^x$. Output $\sk = x$ and $\pk = X$.
     
-    \item $\algo{Sign}(\params, \sk, m, m_C) \rightarrow (\sigma, R_C)$: Parse $\params = (\gparam, \kappa_{\mathsf{sig}}, \kappa_{\mathsf{com}}, \mathcal{M}, \mathcal{S})$ and $\sk = x$. Compute:
+    \item $\algo{Sign}(\params, \sk, m, m_C) \rightarrow (\sigma, R_C)$: Parse $\params = (\gparam, \kappa_{\mathsf{sig}}, \kappa_{\mathsf{com}}, \mathcal{M}, \mathcal{MC}, \mathcal{S})$ and $\sk = x$. Compute:
     \begin{align*}
       r_C &\sample \ZZ_p\\
       R_C &= g^{r_C} \\
@@ -90,7 +90,7 @@
     \end{align*}
     Output $\sigma = (R, s)$ and $R_C$.
     
-    \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow \{0, 1\}$: Parse $\params = (\gparam, \kappa_{\mathsf{sig}}, \kappa_{\mathsf{com}}, \mathcal{M}, \mathcal{S})$, $\pk = X$ and $\sigma = (R, s)$. Compute $c = \algo{H}_{\mathsf{sig}}.\algo{Eval}(\kappa_{\mathsf{sig}}, (R, m))$. Accept if and only if:
+    \item $\algo{Verify}(\params, \pk, m, \sigma) \rightarrow \{0, 1\}$: Parse $\params = (\gparam, \kappa_{\mathsf{sig}}, \kappa_{\mathsf{com}}, \mathcal{M}, \mathcal{MC}, \mathcal{S})$, $\pk = X$ and $\sigma = (R, s)$. Compute $c = \algo{H}_{\mathsf{sig}}.\algo{Eval}(\kappa_{\mathsf{sig}}, (R, m))$. Accept if and only if:
     \[
       g^s = R \cdot X^c
     \]
@@ -165,7 +165,7 @@
             \gparam \gets \grgen(1^\secpar) \\
             x \sample \ZZ_p \\
             X \defeq g^x \\
-            \params \defeq (\gparam, \{0,1\}^*, \GG \times \ZZ_p) \\
+            \params \defeq (\gparam, \{0,1\}^*, \{0,1\}^*, \GG \times \ZZ_p) \\
             T_{\mathsf{sig}} \defeq \emptyset \\
             T_{\mathsf{com}} \defeq \emptyset \\
             \mathcal{Q} \defeq \emptyset \\
@@ -201,7 +201,7 @@
         \pchspace
         \begin{pcvstack}
           \procedure[headlinesep=1pt]{$\bdv^{\pcoracle{H}_{\mathsf{sig}}}(\gamechange{$\gparam, X$})$}{%
-            \gamechange{$\params \defeq (\gparam, \{0,1\}^*, \GG \times \ZZ_p)$} \\
+            \gamechange{$\params \defeq (\gparam, \{0,1\}^*, \{0,1\}^*, \GG \times \ZZ_p)$} \\
             T_{\mathsf{com}} \defeq \emptyset \\
             \gamechange{$\pcreturn \adv^{\pcoracle{S2CSign}_{\bdv}, \pcoracle{H}_{\mathsf{sig}}, \pcoracle{H}_{\mathsf{com},\bdv}}(\params, X)$}
           }
