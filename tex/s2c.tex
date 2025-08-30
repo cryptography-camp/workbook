@@ -94,6 +94,11 @@
     \[
       g^s = R \cdot X^c
     \]
+
+    \item $\algo{VerifyCom}(\params, \sigma, m_c, R_C) \rightarrow \{0, 1\}$: Parse $\params = (\gparam, \kappa_{\mathsf{sig}}, \kappa_{\mathsf{com}}, \mathcal{M}, \mathcal{MC}, \mathcal{S})$, $\sigma = (R, s)$. Compute $c = \algo{H}_{\mathsf{com}}.\algo{Eval}(\kappa_{\mathsf{com}}, (R_C, m_C)) \bmod p$. Accept if and only if:
+    \[
+      R = R_C \cdot g^c
+    \]
   \end{itemize}
 \end{definition}
 
