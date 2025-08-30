@@ -34,18 +34,18 @@
 
 \subsection{Security}
 
-\begin{definition}[EUF-CMA Security for Sign-to-Contract]\label{def:euf-cma-s2c}
-  A sign-to-contract signature scheme $\algo{SigS2C}$ is \emph{existentially unforgeable under chosen message attack (EUF-CMA)} if for all \ppt adversaries $\adv$:
+\begin{definition}[EUF-CC-CMA Security for Sign-to-Contract]\label{def:euf-cma-s2c}
+  A sign-to-contract signature scheme $\algo{SigS2C}$ is \emph{existentially unforgeable under chosen-commitment and chosen-message attacks (EUF-CC-CMA)} if for all \ppt adversaries $\adv$:
   \[
-    \advantage{EUF-CMA}{\adv, \algo{SigS2C}} \defeq \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SigS2C}} = 1} = \negl
+    \advantage{EUF-CC-CMA}{\adv, \algo{SigS2C}} \defeq \pr{\game{\Game~\algo{EUF-CC-CMA}}{\algo{SigS2C}} = 1} = \negl
   \]
-  where $\game{\Game~\algo{EUF-CMA}}{\algo{SigS2C}}$ is defined in \autoref{fig:euf-cma-s2c}.
+  where $\game{\Game~\algo{EUF-CC-CMA}}{\algo{SigS2C}}$ is defined in \autoref{fig:euf-cma-s2c}.
 \end{definition}
 
 \begin{figure}[tbh]
   \begin{tcolorbox}
     \begin{pchstack}[center]
-      \procedure{$\game{\Game~\algo{EUF-CMA}}{\algo{SigS2C}}$}{%
+      \procedure{$\game{\Game~\algo{EUF-CC-CMA}}{\algo{SigS2C}}$}{%
         \params \gets \algo{Setup}(1^\secpar) \\
         (\sk,\pk) \gets \algo{KeyGen}(\params) \\
         \mathcal{Q} \defeq \emptyset\\
@@ -61,7 +61,7 @@
       }
     \end{pchstack}
   \end{tcolorbox}
-  \caption{The EUF-CMA security game for sign-to-contract signatures}
+  \caption{The EUF-CC-CMA security game for sign-to-contract signatures}
   \label{fig:euf-cma-s2c}
 \end{figure}
 
@@ -97,25 +97,25 @@
   \end{itemize}
 \end{definition}
 
-\begin{theorem}[Schnorr signatures with sign-to-contract are EUF-CMA secure]\label{thm:schnorr-s2c-euf-cma}
+\begin{theorem}[Schnorr signatures with sign-to-contract are EUF-CC-CMA secure]\label{thm:schnorr-s2c-euf-cma}
   Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard and let $\algo{H}_{\mathsf{sig}}$ and $\algo{H}_{\mathsf{com}}$ be hash functions with output space $\ZZ_p$.
-  Then the Schnorr signature with sign-to-contract scheme $\algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]$ is EUF-CMA secure in the random oracle model for $\algo{H}_{\mathsf{sig}}$ and $\algo{H}_{\mathsf{com}}$.
-  More precisely, for any \ppt adversary $\adv$ against the EUF-CMA security of $\algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]$ making at most $q_s$ queries to the signing oracle, at most $q_{h_s}$ queries to the random oracle $\algo{H}_{\mathsf{sig}}$ and at most $q_{h_c}$ queries to the random oracle $\algo{H}_{\mathsf{com}}$,
+  Then the Schnorr signature with sign-to-contract scheme $\algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]$ is EUF-CC-CMA secure in the random oracle model for $\algo{H}_{\mathsf{sig}}$ and $\algo{H}_{\mathsf{com}}$.
+  More precisely, for any \ppt adversary $\adv$ against the EUF-CC-CMA security of $\algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]$ making at most $q_s$ queries to the signing oracle, at most $q_{h_s}$ queries to the random oracle $\algo{H}_{\mathsf{sig}}$ and at most $q_{h_c}$ queries to the random oracle $\algo{H}_{\mathsf{com}}$,
   there exists a \ppt adversary $\bdv$ against the EUF-CMA security of $\algo{SchnorrSig}[\grgen, \algo{H}_{\mathsf{sig}}]$ making at most $q_s$ queries to the signing oracle and at most $q_{h_s}$ queries to the random oracle $\algo{H}_{\mathsf{sig}}$ such that
   \[
-    \advantage{EUF-CMA}{\adv, \algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]} \leq \advantage{EUF-CMA}{\bdv, \algo{SchnorrSig}[\grgen, \algo{H}_{\mathsf{sig}}]} + q_s \frac{q_s + q_{h_C}}{2^{\secpar - 1}}.
+    \advantage{EUF-CC-CMA}{\adv, \algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]} \leq \advantage{EUF-CMA}{\bdv, \algo{SchnorrSig}[\grgen, \algo{H}_{\mathsf{sig}}]} + q_s \frac{q_s + q_{h_C}}{2^{\secpar - 1}}.
   \]
 \end{theorem}
 
 
 \begin{proof}
-  Let $\adv$ be a \ppt adversary against the EUF-CMA security of $\algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]$  making at most $q_s$ queries to the signing oracle, at most $q_{h_s}$ queries to the random oracle $\algo{H}_{\mathsf{sig}}$ and at most $q_{h_c}$ queries to the random oracle $\algo{H}_{\mathsf{com}}$.
+  Let $\adv$ be a \ppt adversary against the EUF-CC-CMA security of $\algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]$  making at most $q_s$ queries to the signing oracle, at most $q_{h_s}$ queries to the random oracle $\algo{H}_{\mathsf{sig}}$ and at most $q_{h_c}$ queries to the random oracle $\algo{H}_{\mathsf{com}}$.
 
   \begin{enumerate}
   \item Let $\bdv$ be the adversary as defined in \autoref{fig:schnorr-s2c-reduction} that internall runs $\adv$.
   \item Let $E$ be the event that during a $\pcoracle{S2CSign}$ query, $\algo{H}_{\mathsf{com}}$ had already been queried with $R_C, m_C$.
   \item Claim: Then \[
-      \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrS2C}} = 1 \wedge \neg E} =  \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrSig}}[\bdv] = 1 \wedge \neg E}
+      \pr{\game{\Game~\algo{EUF-CC-CMA}}{\algo{SchnorrS2C}} = 1 \wedge \neg E} =  \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrSig}}[\bdv] = 1 \wedge \neg E}
   \]
   \begin{enumerate}
     \item In both games, the inputs of $\adv$ have the same distribution. The only change is in oracle $\pcoracle{S2CSign}$.
@@ -144,11 +144,11 @@
     \end{enumerate}
   \item Using the difference lemma, we have
     \[
-    | \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrS2C}} = 1} - \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrSig}}[\bdv] = 1}| \le q_s \frac{q_s + q_{h_C}}{2^{\secpar - 1}}.
+    | \pr{\game{\Game~\algo{EUF-CC-CMA}}{\algo{SchnorrS2C}} = 1} - \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrSig}}[\bdv] = 1}| \le q_s \frac{q_s + q_{h_C}}{2^{\secpar - 1}}.
       \]
       Thus,
     \[
-    \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrS2C}} = 1} \le \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrSig}}[\bdv] = 1} + q_s \frac{q_s + q_{h_C}}{2^{\secpar - 1}}.
+    \pr{\game{\Game~\algo{EUF-CC-CMA}}{\algo{SchnorrS2C}} = 1} \le \pr{\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrSig}}[\bdv] = 1} + q_s \frac{q_s + q_{h_C}}{2^{\secpar - 1}}.
       \]
   \end{enumerate}
   It is easy to see that $\bdv$ is \ppt (if $\adv$ is \ppt).
@@ -161,7 +161,7 @@
     \begin{tcolorbox}[width=\textwidth]
       \begin{pchstack}[center]
         \begin{pcvstack}
-          \procedure[headlinesep=1pt]{$\game{\Game~\algo{EUF-CMA}}{\algo{SchnorrS2C}}$}{%
+          \procedure[headlinesep=1pt]{$\game{\Game~\algo{EUF-CC-CMA}}{\algo{SchnorrS2C}}$}{%
             \gparam \gets \grgen(1^\secpar) \\
             x \sample \ZZ_p \\
             X \defeq g^x \\
@@ -225,7 +225,7 @@
       \end{pchstack}
     \end{tcolorbox}
   \end{center}
-  \caption{Security reduction for Schnorr sign-to-contract signatures: EUF-CMA game (left), algorithm $\bdv$ (middle), and algorithm $\cdv$ (right). Changes from the previous game are marked with $\gamechange{$\cdot$}$.}
+  \caption{Security reduction for Schnorr sign-to-contract signatures: EUF-CC-CMA game (left), algorithm $\bdv$ (middle), and algorithm $\cdv$ (right). Changes from the previous game are marked with $\gamechange{$\cdot$}$.}
   \label{fig:schnorr-s2c-reduction}
 \end{figure}
 
