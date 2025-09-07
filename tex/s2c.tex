@@ -85,7 +85,7 @@
 					(m_0, m_1) \sample \mathcal{M} \\
 					(m_{C0}, m_{C1}), (r_{C0}, r_{C1}) \gets \adv(\params) \\
 					((R_0, s_0), R_{C0}) \gets \algo{S2CSign}(\params, sk, m_0, m_{C0}, r_{C0}) \\
-					((R_0, s_0), R_{C1}) \gets \algo{S2CSign}(\params, sk, m_1, m_{C1}, r_{C1}) \\
+					((R_1, s_1), R_{C1}) \gets \algo{S2CSign}(\params, sk, m_1, m_{C1}, r_{C1}) \\
 					\pcreturn ((R_0 = R_1) \wedge (R_{C0} = R_{C1}))) \wedge \\
 					\t ((m_{C0} \neq m_{C1}) \vee (r_{C0} \neq r_{C1}))
 				}
@@ -278,9 +278,37 @@
       \end{pchstack}
     \end{tcolorbox}
   \end{center}
-  \caption{Security reduction for Schnorr sign-to-contract signatures: EUF-CC-CMA game (left) and algorithm $\bdv$ (right). Changes from the previous game are marked with $\gamechange{$\cdot$}$.}
+  \caption{Security reduction for Schnorr sign-to-contract signatures: EUF-CC-CMA (left) and algorithm $\bdv$ (right). Changes from the previous game are marked with $\gamechange{$\cdot$}$.}
   % TODO: Do we really need to define H_com,B? Its definition is identical to that of H_com so maybe we can reuse that?
   \label{fig:schnorr-s2c-reduction}
 \end{figure}
 
+\begin{theorem}[Schnorr signatures with sign-to-contract are strongly binding]\label{thm:schnorr-s2c-strong-bind}
+    Let $\grgen$ be a group generation algorithm for which the discrete logarithm problem is hard and let $\algo{H}_{\mathsf{sig}}$ and $\algo{H}_{\mathsf{com}}$ be hash functions with output space $\ZZ_p$.
+    Then the Schnorr signature with sign-to-contract scheme $\algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]$ is \emph{strongly binding}. More precisely for any \ppt adversary $\adv$ against the \emph{strongly binding} security of $\algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]$ there exists a \ppt adversary $\bdv$ against the collision security of $\algo{H}_{\mathsf{com}}$.
+\end{theorem}
 
+\begin{proof}
+	Let $\adv$ be a \ppt adversary against the \emph{strongly binding} security of $\algo{SchnorrS2C}[\grgen, \algo{H}_{\mathsf{sig}}, \algo{H}_{\mathsf{com}}]$ that wins $\game{\Game~\algo{ComStrongBind}}{\algo{Sig2SC}}$ with non-negligible probability, finding $(m_{C0}, m_{C1})$ and $(r_{C0}, r_{C1})$ such that $R_0=R_1$, $R_{C0}=R_{C1}$, and $((m_{C0} \neq m_{C1}) \vee (r_{C0} \neq r_{C1}))$.
+
+	% Not sure about this first part, but see Katz and Lindell Introduction to p. 319
+	Note that $r_C$ is required to be in $\ZZ_p$. Since $g$ generates a cyclic group of prime order $p$, the mapping $r \mapsto g^r$ is an isomorphism from $\ZZ_p$ to the group, and thus $R_{C0} = R_{C1}$ if and only if $r_{C0} = r_{C1}$. Therefore, to satisfy the winning condition $((m_{C0} \neq m_{C1}) \vee (r_{C0} \neq r_{C1}))$, the adversary must output commitment messages $m_{C0} \neq m_{C1}$ to win the game.
+
+	Given $R_0 = R_1$ from the signing algorithm, both $R_0$ and $R_1$ are computed as:
+	\begin{align}
+		R_0 &= g^{r_{C0} + \algo{H}_{\mathsf{com}}.\algo{Eval}(\kappa_{\mathsf{com}}, (R_{C0}, m_{C0})) \bmod p} \\
+		R_1 &= g^{r_{C1} + \algo{H}_{\mathsf{com}}.\algo{Eval}(\kappa_{\mathsf{com}}, (R_{C1}, m_{C1})) \bmod p}
+	\end{align}
+
+	%TODO: Is this really true? I guess if $p$ is large enough, but we might have a collision only on the prime order?
+	Since $R_0 = R_1$, $r_{C0} = r_{C1}$, and $R_{C0} = R_{C1}$, we must have:
+	\[
+	\algo{H}_{\mathsf{com}}.\algo{Eval}(\kappa_{\mathsf{com}}, (R_{C0}, m_{C0})) = \algo{H}_{\mathsf{com}}.\algo{Eval}(\kappa_{\mathsf{com}}, (R_{C1}, m_{C1}))
+	\]
+
+	This implies that the adversary finds a collision for $\algo{H}_{\mathsf{com}}$ under the winning condition $m_{C0} \neq m_{C1}$.
+
+	We can construct an adversary $\bdv$ against the collision resistance of $\algo{H}_{\mathsf{com}}$ for $\game{\Game~\algo{Collision}}{\algo{H}_{\mathsf{com}}}$ by running $\adv$ and outputting $((R_{C0} || m_{C0}), (R_{C1} || m_{C1}))$. Since $\adv$ succeeds in \ppt with non-negligible probability, and $\bdv$ only runs $\adv$ once, $\bdv$ also succeeds in \ppt with non-negligible probability.
+
+	Therefore, if $\algo{H}_{\mathsf{com}}$ is collision resistant, then $\algo{SchnorrS2C}$ is strongly binding.
+\end{proof}
